@@ -6,23 +6,23 @@
 <title>DOOMINIKS STORE</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { getDatabase, ref, set, get, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyDECWw2-w_HdtmIFp5eJB1es_h8lpT0Gt4",
-  authDomain: "doominiks-niks.firebaseapp.com",
-  databaseURL: "https://doominiks-niks-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "doominiks-niks",
-  storageBucket: "doominiks-niks.firebasestorage.app",
-  messagingSenderId: "504521349704",
-  appId: "1:504521349704:web:15f0305b8cf9da746f567d"
-};
-  const app = initializeApp(firebaseConfig);
-  window.FS  = getFirestore(app);
-  window.RDB = getDatabase(app);
-  window.FO  = { collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, serverTimestamp, increment, ref, set, get, onValue, push, remove, update };
+<!-- Firebase compat (non-module) — fixes scope issue -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDECWw2-w_HdtmIFp5eJB1es_h8lpT0Gt4",
+    authDomain: "doominiks-niks.firebaseapp.com",
+    databaseURL: "https://doominiks-niks-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "doominiks-niks",
+    storageBucket: "doominiks-niks.firebasestorage.app",
+    messagingSenderId: "504521349704",
+    appId: "1:504521349704:web:15f0305b8cf9da746f567d"
+  };
+  firebase.initializeApp(firebaseConfig);
+  window._db  = firebase.firestore();
+  window._rdb = firebase.database();
   window.firebaseReady = true;
   document.dispatchEvent(new Event('firebaseReady'));
 </script>
@@ -1312,45 +1312,46 @@ const DEF_OWNER_PW = 'doominiks123';
 // ================================================================
 // FIREBASE HELPERS
 // ================================================================
-function getFS()  { return window.FS; }
-function getRDB() { return window.RDB; }
-function getFO()  { return window.FO; }
+// ── Firebase compat helpers ──
+function getDB()  { return window._db; }
+function getRDB() { return window._rdb; }
 
 async function dbSet(col, id, data) {
-  await getFO().setDoc(getFO().doc(getFS(), col, id), data, { merge: true });
+  await getDB().collection(col).doc(id).set(data, { merge: true });
 }
 async function dbGet(col, id) {
-  const s = await getFO().getDoc(getFO().doc(getFS(), col, id));
-  return s.exists() ? { id: s.id, ...s.data() } : null;
+  const s = await getDB().collection(col).doc(id).get();
+  return s.exists ? { id: s.id, ...s.data() } : null;
 }
 async function dbGetAll(col) {
-  const s = await getFO().getDocs(getFO().collection(getFS(), col));
+  const s = await getDB().collection(col).get();
   return s.docs.map(d => ({ id: d.id, ...d.data() }));
 }
 async function dbAdd(col, data) {
   data.createdAt = Date.now();
-  const r = await getFO().addDoc(getFO().collection(getFS(), col), data);
+  const r = await getDB().collection(col).add(data);
   return r.id;
 }
 async function dbUpd(col, id, data) {
-  await getFO().updateDoc(getFO().doc(getFS(), col, id), data);
+  await getDB().collection(col).doc(id).update(data);
 }
 async function dbDel(col, id) {
-  await getFO().deleteDoc(getFO().doc(getFS(), col, id));
+  await getDB().collection(col).doc(id).delete();
 }
 async function rtSet(path, val) {
-  await getFO().set(getFO().ref(getRDB(), path), val);
+  await getRDB().ref(path).set(val);
 }
 async function rtGet(path) {
-  const s = await getFO().get(getFO().ref(getRDB(), path));
+  const s = await getRDB().ref(path).get();
   return s.exists() ? s.val() : null;
 }
 function rtListen(path, cb) {
-  return getFO().onValue(getFO().ref(getRDB(), path), s => cb(s.exists() ? s.val() : null));
+  getRDB().ref(path).on('value', s => cb(s.exists() ? s.val() : null));
+  return () => getRDB().ref(path).off('value');
 }
 async function rtPush(path, data) {
   data.ts = Date.now();
-  await getFO().push(getFO().ref(getRDB(), path), data);
+  await getRDB().ref(path).push(data);
 }
 // ================================================================
 // LOADING
