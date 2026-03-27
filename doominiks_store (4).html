@@ -1,0 +1,3561 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOOMINIKS STORE</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getDatabase, ref, set, get, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyDECWw2-w_HdtmIFp5eJB1es_h8lpT0Gt4",
+  authDomain: "doominiks-niks.firebaseapp.com",
+  databaseURL: "https://doominiks-niks-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "doominiks-niks",
+  storageBucket: "doominiks-niks.firebasestorage.app",
+  messagingSenderId: "504521349704",
+  appId: "1:504521349704:web:15f0305b8cf9da746f567d"
+};
+  const app = initializeApp(firebaseConfig);
+  window.FS  = getFirestore(app);
+  window.RDB = getDatabase(app);
+  window.FO  = { collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, serverTimestamp, increment, ref, set, get, onValue, push, remove, update };
+  window.firebaseReady = true;
+  document.dispatchEvent(new Event('firebaseReady'));
+</script>
+<style>
+:root{
+  --pri:#e53935;--pri2:#c62828;--pri-g:rgba(229,57,53,.18);
+  --bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;--bg4:#212121;--bg5:#2a2a2a;
+  --border:#2a2a2a;--border2:#3a3a3a;
+  --txt:#f0f0f0;--txt2:#aaa;--txt3:#666;
+  --gold:#f59e0b;--green:#10b981;--blue:#3b82f6;--cyan:#06b6d4;
+  --f:'Inter',sans-serif;
+  --r:10px;--r2:8px;--r3:6px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--f);font-size:14px;overflow-x:hidden;min-height:100vh}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--pri);border-radius:2px}
+a{text-decoration:none;color:inherit}
+img{display:block}
+
+
+
+/* ── APP ── */
+#APP{display:block}
+@keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes min{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(13,13,13,.98);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;z-index:300;gap:8px}
+.nav-logo{font-size:1.2rem;font-weight:800;color:var(--pri);letter-spacing:-.02em;cursor:pointer;flex-shrink:0;white-space:nowrap}
+.nav-logo span{color:var(--txt)}
+.nav-search{flex:1;max-width:400px;margin:0 12px;position:relative}
+.nav-search input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--txt);font-family:var(--f);font-size:.85rem;padding:8px 12px 8px 36px;border-radius:20px;outline:none;transition:all .2s}
+.nav-search input:focus{border-color:var(--pri);background:var(--bg4)}
+.nav-search input::placeholder{color:var(--txt3)}
+.nav-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--txt3);font-size:.82rem;pointer-events:none}
+.nav-right{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+.nav-icon-btn{width:36px;height:36px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);font-size:.9rem;transition:all .2s;position:relative;flex-shrink:0}
+.nav-icon-btn:hover{border-color:var(--pri);color:var(--pri)}
+.nav-icon-btn .dot{position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:var(--pri);border:2px solid var(--bg);display:none}
+.nav-icon-btn .num{position:absolute;top:-3px;right:-3px;background:var(--pri);color:#fff;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:.58rem;font-weight:700}
+.nav-avatar{width:32px;height:32px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0;border:2px solid var(--pri2)}
+.btn-login{background:var(--pri);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-family:var(--f);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-login:hover{background:var(--pri2)}
+.discord-btn{background:#5865f2;color:#fff;border:none;border-radius:6px;padding:7px 12px;font-family:var(--f);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.discord-btn:hover{background:#4752c4}
+
+/* ── BOTTOM NAV (mobile) ── */
+#bNav{position:fixed;bottom:0;left:0;right:0;height:60px;background:rgba(13,13,13,.98);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:none;align-items:center;justify-content:space-around;z-index:300;padding:0 4px}
+.bni{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 10px;cursor:pointer;color:var(--txt3);font-size:.6rem;font-weight:600;text-transform:uppercase;letter-spacing:.03em;border:none;background:none;transition:color .2s;position:relative;min-width:52px}
+.bni i{font-size:1.1rem;transition:all .2s}
+.bni.act,.bni:hover{color:var(--pri)}
+.bni .bni-badge{position:absolute;top:3px;right:8px;background:var(--pri);color:#fff;width:14px;height:14px;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:.5rem;font-weight:700}
+@media(max-width:768px){#bNav{display:flex}body{padding-bottom:68px}.nav-search{display:none}}
+
+/* ── SECTIONS ── */
+.sec{display:none;padding-top:66px;min-height:100vh;padding-bottom:30px}
+.sec.act{display:block}
+.ctn{max-width:1180px;margin:0 auto;padding:0 16px}
+.ctn-sm{max-width:680px;margin:0 auto;padding:0 16px}
+
+/* ── TYPOGRAPHY ── */
+.sec-hd{font-size:1.1rem;font-weight:700;color:var(--txt);margin-bottom:4px}
+.sec-hd-sm{font-size:.72rem;color:var(--txt3);margin-bottom:16px}
+
+/* ── BUTTONS ── */
+.btn{background:none;border:1px solid var(--border2);color:var(--txt2);font-family:var(--f);font-size:.8rem;font-weight:600;padding:7px 14px;border-radius:6px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn:hover{border-color:var(--pri);color:var(--pri)}
+.btn-red{background:var(--pri);border-color:var(--pri);color:#fff}
+.btn-red:hover{background:var(--pri2);border-color:var(--pri2);color:#fff}
+.btn-sm{padding:5px 10px;font-size:.75rem}
+.btn-xs{padding:3px 8px;font-size:.7rem}
+.btn-ghost{border-color:transparent;color:var(--txt2)}
+.btn-ghost:hover{background:var(--bg3);border-color:var(--border2);color:var(--txt)}
+.btn-green{background:var(--green);border-color:var(--green);color:#fff}
+.btn-green:hover{opacity:.85;color:#fff}
+.btn-danger{border-color:#ef4444;color:#ef4444}
+.btn-danger:hover{background:rgba(239,68,68,.1)}
+.w100{width:100%;justify-content:center}
+
+/* ── INPUTS ── */
+.inp{background:var(--bg3);border:1px solid var(--border2);color:var(--txt);font-family:var(--f);font-size:.88rem;padding:9px 12px;border-radius:var(--r3);width:100%;outline:none;transition:all .2s}
+.inp:focus{border-color:var(--pri);background:var(--bg4)}
+.inp::placeholder{color:var(--txt3)}
+select.inp{cursor:pointer}
+textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
+.lbl{font-size:.72rem;font-weight:600;color:var(--txt2);margin-bottom:5px;display:block}
+.ig{margin-bottom:14px}
+.form-hint{font-size:.7rem;color:var(--txt3);margin-top:4px}
+
+/* ── CARDS / PANELS ── */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);transition:all .22s}
+.card:hover{border-color:var(--border2)}
+.card-p{padding:18px}
+
+/* ── STATUS ── */
+.sta{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:.68rem;font-weight:600}
+.sta-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.st-p{background:rgba(245,158,11,.12);color:#f59e0b}
+.st-pr{background:rgba(59,130,246,.12);color:#3b82f6}
+.st-d{background:rgba(16,185,129,.12);color:var(--green)}
+.st-c{background:rgba(239,68,68,.12);color:#ef4444}
+
+/* ── BADGE ── */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:4px;font-size:.65rem;font-weight:700;text-transform:uppercase}
+.bw{background:rgba(107,114,128,.2);color:#9ca3af}
+.be{background:rgba(59,130,246,.18);color:#60a5fa}
+.bm{background:rgba(168,85,247,.18);color:#c084fc}
+.bg2c{background:rgba(245,158,11,.18);color:#fbbf24}
+.bmy{background:linear-gradient(90deg,rgba(220,38,38,.2),rgba(168,85,247,.2));color:#f472b6;animation:mgl 2s infinite}
+.bo{background:rgba(229,57,53,.2);color:var(--pri)}
+@keyframes mgl{0%,100%{opacity:1}50%{opacity:.7}}
+
+/* ── TOAST ── */
+#TC{position:fixed;top:66px;right:14px;z-index:9000;display:flex;flex-direction:column;gap:6px;pointer-events:none;max-width:300px}
+.toast{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r3);padding:10px 14px;font-size:.82rem;box-shadow:0 4px 20px rgba(0,0,0,.4);animation:tin .3s ease;display:flex;align-items:center;gap:8px;pointer-events:auto}
+.toast.ok{border-left:3px solid var(--green)}
+.toast.err{border-left:3px solid #ef4444}
+.toast.inf{border-left:3px solid var(--cyan)}
+@keyframes tin{from{transform:translateX(110%);opacity:0}to{transform:none;opacity:1}}
+
+/* ── MODAL ── */
+.moverlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center;padding:16px}
+.moverlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:24px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.6);animation:min .25s ease;max-height:92vh;overflow-y:auto}
+.modal-lg{max-width:700px}
+.modal-xl{max-width:920px}
+.mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.mtitle{font-size:1rem;font-weight:700;color:var(--txt)}
+.mclose{background:none;border:none;color:var(--txt3);font-size:1rem;cursor:pointer;transition:color .2s;line-height:1;padding:4px}
+.mclose:hover{color:var(--txt)}
+
+/* ── AUTH TABS ── */
+.atabs{display:flex;gap:4px;margin-bottom:20px;background:var(--bg3);padding:3px;border-radius:8px}
+.atab{flex:1;padding:8px;text-align:center;cursor:pointer;font-size:.82rem;font-weight:600;transition:all .2s;background:none;border:none;color:var(--txt2);font-family:var(--f);border-radius:6px}
+.atab.act{background:var(--pri);color:#fff}
+
+/* ══════════════════════════════════
+   HOME PAGE
+══════════════════════════════════ */
+/* Hero banner */
+.hero-banner{background:linear-gradient(135deg,#1a0a0a 0%,#1a0505 50%,#0d0d0d 100%);border-bottom:1px solid var(--border);padding:32px 0;overflow:hidden;position:relative}
+.hero-banner::before{content:'';position:absolute;top:-50%;right:-10%;width:500px;height:500px;background:radial-gradient(ellipse,rgba(229,57,53,.12) 0,transparent 65%);pointer-events:none}
+.hero-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.hero-text h1{font-size:clamp(1.5rem,4vw,2.4rem);font-weight:800;line-height:1.1;letter-spacing:-.03em}
+.hero-text h1 span{color:var(--pri)}
+.hero-text p{font-size:.88rem;color:var(--txt2);margin-top:8px;line-height:1.6}
+.hero-btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+
+/* Search bar (home) */
+.home-search-wrap{padding:16px 0;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:58px;z-index:100}
+.home-search-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:8px;align-items:center}
+.home-search-box{flex:1;max-width:500px;position:relative}
+.home-search-box input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--txt);font-family:var(--f);font-size:.9rem;padding:10px 14px 10px 38px;border-radius:8px;outline:none;transition:all .2s}
+.home-search-box input:focus{border-color:var(--pri)}
+.home-search-box input::placeholder{color:var(--txt3)}
+.home-search-box i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--txt3)}
+
+/* Catalog strip */
+.catalog-strip{padding:14px 0;background:var(--bg);border-bottom:1px solid var(--border)}
+.catalog-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.catalog-inner::-webkit-scrollbar{display:none}
+.cat-chip{display:flex;align-items:center;gap:7px;padding:7px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0;font-size:.8rem;font-weight:600;color:var(--txt2)}
+.cat-chip img{width:22px;height:22px;border-radius:4px;object-fit:cover}
+.cat-chip .cat-chip-icon{width:22px;height:22px;border-radius:4px;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-size:.75rem}
+.cat-chip:hover,.cat-chip.act{background:rgba(229,57,53,.12);border-color:var(--pri);color:var(--pri)}
+
+/* Section heading with "see all" */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sh-title{font-size:.95rem;font-weight:700}
+.sh-more{font-size:.78rem;color:var(--pri);cursor:pointer;font-weight:600;display:flex;align-items:center;gap:4px}
+.sh-more:hover{text-decoration:underline}
+
+/* Horizontal scroll row */
+.h-scroll-row{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.h-scroll-row::-webkit-scrollbar{display:none}
+
+/* ══════════════════════════════════
+   PRODUCT CARD (simple)
+══════════════════════════════════ */
+.pcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:all .2s;flex-shrink:0}
+.pcard:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.pcard-img{width:100%;aspect-ratio:16/9;background:var(--bg4);overflow:hidden;position:relative}
+.pcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.pcard:hover .pcard-img img{transform:scale(1.04)}
+.pcard-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:2rem}
+.pcard-disc{position:absolute;top:7px;left:7px;background:var(--pri);color:#fff;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:4px}
+.pcard-oos{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#ef4444;letter-spacing:.04em}
+.pcard-fav{position:absolute;top:7px;right:7px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.5);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.82rem;transition:all .2s}
+.pcard-fav:hover{background:rgba(0,0,0,.7)}
+.pcard-body{padding:11px 12px}
+.pcard-name{font-size:.85rem;font-weight:700;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard-cat{font-size:.7rem;color:var(--txt3);margin-bottom:7px}
+.pcard-price{font-size:.95rem;font-weight:700;color:var(--pri)}
+.pcard-price-orig{font-size:.72rem;color:var(--txt3);text-decoration:line-through;margin-left:5px}
+.pcard-meta{display:flex;align-items:center;justify-content:space-between;margin-top:7px}
+.pcard-stock{font-size:.68rem;color:var(--txt3)}
+.pcard-stock.low{color:#f59e0b}
+.pcard-stock.out{color:#ef4444}
+.pcard-rating{font-size:.7rem;color:var(--gold);display:flex;align-items:center;gap:3px}
+
+/* Grid layouts */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.pgrid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:900px){.pgrid-5{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.pgrid-5{grid-template-columns:repeat(2,1fr)}.pgrid{grid-template-columns:repeat(2,1fr)}}
+/* Horizontal scroll card sizes */
+.pcard-h{width:180px}
+.pcard-h .pcard-img{aspect-ratio:4/3}
+@media(max-width:600px){.pcard-h{width:155px}}
+
+/* ══════════════════════════════════
+   PAYMENT LOGOS
+══════════════════════════════════ */
+.pay-methods{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.pm{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r3);padding:10px 12px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.pm:hover,.pm.sel{border-color:var(--pri);background:rgba(229,57,53,.08)}
+.pm-logo{height:26px;object-fit:contain;width:auto;max-width:80px}
+.pm-logo-fallback{height:26px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--txt2)}
+.pm-label{font-size:.7rem;color:var(--txt2);font-weight:600}
+.pm.sel .pm-label{color:var(--pri)}
+
+/* ══════════════════════════════════
+   PROFILE / ACCOUNT
+══════════════════════════════════ */
+.prof-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.prof-av{width:60px;height:60px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff;flex-shrink:0}
+.prof-balance-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.prof-bal-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:14px;text-align:center}
+.prof-bal-val{font-size:1.1rem;font-weight:700;color:var(--pri);margin-bottom:2px}
+.prof-bal-lbl{font-size:.68rem;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em}
+.prof-chat-btn{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:14px 16px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.prof-chat-btn:hover{border-color:var(--cyan);background:rgba(6,182,212,.05)}
+.prof-chat-av{width:38px;height:38px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.prof-act-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.prof-act-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.prof-act-item:hover{border-color:var(--pri);background:var(--pri-g)}
+.prof-act-icon{font-size:1.4rem;margin-bottom:4px}
+.prof-act-lbl{font-size:.65rem;color:var(--txt2);line-height:1.3}
+.prof-act-num{position:absolute;top:5px;right:5px;background:var(--pri);color:#fff;width:15px;height:15px;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:.55rem;font-weight:700}
+.prof-act-num.show{display:flex}
+.help-list{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);overflow:hidden;margin-bottom:14px}
+.hi{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:all .2s}
+.hi:last-child{border-bottom:none}
+.hi:hover{background:var(--bg3)}
+.hi-ico{width:36px;height:36px;border-radius:8px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.hi-txt{flex:1;font-size:.85rem;font-weight:600}
+.hi-arr{color:var(--txt3);font-size:.8rem;transition:transform .2s}
+.hi:hover .hi-arr{transform:translateX(3px);color:var(--pri)}
+
+/* ══════════════════════════════════
+   CHAT
+══════════════════════════════════ */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh-156px);min-height:420px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.chat-hdr{padding:14px 16px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.chat-hdr-av{width:36px;height:36px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#fff;flex-shrink:0}
+.chat-online{display:flex;align-items:center;gap:5px;font-size:.68rem;color:var(--green)}
+.chat-online-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pd 2s ease-in-out infinite}
+@keyframes pd{0%,100%{opacity:1}50%{opacity:.4}}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.msg-wrap{display:flex;gap:7px;max-width:75%;align-items:flex-end}
+.msg-wrap.mine{align-self:flex-end;flex-direction:row-reverse}
+.msg-av{width:26px;height:26px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;flex-shrink:0}
+.msg-av.ow{background:var(--pri);color:#fff}
+.mbub{padding:9px 13px;border-radius:12px;font-size:.83rem;line-height:1.5;word-break:break-word}
+.mbub.theirs{background:var(--bg4);border:1px solid var(--border);border-bottom-left-radius:4px}
+.mbub.mine-b{background:var(--pri);color:#fff;border-bottom-right-radius:4px}
+.mmeta{font-size:.62rem;color:var(--txt3);margin-top:3px}
+.msg-wrap.mine .mmeta{text-align:right}
+.chat-date-sep{text-align:center;font-size:.65rem;color:var(--txt3);padding:4px 0}
+.chat-inp{padding:10px 14px;border-top:1px solid var(--border);background:var(--bg3);display:flex;gap:8px;align-items:center;flex-shrink:0}
+.chat-inp .inp{flex:1;border-radius:18px;padding:8px 14px;font-size:.85rem}
+.chat-send{width:36px;height:36px;border-radius:50%;background:var(--pri);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:.82rem;flex-shrink:0;transition:all .2s}
+.chat-send:hover{background:var(--pri2)}
+
+/* ══════════════════════════════════
+   ORDERS
+══════════════════════════════════ */
+.ocard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:14px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;transition:all .2s}
+.ocard:hover{border-color:var(--border2)}
+.o-thumb{width:48px;height:48px;border-radius:6px;background:var(--bg4);object-fit:cover;flex-shrink:0}
+.o-info{flex:1;min-width:140px}
+.o-id{font-size:.65rem;color:var(--txt3);margin-bottom:2px;font-variant-numeric:tabular-nums}
+.o-name{font-size:.85rem;font-weight:700;margin-bottom:4px}
+.o-amt{font-size:.88rem;font-weight:700;color:var(--pri)}
+.o-method{font-size:.7rem;color:var(--txt3);margin-top:2px}
+.delivery-box{background:var(--bg3);border:1px solid var(--green);border-radius:6px;padding:10px;font-size:.78rem;color:var(--green);word-break:break-all;margin-top:8px;font-variant-numeric:tabular-nums}
+
+/* ══════════════════════════════════
+   TOPUP
+══════════════════════════════════ */
+.info-box{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r3);padding:14px;margin-bottom:14px}
+
+/* ══════════════════════════════════
+   OWNER PANEL
+══════════════════════════════════ */
+.otabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:10px}
+.otab{background:none;border:1px solid transparent;color:var(--txt3);padding:5px 12px;border-radius:5px;cursor:pointer;font-family:var(--f);font-size:.76rem;font-weight:600;transition:all .2s}
+.otab.act,.otab:hover{border-color:var(--border2);color:var(--txt);background:var(--bg3)}
+.otab.act{border-color:var(--pri);color:var(--pri);background:rgba(229,57,53,.08)}
+.osec{display:none}
+.osec.act{display:block}
+.dtable{width:100%;border-collapse:collapse}
+.dtable th{background:var(--bg3);padding:8px 12px;text-align:left;font-size:.7rem;font-weight:700;text-transform:uppercase;color:var(--txt3);border-bottom:1px solid var(--border);white-space:nowrap;letter-spacing:.04em}
+.dtable td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:.82rem;vertical-align:middle}
+.dtable tr:hover td{background:var(--bg3)}
+.tscroll{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r3)}
+
+/* Upload area */
+.uparea{border:2px dashed var(--border2);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg3)}
+.uparea:hover{border-color:var(--pri);background:rgba(229,57,53,.05)}
+.uppreview{max-width:100%;max-height:130px;object-fit:contain;margin-top:10px;border-radius:6px;display:none}
+
+/* ══════════════════════════════════
+   NOTIF PANEL
+══════════════════════════════════ */
+#notifPanel{display:none;position:fixed;top:62px;right:14px;z-index:800;width:305px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);box-shadow:0 10px 40px rgba(0,0,0,.5);animation:min .2s ease}
+.notif-item{padding:11px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:all .18s;display:flex;gap:9px;align-items:flex-start}
+.notif-item:last-child{border-bottom:none}
+.notif-item:hover{background:var(--bg3)}
+.notif-item.unread{background:rgba(229,57,53,.04)}
+.notif-ic{width:30px;height:30px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:.82rem;flex-shrink:0}
+.notif-body{flex:1;min-width:0}
+.notif-title{font-size:.78rem;font-weight:700;margin-bottom:2px}
+.notif-sub{font-size:.7rem;color:var(--txt2);line-height:1.4}
+.notif-time{font-size:.62rem;color:var(--txt3);margin-top:3px}
+.notif-empty{text-align:center;padding:28px 14px;color:var(--txt3);font-size:.78rem}
+
+/* ══════════════════════════════════
+   CHAT NOTIFICATION BUBBLE
+══════════════════════════════════ */
+#chatNotifBubble{position:fixed;bottom:74px;right:14px;z-index:1000;display:none;flex-direction:column;gap:7px;max-width:300px;pointer-events:none}
+@media(min-width:769px){#chatNotifBubble{bottom:20px}}
+.chat-notif-card{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;box-shadow:0 6px 28px rgba(0,0,0,.4);animation:tin .3s ease;display:flex;align-items:flex-start;gap:9px;cursor:pointer;pointer-events:auto;transition:all .2s}
+.chat-notif-card:hover{border-color:var(--pri)}
+.chat-notif-av{width:34px;height:34px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:.85rem;color:#fff;flex-shrink:0}
+.chat-notif-body{flex:1;min-width:0}
+.chat-notif-name{font-size:.72rem;font-weight:700;color:var(--pri);margin-bottom:1px}
+.chat-notif-text{font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.chat-notif-time{font-size:.62rem;color:var(--txt3);margin-top:2px}
+.chat-notif-close{background:none;border:none;color:var(--txt3);cursor:pointer;font-size:.8rem;flex-shrink:0;padding:0 2px}
+.chat-notif-close:hover{color:var(--txt)}
+
+/* ══════════════════════════════════
+   MISC UTILITIES
+══════════════════════════════════ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:700px){.g2,.g3{grid-template-columns:1fr}}
+.flex{display:flex}.frow{display:flex;align-items:center}.fbetween{display:flex;align-items:center;justify-content:space-between}.fwrap{flex-wrap:wrap}
+.gap1{gap:5px}.gap2{gap:9px}.gap3{gap:14px}
+.mb1{margin-bottom:6px}.mb2{margin-bottom:12px}.mb3{margin-bottom:18px}.mb4{margin-bottom:24px}
+.mt1{margin-top:6px}.mt2{margin-top:12px}.mt3{margin-top:20px}
+.tc{text-align:center}
+.pri{color:var(--pri)}.tg{color:var(--gold)}.tgr{color:var(--green)}.td{color:var(--txt2)}.tm{color:var(--txt3)}
+.tsm{font-size:.82rem}.txs{font-size:.7rem}.tbold{font-weight:700}
+.sep{border:none;border-top:1px solid var(--border);margin:14px 0}
+.empty{text-align:center;padding:48px 20px;color:var(--txt2)}
+.empty i{font-size:2.2rem;color:var(--txt3);margin-bottom:10px;display:block}
+.stars{color:var(--gold);letter-spacing:-.1em}
+.rcard{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:14px;transition:all .2s}
+.rcard:hover{border-color:var(--border2)}
+
+/* komplain */
+.ki{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:13px;margin-bottom:9px;display:flex;gap:10px;align-items:flex-start}
+.ki-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.ki-dot.open{background:#f59e0b}
+.ki-dot.resolved{background:var(--green)}
+
+/* owner chat two-panel */
+.oc-wrap{display:grid;grid-template-columns:210px 1fr;gap:12px;height:500px}
+.oc-side{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);overflow:hidden;display:flex;flex-direction:column}
+.oc-side-ttl{padding:11px 14px;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--txt3);border-bottom:1px solid var(--border);background:var(--bg3)}
+.oc-ulist{overflow-y:auto;flex:1}
+.oc-ui{padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:8px}
+.oc-ui:hover,.oc-ui.act{background:rgba(229,57,53,.08)}
+.oc-av{width:30px;height:30px;border-radius:50%;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}
+.oc-unr{margin-left:auto;background:var(--pri);color:#fff;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;flex-shrink:0}
+.oc-main{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);overflow:hidden;display:flex;flex-direction:column}
+
+/* scroll fade for horizontal rows */
+.scroll-container{position:relative}
+.scroll-arrow{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;background:var(--bg3);border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;color:var(--txt2);transition:all .2s;font-size:.8rem}
+.scroll-arrow:hover{border-color:var(--pri);color:var(--pri)}
+.scroll-arrow.left{left:-14px}
+.scroll-arrow.right{right:-14px}
+@media(max-width:600px){.scroll-arrow{display:none}}
+
+/* ══════════════════════════════════
+   CATALOG CHIP ICON from owner
+══════════════════════════════════ */
+.cat-manage-item{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.cat-manage-item img{width:32px;height:32px;border-radius:6px;object-fit:cover}
+.cat-manage-icon-ph{width:32px;height:32px;border-radius:6px;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+</style>
+</head>
+<body>
+
+
+
+<!-- TOAST -->
+<div id="TC"></div>
+
+<div id="APP">
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-logo" onclick="goSec('home')">DOOMINIKS<span>STORE</span></div>
+  <div class="nav-search">
+    <i class="fas fa-search"></i>
+    <input id="navSearch" placeholder="Cari produk..." oninput="doNavSearch(this.value)" onkeypress="if(event.key==='Enter')goSearchResults()">
+  </div>
+  <div class="nav-right">
+    <div class="nav-icon-btn" id="navBell" style="display:none" onclick="toggleNotifPanel()" title="Notifikasi">
+      <i class="fas fa-bell"></i>
+      <span class="num" id="bellBadge"></span>
+    </div>
+    <div class="nav-icon-btn" id="nChat" style="display:none" onclick="goSec('chat')" title="Chat">
+      <i class="fas fa-comments"></i>
+      <span class="dot" id="navChatDot"></span>
+    </div>
+    <a class="discord-btn" id="navDiscord" href="#" target="_blank"><i class="fab fa-discord"></i></a>
+    <button class="btn-login" onclick="openM('mAuth')" id="nLogin">Login</button>
+    <div class="nav-avatar" id="navAv" style="display:none" onclick="goSec('profile')">U</div>
+    <button class="btn btn-sm btn-danger" onclick="doLogout()" id="nLogout" style="display:none">Logout</button>
+    <button class="btn btn-sm" onclick="goSec('owner')" id="nOwner" style="display:none;border-color:var(--pri);color:var(--pri)">⚙</button>
+  </div>
+</nav>
+
+<!-- NOTIF DROPDOWN -->
+<div id="notifPanel">
+  <div style="padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+    <span style="font-size:.85rem;font-weight:700">Notifikasi</span>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span onclick="clearNotifs()" style="font-size:.72rem;color:var(--txt3);cursor:pointer">Hapus</span>
+      <button onclick="closeNotifPanel()" style="background:none;border:none;color:var(--txt3);cursor:pointer;font-size:.85rem">✕</button>
+    </div>
+  </div>
+  <div id="notifList"></div>
+</div>
+
+<!-- CHAT NOTIF BUBBLE -->
+<div id="chatNotifBubble"></div>
+
+<!-- BOTTOM NAV -->
+<div id="bNav">
+  <button class="bni act" data-bs="home" onclick="goSec('home');setBNav(this)"><i class="fas fa-home"></i>Home</button>
+  <button class="bni" data-bs="products" onclick="goSec('products');setBNav(this)"><i class="fas fa-bolt"></i>Produk</button>
+  <button class="bni" data-bs="orders" onclick="goSec('orders');setBNav(this)"><i class="fas fa-box"></i>Order<span class="bni-badge" id="bnavBadge"></span></button>
+  <button class="bni" data-bs="favorit" onclick="goSec('favorit');setBNav(this)"><i class="fas fa-heart"></i>Favorit</button>
+  <button class="bni" data-bs="profile" onclick="goSec('profile');setBNav(this)"><i class="fas fa-user"></i>Akun</button>
+</div>
+
+<!-- ════════════════════════════════════
+  HOME SECTION
+════════════════════════════════════ -->
+<section class="sec act" id="sec-home">
+  <!-- Hero Banner -->
+  <div class="hero-banner">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h1>Digital Store<br><span>Terpercaya</span></h1>
+        <p>Game top up, akun, dan produk digital terbaik.<br>Transaksi cepat & aman.</p>
+        <div class="hero-btns">
+          <button class="btn btn-red" onclick="goSec('products')"><i class="fas fa-shopping-bag"></i> Belanja Sekarang</button>
+          <a class="btn" id="heroDiscord" href="#" target="_blank" style="border-color:#5865f2;color:#7289da"><i class="fab fa-discord"></i> Discord</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search + Filter Bar -->
+  <div class="home-search-wrap">
+    <div class="home-search-inner">
+      <div class="home-search-box">
+        <i class="fas fa-search"></i>
+        <input id="homeSearch" placeholder="Cari produk, game, topup..." oninput="filterHomeProds(this.value)">
+      </div>
+      <select class="inp" style="width:130px;padding:9px 10px;font-size:.82rem" id="homeSort" onchange="filterHomeProds()">
+        <option value="">Terbaru</option>
+        <option value="pa">Harga ↑</option>
+        <option value="pd">Harga ↓</option>
+        <option value="rat">Rating</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Catalog Chips -->
+  <div class="catalog-strip">
+    <div class="catalog-inner" id="homeCatalogStrip">
+      <div class="cat-chip act" data-cat="" onclick="setCat('',this)">
+        <div class="cat-chip-icon">🔥</div>
+        <span>Semua</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ctn" style="padding-top:20px">
+
+    <!-- Catalog Sections (dynamic) -->
+    <div id="homeCatalogSections"></div>
+
+    <!-- All Products Fallback -->
+    <div id="homeAllProds">
+      <div class="sh mb2 mt2">
+        <span class="sh-title">Semua Produk</span>
+        <span class="sh-more" onclick="goSec('products')">Lihat Semua <i class="fas fa-chevron-right"></i></span>
+      </div>
+      <div class="pgrid" id="homeProdsGrid"><div class="empty"><i class="fas fa-spinner fa-spin"></i></div></div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="mb4 mt4">
+      <div class="sh mb2"><span class="sh-title">Ulasan Terbaru</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px" id="homeRevs"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  FAVORIT
+════════════════════════════════════ -->
+<section class="sec" id="sec-favorit">
+  <div class="ctn" style="padding-top:20px">
+    <div class="sec-hd">❤ Favorit Saya</div>
+    <div class="sec-hd-sm">Produk yang kamu simpan</div>
+    <div class="pgrid" id="favGrid">
+      <div class="empty"><i class="fas fa-heart"></i><p>Belum ada favorit</p><p class="txs td mt1">Tekan ❤ pada produk</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  PRODUCTS
+════════════════════════════════════ -->
+<section class="sec" id="sec-products">
+  <div class="ctn" style="padding-top:20px">
+    <div class="fbetween fwrap gap2 mb3">
+      <div><div class="sec-hd">Semua Produk</div></div>
+      <div class="frow gap2 fwrap">
+        <div style="position:relative">
+          <i class="fas fa-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--txt3);font-size:.8rem;pointer-events:none"></i>
+          <input class="inp" style="width:180px;padding-left:32px;border-radius:18px;font-size:.82rem" placeholder="Cari..." id="psearch" oninput="renderProds()">
+        </div>
+        <select class="inp" style="width:130px;font-size:.82rem" id="psort" onchange="renderProds()">
+          <option value="">Default</option>
+          <option value="pa">Harga ↑</option>
+          <option value="pd">Harga ↓</option>
+          <option value="rat">Rating</option>
+          <option value="new">Terbaru</option>
+        </select>
+        <select class="inp" style="width:140px;font-size:.82rem" id="pcat" onchange="renderProds()">
+          <option value="">Semua Kategori</option>
+        </select>
+      </div>
+    </div>
+    <div class="pgrid" id="prodsGrid"><div class="empty"><i class="fas fa-spinner fa-spin"></i></div></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  REVIEWS
+════════════════════════════════════ -->
+<section class="sec" id="sec-reviews">
+  <div class="ctn" style="padding-top:20px">
+    <div class="sec-hd">Ulasan Pelanggan</div>
+    <div class="frow gap2 mb3 fwrap">
+      <select class="inp" style="width:180px;font-size:.82rem" id="revFilter" onchange="renderReviews()"><option value="">Semua Produk</option></select>
+      <select class="inp" style="width:150px;font-size:.82rem" id="revSort" onchange="renderReviews()">
+        <option value="new">Terbaru</option>
+        <option value="top">Rating Tertinggi</option>
+        <option value="low">Rating Terendah</option>
+      </select>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px" id="revGrid"></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  ORDERS
+════════════════════════════════════ -->
+<section class="sec" id="sec-orders">
+  <div class="ctn" style="padding-top:20px">
+    <div class="fbetween mb3">
+      <div class="sec-hd">Pesanan Saya</div>
+      <select class="inp" style="width:150px;font-size:.82rem" id="ordFilter" onchange="renderOrders()">
+        <option value="">Semua Status</option>
+        <option value="pending">Pending</option>
+        <option value="processing">Diproses</option>
+        <option value="delivered">Terkirim</option>
+        <option value="cancelled">Dibatalkan</option>
+      </select>
+    </div>
+    <div id="ordList"><div class="empty"><i class="fas fa-spinner fa-spin"></i></div></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  PROFILE / AKUN
+════════════════════════════════════ -->
+<section class="sec" id="sec-profile">
+  <div class="ctn-sm" style="padding-top:20px">
+    <!-- Profile Header -->
+    <div class="prof-card mb3">
+      <div class="prof-av" id="profAv">U</div>
+      <div style="flex:1">
+        <div style="font-size:1rem;font-weight:700" id="profName">Username</div>
+        <div id="profBadges" style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap"></div>
+        <div style="font-size:.75rem;color:var(--txt3);margin-top:3px" id="profEmail"></div>
+        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+          <button class="btn btn-sm" onclick="openEditProfile()"><i class="fas fa-pen"></i> Edit</button>
+          <button class="btn btn-sm btn-red" onclick="goSec('topup')"><i class="fas fa-wallet"></i> Top Up</button>
+        </div>
+      </div>
+    </div>
+    <!-- Balances -->
+    <div class="prof-balance-row mb3">
+      <div class="prof-bal-item"><div class="prof-bal-val" id="profBal">Rp 0</div><div class="prof-bal-lbl">Balance</div></div>
+      <div class="prof-bal-item"><div class="prof-bal-val tg" id="profCoins">0 🪙</div><div class="prof-bal-lbl">Coins</div></div>
+      <div class="prof-bal-item"><div class="prof-bal-val" id="profOrdC">0</div><div class="prof-bal-lbl">Order</div></div>
+    </div>
+    <!-- Quick Chat -->
+    <div class="prof-chat-btn mb2" onclick="goSec('chat')">
+      <div class="prof-chat-av">💬</div>
+      <div style="flex:1">
+        <div style="font-size:.85rem;font-weight:600">Support Chat</div>
+        <div style="font-size:.72rem;color:var(--txt2);display:flex;align-items:center;gap:5px;margin-top:2px">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pd 2s infinite"></span>
+          Online &bull; Siap membantu
+        </div>
+      </div>
+      <span id="profChatUnread" style="display:none;background:var(--pri);color:#fff;min-width:18px;height:18px;border-radius:9px;align-items:center;justify-content:center;font-size:.62rem;font-weight:700;padding:0 4px"></span>
+      <i class="fas fa-chevron-right tm"></i>
+    </div>
+    <!-- Activity -->
+    <div class="prof-act-grid mb2">
+      <div class="prof-act-item" onclick="goSec('orders');setTimeout(()=>{document.getElementById('ordFilter').value='pending';renderOrders()},200)">
+        <div class="prof-act-num" id="actCountPending"></div>
+        <div class="prof-act-icon">⏳</div>
+        <div class="prof-act-lbl">Menunggu<br>Bayar</div>
+      </div>
+      <div class="prof-act-item" onclick="goSec('orders');setTimeout(()=>{document.getElementById('ordFilter').value='processing';renderOrders()},200)">
+        <div class="prof-act-num" id="actCountProcessing"></div>
+        <div class="prof-act-icon">🚚</div>
+        <div class="prof-act-lbl">Diproses</div>
+      </div>
+      <div class="prof-act-item" onclick="goSec('orders');setTimeout(()=>{document.getElementById('ordFilter').value='delivered';renderOrders()},200)">
+        <div class="prof-act-num" id="actCountDelivered"></div>
+        <div class="prof-act-icon">📦</div>
+        <div class="prof-act-lbl">Terkirim</div>
+      </div>
+      <div class="prof-act-item" onclick="goSec('orders')">
+        <div class="prof-act-num" id="actCountDone"></div>
+        <div class="prof-act-icon">✅</div>
+        <div class="prof-act-lbl">Semua<br>Order</div>
+      </div>
+    </div>
+    <!-- Help -->
+    <div class="help-list mb3">
+      <div class="hi" onclick="openM('mKendala')"><div class="hi-ico">⚠️</div><div class="hi-txt">Kendala Pesanan</div><i class="fas fa-chevron-right hi-arr"></i></div>
+      <div class="hi" onclick="openM('mPusatBantuan')"><div class="hi-ico">❓</div><div class="hi-txt">Pusat Bantuan</div><i class="fas fa-chevron-right hi-arr"></i></div>
+      <div class="hi" onclick="openKomplain()"><div class="hi-ico">📋</div><div class="hi-txt">Daftar Komplain</div><i class="fas fa-chevron-right hi-arr"></i></div>
+    </div>
+    <!-- My Reviews -->
+    <div class="sec-hd mb2">Ulasan Saya</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px" id="myRevs"></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  CHAT
+════════════════════════════════════ -->
+<section class="sec" id="sec-chat">
+  <div class="ctn" style="padding-top:16px">
+    <div style="chat-wrap" class="chat-wrap" style="height:calc(100vh - 150px)">
+      <div class="chat-hdr">
+        <div class="chat-hdr-av">S</div>
+        <div style="flex:1">
+          <div style="font-size:.88rem;font-weight:700">Support — DOOMINIKS</div>
+          <div class="chat-online"><span class="chat-online-dot"></span>Online</div>
+        </div>
+        <button class="btn btn-sm btn-ghost" onclick="goSec('home')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="chat-msgs" id="chatMsgsFull">
+        <div class="empty"><i class="fas fa-comments"></i><p>Kirim pesan untuk memulai</p></div>
+      </div>
+      <div class="chat-inp" id="chatInpBar">
+        <input class="inp" id="chatInp" placeholder="Ketik pesan..." onkeypress="if(event.key==='Enter')sendMsg()">
+        <button class="chat-send" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  TOPUP
+════════════════════════════════════ -->
+<section class="sec" id="sec-topup">
+  <div class="ctn-sm" style="padding-top:20px">
+    <div class="sec-hd mb3">Top Up</div>
+    <div class="card card-p mb3">
+      <div class="ig">
+        <label class="lbl">Tipe Top Up</label>
+        <select class="inp" id="tuType" onchange="tuTypeChange()">
+          <option value="balance">Balance (IDR)</option>
+          <option value="coins">Coins (IDR → Coins)</option>
+        </select>
+      </div>
+      <div class="ig">
+        <label class="lbl" id="tuAmtLbl">Jumlah (IDR)</label>
+        <input class="inp" type="number" id="tuAmt" placeholder="Min Rp 5.000" min="5000">
+        <div class="form-hint" id="tuConv" style="display:none">🪙 Preview coins akan muncul setelah kamu isi jumlah</div>
+      </div>
+      <div class="ig">
+        <label class="lbl">Metode Pembayaran</label>
+        <div class="pay-methods" id="tuMethods">
+          <div class="pm" data-m="bca" onclick="selTuMethod(this)">
+            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="BCA">
+            <div class="pm-logo-fallback" style="display:none">BCA</div>
+            <div class="pm-label">BCA</div>
+          </div>
+          <div class="pm" data-m="bni" onclick="selTuMethod(this)">
+            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/id/5/55/BNI_logo.svg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="BNI">
+            <div class="pm-logo-fallback" style="display:none">BNI</div>
+            <div class="pm-label">BNI</div>
+          </div>
+          <div class="pm" data-m="seabank" onclick="selTuMethod(this)">
+            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/SeaBank_Logo.svg/512px-SeaBank_Logo.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="SeaBank">
+            <div class="pm-logo-fallback" style="display:none">SeaBank</div>
+            <div class="pm-label">SeaBank</div>
+          </div>
+          <div class="pm" data-m="gopay" onclick="selTuMethod(this)">
+            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Gopay_logo.svg/512px-Gopay_logo.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="GoPay">
+            <div class="pm-logo-fallback" style="display:none">GoPay</div>
+            <div class="pm-label">GoPay</div>
+          </div>
+          <div class="pm" data-m="dana" onclick="selTuMethod(this)">
+            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_dana_blue.svg/512px-Logo_dana_blue.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="DANA">
+            <div class="pm-logo-fallback" style="display:none">DANA</div>
+            <div class="pm-label">DANA</div>
+          </div>
+          <div class="pm" data-m="qris" onclick="selTuMethod(this)">
+            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_QRIS.svg/512px-Logo_QRIS.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="QRIS">
+            <div class="pm-logo-fallback" style="display:none">QRIS</div>
+            <div class="pm-label">QRIS</div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-red w100" onclick="procTopup()">Lanjutkan Pembayaran →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  OWNER PANEL
+════════════════════════════════════ -->
+<section class="sec" id="sec-owner">
+  <div class="ctn" style="padding-top:20px">
+    <div class="fbetween mb3 fwrap gap2">
+      <div><div class="sec-hd">⚙ Owner Panel</div></div>
+      <span class="badge bo"><i class="fas fa-crown"></i> OWNER</span>
+    </div>
+    <div class="otabs">
+      <button class="otab act" onclick="otab(this,'dash')">Dashboard</button>
+      <button class="otab" onclick="otab(this,'prods')">Produk</button>
+      <button class="otab" onclick="otab(this,'ords')">Orders</button>
+      <button class="otab" onclick="otab(this,'txs')">Transaksi</button>
+      <button class="otab" onclick="otab(this,'users')">Users</button>
+      <button class="otab" onclick="otab(this,'ochat')">Chat</button>
+      <button class="otab" onclick="otab(this,'catalog')">Katalog</button>
+      <button class="otab" onclick="otab(this,'discs')">Diskon</button>
+      <button class="otab" onclick="otab(this,'komplain')">Komplain</button>
+      <button class="otab" onclick="otab(this,'settings')">Settings</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="osec act" id="o-dash">
+      <div class="g3 mb3">
+        <div class="card card-p"><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Revenue</div><div style="font-size:1.6rem;font-weight:800;color:var(--pri)" id="oRev">Rp 0</div></div>
+        <div class="card card-p"><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Pending Orders</div><div style="font-size:1.6rem;font-weight:800" id="oPend">0</div></div>
+        <div class="card card-p"><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Total Users</div><div style="font-size:1.6rem;font-weight:800" id="oUc">0</div></div>
+        <div class="card card-p"><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Delivered</div><div style="font-size:1.6rem;font-weight:800;color:var(--green)" id="oDel">0</div></div>
+        <div class="card card-p"><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Pending Topup</div><div style="font-size:1.6rem;font-weight:800;color:var(--gold)" id="oPTx">0</div></div>
+        <div class="card card-p"><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Total Produk</div><div style="font-size:1.6rem;font-weight:800" id="oPrc">0</div></div>
+      </div>
+      <div class="card card-p">
+        <div style="font-size:.82rem;font-weight:700;margin-bottom:12px">Aktivitas Terbaru</div>
+        <div id="oLog"><div class="empty"><i class="fas fa-spinner fa-spin"></i></div></div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="osec" id="o-prods">
+      <div class="fbetween mb3">
+        <div style="font-size:.88rem;font-weight:700">Kelola Produk</div>
+        <button class="btn btn-sm btn-red" onclick="openAddProd()"><i class="fas fa-plus"></i> Tambah</button>
+      </div>
+      <div class="tscroll"><table class="dtable"><thead><tr><th>Img</th><th>Nama</th><th>Harga</th><th>Balance</th><th>Coins</th><th>Stok</th><th>Diskon</th><th>Rating</th><th>Aksi</th></tr></thead><tbody id="oProdTb"></tbody></table></div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="osec" id="o-ords">
+      <div class="fbetween mb3 fwrap gap2">
+        <div style="font-size:.88rem;font-weight:700">Manajemen Order</div>
+        <select class="inp" style="width:140px;font-size:.8rem" id="oOrdFilter" onchange="loadOOrders()">
+          <option value="">Semua Status</option>
+          <option value="pending">Pending</option>
+          <option value="processing">Processing</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div class="tscroll"><table class="dtable"><thead><tr><th>Order ID</th><th>Customer</th><th>Produk</th><th>Amount</th><th>Metode</th><th>Status</th><th>Proof</th><th>Aksi</th></tr></thead><tbody id="oOrdTb"></tbody></table></div>
+    </div>
+
+    <!-- TRANSACTIONS -->
+    <div class="osec" id="o-txs">
+      <div style="font-size:.88rem;font-weight:700;margin-bottom:14px">Riwayat Transaksi (Topup)</div>
+      <div class="tscroll"><table class="dtable"><thead><tr><th>TX ID</th><th>User</th><th>Tipe</th><th>Amount</th><th>Coins</th><th>Metode</th><th>Status</th><th>Tanggal</th><th>Proof</th><th>Aksi</th></tr></thead><tbody id="oTxTb"></tbody></table></div>
+    </div>
+
+    <!-- USERS -->
+    <div class="osec" id="o-users">
+      <div style="font-size:.88rem;font-weight:700;margin-bottom:14px">Manajemen User</div>
+      <div class="tscroll"><table class="dtable"><thead><tr><th>Username</th><th>Email</th><th>Balance</th><th>Coins</th><th>Badge</th><th>Orders</th><th>Aksi</th></tr></thead><tbody id="oUserTb"></tbody></table></div>
+    </div>
+
+    <!-- OWNER CHAT -->
+    <div class="osec" id="o-ochat">
+      <div style="font-size:.88rem;font-weight:700;margin-bottom:14px">Chat Customers</div>
+      <div class="oc-wrap">
+        <div class="oc-side">
+          <div class="oc-side-ttl">Customers</div>
+          <div class="oc-ulist" id="oChatList"><div style="padding:20px;text-align:center;color:var(--txt3);font-size:.8rem">Belum ada chat</div></div>
+        </div>
+        <div class="oc-main">
+          <div style="padding:12px 14px;background:var(--bg3);border-bottom:1px solid var(--border);font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:8px" id="oChatHdr"><i class="fas fa-user pri"></i><span id="oChatName">Pilih customer</span></div>
+          <div class="chat-msgs" id="oChatMsgs"><div class="empty"><i class="fas fa-comments"></i><p>Pilih customer</p></div></div>
+          <div class="chat-inp" id="oChatInpRow" style="display:none">
+            <input class="inp" id="oChatInp" placeholder="Balas customer..." style="flex:1" onkeypress="if(event.key==='Enter')sendOwnerMsg()">
+            <button class="chat-send" onclick="sendOwnerMsg()"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KATALOG MANAGEMENT -->
+    <div class="osec" id="o-catalog">
+      <div class="fbetween mb3">
+        <div style="font-size:.88rem;font-weight:700">Kelola Katalog</div>
+        <button class="btn btn-sm btn-red" onclick="openAddCatalog()"><i class="fas fa-plus"></i> Tambah Katalog</button>
+      </div>
+      <p style="font-size:.78rem;color:var(--txt3);margin-bottom:14px">Katalog akan muncul sebagai filter di halaman Home. Setiap katalog bisa punya ikon gambar dan terhubung ke kategori produk tertentu.</p>
+      <div id="oCatalogList"><div class="empty"><i class="fas fa-spinner fa-spin"></i></div></div>
+    </div>
+
+    <!-- DISCOUNTS -->
+    <div class="osec" id="o-discs">
+      <div class="fbetween mb3">
+        <div style="font-size:.88rem;font-weight:700">Kode Diskon</div>
+        <button class="btn btn-sm btn-red" onclick="openM('mDisc')"><i class="fas fa-plus"></i> Tambah</button>
+      </div>
+      <div class="tscroll"><table class="dtable"><thead><tr><th>Kode</th><th>Diskon</th><th>Min Beli</th><th>Sisa</th><th>Dibuat</th><th>Aksi</th></tr></thead><tbody id="oDiscTb"></tbody></table></div>
+    </div>
+
+    <!-- KOMPLAIN -->
+    <div class="osec" id="o-komplain">
+      <div class="fbetween mb3 fwrap gap2">
+        <div style="font-size:.88rem;font-weight:700">Manajemen Komplain</div>
+        <select class="inp" style="width:130px;font-size:.8rem" id="oKpFilter" onchange="oLoadKomplain()">
+          <option value="">Semua</option>
+          <option value="open">Open</option>
+          <option value="resolved">Resolved</option>
+        </select>
+      </div>
+      <div class="tscroll"><table class="dtable"><thead><tr><th>ID</th><th>User</th><th>Kategori</th><th>Order</th><th>Deskripsi</th><th>Status</th><th>Tanggal</th><th>Aksi</th></tr></thead><tbody id="oKpTb"></tbody></table></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="osec" id="o-settings">
+      <div class="g2 gap3" style="max-width:860px">
+        <div class="card card-p">
+          <div style="font-size:.85rem;font-weight:700;margin-bottom:14px">👤 Akun Owner</div>
+          <div class="ig"><label class="lbl">Username</label><input class="inp" id="sOwnerUN" placeholder="Username owner"></div>
+          <div class="ig"><label class="lbl">Password Lama</label><input class="inp" type="password" id="sOwnerOldPwd" placeholder="Password saat ini"></div>
+          <div class="ig"><label class="lbl">Password Baru</label><input class="inp" type="password" id="sOwnerPwd" placeholder="Min 6 karakter"></div>
+          <button class="btn btn-red w100" onclick="saveOwnerAcc()">Simpan Akun</button>
+        </div>
+        <div class="card card-p">
+          <div style="font-size:.85rem;font-weight:700;margin-bottom:14px">🏪 Pengaturan Toko</div>
+          <div class="ig"><label class="lbl">Discord Invite Link</label><input class="inp" id="sDiscord" placeholder="https://discord.gg/..."></div>
+          <div class="ig"><label class="lbl">Coin Rate — 1 Coin = IDR</label><input class="inp" type="number" id="sCoinRate" placeholder="1000"></div>
+          <div class="ig"><label class="lbl">Pengumuman Toko</label><textarea class="inp" id="sAnnounce" placeholder="Opsional..."></textarea></div>
+          <button class="btn btn-red w100" onclick="saveStoreSet()">Simpan</button>
+        </div>
+
+        <!-- WEBHOOK -->
+        <div class="card card-p" style="border-color:rgba(6,182,212,.3)">
+          <div style="font-size:.85rem;font-weight:700;margin-bottom:4px;color:var(--cyan)">🔔 Webhook</div>
+          <div style="font-size:.72rem;color:var(--txt3);margin-bottom:14px">Kirim notif otomatis ke Discord/Telegram/Custom endpoint.</div>
+          <div class="ig"><label class="lbl">Tipe</label>
+            <select class="inp" id="sWHType" onchange="whTypeChange()">
+              <option value="discord">Discord Webhook</option>
+              <option value="telegram">Telegram Bot</option>
+              <option value="custom">Custom HTTP</option>
+            </select>
+          </div>
+          <div id="whDiscordRow"><div class="ig"><label class="lbl">Discord Webhook URL</label><input class="inp" id="sWHDiscord" placeholder="https://discord.com/api/webhooks/..."></div></div>
+          <div id="whTelegramRow" style="display:none">
+            <div class="ig"><label class="lbl">Bot Token</label><input class="inp" id="sWHTGToken" placeholder="123456:ABCdef..."></div>
+            <div class="ig"><label class="lbl">Chat ID</label><input class="inp" id="sWHTGChat" placeholder="-100123456789"></div>
+          </div>
+          <div id="whCustomRow" style="display:none"><div class="ig"><label class="lbl">Custom URL (POST)</label><input class="inp" id="sWHCustom" placeholder="https://your-server.com/webhook"></div></div>
+          <div class="ig">
+            <label class="lbl">Notifikasi</label>
+            <div class="frow gap2 fwrap mt1">
+              <label style="display:flex;align-items:center;gap:5px;font-size:.8rem;cursor:pointer"><input type="checkbox" id="whEvtOrder" checked> Order Baru</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:.8rem;cursor:pointer"><input type="checkbox" id="whEvtChat" checked> Chat</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:.8rem;cursor:pointer"><input type="checkbox" id="whEvtStatus" checked> Status</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:.8rem;cursor:pointer"><input type="checkbox" id="whEvtTopup" checked> Topup</label>
+            </div>
+          </div>
+          <div class="frow gap2">
+            <button class="btn btn-sm" style="border-color:var(--cyan);color:var(--cyan)" onclick="testWebhook()">🧪 Test</button>
+            <button class="btn btn-sm btn-red w100" onclick="saveWebhookSet()">💾 Simpan</button>
+          </div>
+          <div id="whStatus" class="txs mt2 td"></div>
+        </div>
+
+        <!-- PAYMENT -->
+        <div class="card card-p">
+          <div style="font-size:.85rem;font-weight:700;margin-bottom:14px">💳 Akun Pembayaran</div>
+          <div class="ig"><label class="lbl">BCA — No Rekening &amp; Nama</label><input class="inp" id="sBCA" placeholder="1234567890 a.n. Nama"></div>
+          <div class="ig"><label class="lbl">BNI — No Rekening &amp; Nama</label><input class="inp" id="sBNI" placeholder="0987654321 a.n. Nama"></div>
+          <div class="ig"><label class="lbl">SeaBank</label><input class="inp" id="sSeabank" placeholder="08XXXXXXXXXX"></div>
+          <div class="ig"><label class="lbl">GoPay</label><input class="inp" id="sGopay" placeholder="08XXXXXXXXXX"></div>
+          <div class="ig"><label class="lbl">DANA</label><input class="inp" id="sDANA" placeholder="08XXXXXXXXXX"></div>
+          <div class="ig">
+            <label class="lbl">QRIS — Upload Gambar QR</label>
+            <div class="uparea" onclick="document.getElementById('qrisFile').click()">
+              <i class="fas fa-qrcode" style="font-size:2rem;color:var(--txt3);margin-bottom:8px;display:block"></i>
+              <div style="font-size:.82rem;color:var(--txt2)">Klik upload gambar QRIS</div>
+              <img id="qrisPrev" style="max-width:100%;max-height:120px;margin:10px auto 0;display:none;border-radius:6px">
+            </div>
+            <input type="file" id="qrisFile" accept="image/*" style="display:none" onchange="prevQris(this)">
+            <div class="form-hint" id="qrisStatus"></div>
+          </div>
+          <button class="btn btn-red w100" onclick="savePaySet()">Simpan Pembayaran</button>
+        </div>
+
+        <!-- REVIEWS -->
+        <div class="card card-p">
+          <div style="font-size:.85rem;font-weight:700;margin-bottom:14px">⭐ Kelola Ulasan</div>
+          <div id="oRevList" style="max-height:340px;overflow-y:auto"><div class="empty"><i class="fas fa-spinner fa-spin"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+  MODALS
+════════════════════════════════════ -->
+
+<!-- PRODUCT DETAIL / BUY -->
+<div class="moverlay" id="mBuy">
+  <div class="modal modal-lg">
+    <div class="mhead"><div class="mtitle" id="mBuyTitle">Produk</div><button class="mclose" onclick="closeM('mBuy')">✕</button></div>
+    <div id="mBuyBody" style="display:grid;grid-template-columns:160px 1fr;gap:16px;margin-bottom:16px"></div>
+    <div class="ig" id="buyMethodsWrap">
+      <label class="lbl">Metode Pembayaran (untuk IDR)</label>
+      <div class="pay-methods" id="buyMethods"></div>
+    </div>
+    <div class="ig">
+      <label class="lbl">Bayar Dengan</label>
+      <div class="frow gap2 fwrap">
+        <button class="btn" id="bwIDR" onclick="setBuyMode('idr')" style="flex:1"><i class="fas fa-money-bill"></i> IDR</button>
+        <button class="btn" id="bwCoin" onclick="setBuyMode('coin')" style="flex:1">🪙 Coins</button>
+        <button class="btn" id="bwBal" onclick="setBuyMode('balance')" style="flex:1"><i class="fas fa-wallet"></i> Balance</button>
+      </div>
+      <div class="form-hint" id="buyBalanceInfo" style="display:none"></div>
+    </div>
+    <div class="ig" id="discRow">
+      <label class="lbl">Kode Diskon</label>
+      <div class="frow gap2">
+        <input class="inp" id="discInp" placeholder="Masukkan kode...">
+        <button class="btn btn-sm" onclick="applyDisc()">Pakai</button>
+      </div>
+      <div id="discMsg" style="display:none;font-size:.75rem;margin-top:4px"></div>
+    </div>
+    <!-- CATATAN UNTUK SELLER -->
+    <div class="ig">
+      <label class="lbl">Catatan untuk Penjual <span style="color:var(--txt3);font-weight:400">(opsional)</span></label>
+      <textarea class="inp" id="buyNote" placeholder="Contoh: ID game, server, atau info tambahan..." style="min-height:64px;font-size:.83rem"></textarea>
+    </div>
+    <div class="info-box fbetween">
+      <span style="font-size:.82rem;color:var(--txt2)">Total:</span>
+      <span style="font-size:1.2rem;font-weight:700;color:var(--pri)" id="buyTotal">Rp 0</span>
+    </div>
+    <button class="btn btn-red w100" onclick="doBuy()">Konfirmasi &amp; Lanjutkan →</button>
+  </div>
+</div>
+
+<!-- PAYMENT PROOF -->
+<div class="moverlay" id="mPay">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle">Selesaikan Pembayaran</div><button class="mclose" onclick="closeM('mPay')">✕</button></div>
+    <div class="info-box" id="payInstr"></div>
+    <div id="payTotalBox" class="mb3"></div>
+    <div class="ig">
+      <label class="lbl">Upload Bukti Pembayaran</label>
+      <div class="uparea" onclick="document.getElementById('proofFile').click()">
+        <i class="fas fa-cloud-upload-alt" style="font-size:1.8rem;color:var(--txt3);margin-bottom:6px;display:block"></i>
+        <div style="font-size:.82rem;color:var(--txt2)">Klik upload screenshot</div>
+        <img id="proofPrev" class="uppreview">
+      </div>
+      <input type="file" id="proofFile" accept="image/*" style="display:none" onchange="prevProof(this)">
+    </div>
+    <button class="btn btn-red w100" onclick="submitProof()">Submit Bukti Bayar →</button>
+  </div>
+</div>
+
+<!-- TOPUP PAYMENT -->
+<div class="moverlay" id="mTuPay">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle">Top Up Payment</div><button class="mclose" onclick="closeM('mTuPay')">✕</button></div>
+    <div class="info-box" id="tuPayInstr"></div>
+    <div id="tuPayTotal" class="mb3"></div>
+    <div class="ig">
+      <label class="lbl">Upload Bukti Transfer</label>
+      <div class="uparea" onclick="document.getElementById('tuProofFile').click()">
+        <i class="fas fa-cloud-upload-alt" style="font-size:1.8rem;color:var(--txt3);margin-bottom:6px;display:block"></i>
+        <div style="font-size:.82rem;color:var(--txt2)">Klik upload screenshot</div>
+        <img id="tuProofPrev" class="uppreview">
+      </div>
+      <input type="file" id="tuProofFile" accept="image/*" style="display:none" onchange="prevTuProof(this)">
+    </div>
+    <button class="btn btn-red w100" onclick="submitTuProof()">Submit Topup →</button>
+  </div>
+</div>
+
+<!-- AUTH -->
+<div class="moverlay" id="mAuth">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle" id="mAuthTitle">Masuk</div><button class="mclose" onclick="closeM('mAuth')">✕</button></div>
+    <div class="atabs">
+      <button class="atab act" id="atLogin" onclick="switchAuth('login')">Login</button>
+      <button class="atab" id="atReg" onclick="switchAuth('reg')">Daftar</button>
+    </div>
+    <div id="fLogin">
+      <div class="ig"><label class="lbl">Username</label><input class="inp" id="lUN" placeholder="Username kamu"></div>
+      <div class="ig"><label class="lbl">Password</label><input class="inp" type="password" id="lPW" placeholder="Password" onkeypress="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn btn-red w100 mt1" onclick="doLogin()">Login</button>
+    </div>
+    <div id="fReg" style="display:none">
+      <div class="ig"><label class="lbl">Username (a-z, 0-9, _, -)</label><input class="inp" id="rUN" placeholder="Pilih username"></div>
+      <div class="ig"><label class="lbl">Email</label><input class="inp" type="email" id="rEM" placeholder="email@kamu.com"></div>
+      <div class="ig"><label class="lbl">Password (min 6 karakter)</label><input class="inp" type="password" id="rPW" placeholder="Buat password"></div>
+      <button class="btn btn-red w100 mt1" onclick="doReg()">Buat Akun</button>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEW -->
+<div class="moverlay" id="mRev">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle">Tulis Ulasan</div><button class="mclose" onclick="closeM('mRev')">✕</button></div>
+    <input type="hidden" id="revOrdId"><input type="hidden" id="revProdId"><input type="hidden" id="revProdName">
+    <div class="ig">
+      <label class="lbl">Rating</label>
+      <div class="frow gap2" id="starPick" style="font-size:1.5rem">
+        <span onclick="setRating(1)" style="cursor:pointer">⭐</span><span onclick="setRating(2)" style="cursor:pointer">⭐</span><span onclick="setRating(3)" style="cursor:pointer">⭐</span><span onclick="setRating(4)" style="cursor:pointer">⭐</span><span onclick="setRating(5)" style="cursor:pointer">⭐</span>
+      </div>
+      <div style="font-size:.72rem;color:var(--txt3);margin-top:3px" id="ratingLbl">5 / 5 bintang</div>
+    </div>
+    <div class="ig"><label class="lbl">Ulasan</label><textarea class="inp" id="revText" placeholder="Ceritakan pengalamanmu..." style="min-height:90px"></textarea></div>
+    <button class="btn btn-red w100" onclick="submitRev()">Kirim Ulasan</button>
+  </div>
+</div>
+
+<!-- ADD/EDIT PRODUCT -->
+<div class="moverlay" id="mProd">
+  <div class="modal modal-xl">
+    <div class="mhead"><div class="mtitle" id="mProdTitle">Tambah Produk</div><button class="mclose" onclick="closeM('mProd')">✕</button></div>
+    <input type="hidden" id="eProdId">
+    <div class="g2">
+      <div>
+        <div class="ig"><label class="lbl">Nama Produk *</label><input class="inp" id="pName" placeholder="e.g. Mobile Legends 100 Diamonds"></div>
+        <div class="ig"><label class="lbl">Deskripsi *</label><textarea class="inp" id="pDesc" placeholder="Deskripsi produk..."></textarea></div>
+        <div class="ig"><label class="lbl">Harga IDR *</label><input class="inp" type="number" id="pPrice" placeholder="50000" min="0"></div>
+        <div class="ig"><label class="lbl">Harga Balance IDR (0 = tidak dijual)</label><input class="inp" type="number" id="pBalPrice" placeholder="0" min="0"></div>
+        <div class="ig"><label class="lbl">Harga Coins (0 = tidak dijual)</label><input class="inp" type="number" id="pCoinP" placeholder="0" min="0"></div>
+        <div class="ig"><label class="lbl">Stok *</label><input class="inp" type="number" id="pStock" placeholder="10" min="0"></div>
+        <div class="ig"><label class="lbl">Kategori</label><input class="inp" id="pCat" placeholder="e.g. Mobile Legends, Game Key, Joki"></div>
+        <div class="ig"><label class="lbl">Isi Kiriman (setelah pembayaran)</label><textarea class="inp" id="pDeliv" placeholder="Username: xxx | Password: xxx"></textarea></div>
+      </div>
+      <div>
+        <div class="ig">
+          <label class="lbl">Gambar Produk</label>
+          <div class="uparea" onclick="document.getElementById('pImgFile').click()">
+            <i class="fas fa-image" style="font-size:2rem;color:var(--txt3);margin-bottom:6px;display:block"></i>
+            <div style="font-size:.82rem;color:var(--txt2)">Klik upload gambar</div>
+            <div style="font-size:.7rem;color:var(--txt3);margin-top:3px">Max 2MB</div>
+            <img id="pImgPrev" class="uppreview">
+          </div>
+          <input type="file" id="pImgFile" accept="image/*" style="display:none" onchange="prevProdImg(this)">
+        </div>
+        <div class="ig"><label class="lbl">Atau URL Gambar</label><input class="inp" id="pImgUrl" placeholder="https://..." oninput="onPImgUrl()"></div>
+        <div class="ig"><label class="lbl">Diskon % (0 = tidak ada)</label><input class="inp" type="number" id="pDisc" placeholder="0" min="0" max="100"></div>
+        <div class="ig"><label class="lbl">Featured (tampil di Home)</label><select class="inp" id="pFeat"><option value="0">Tidak</option><option value="1">Ya</option></select></div>
+      </div>
+    </div>
+    <button class="btn btn-red w100 mt2" onclick="saveProd()">💾 Simpan Produk</button>
+  </div>
+</div>
+
+<!-- ADD CATALOG -->
+<div class="moverlay" id="mCatalog">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle" id="mCatalogTitle">Tambah Katalog</div><button class="mclose" onclick="closeM('mCatalog')">✕</button></div>
+    <input type="hidden" id="eCatalogId">
+    <div class="ig"><label class="lbl">Nama Katalog *</label><input class="inp" id="cName" placeholder="e.g. Mobile Legends, Free Fire, Joki"></div>
+    <div class="ig"><label class="lbl">Kategori Produk Terkait</label><input class="inp" id="cCat" placeholder="Harus cocok dengan kategori produk (case-sensitive)"></div>
+    <div class="ig">
+      <label class="lbl">Ikon Katalog (Upload Gambar)</label>
+      <div class="uparea" onclick="document.getElementById('catImgFile').click()">
+        <i class="fas fa-image" style="font-size:1.6rem;color:var(--txt3);margin-bottom:5px;display:block"></i>
+        <div style="font-size:.82rem;color:var(--txt2)">Klik upload ikon</div>
+        <img id="catImgPrev" style="max-width:80px;max-height:80px;margin:8px auto 0;display:none;border-radius:6px">
+      </div>
+      <input type="file" id="catImgFile" accept="image/*" style="display:none" onchange="prevCatImg(this)">
+    </div>
+    <div class="ig"><label class="lbl">Atau Emoji sebagai Ikon</label><input class="inp" id="cEmoji" placeholder="e.g. 🎮 🔥 ⚔️"></div>
+    <div class="ig"><label class="lbl">Tampilkan di Home?</label><select class="inp" id="cVisible"><option value="1">Ya</option><option value="0">Tidak</option></select></div>
+    <div class="ig"><label class="lbl">Urutan (lebih kecil = lebih depan)</label><input class="inp" type="number" id="cOrder" placeholder="0" min="0"></div>
+    <button class="btn btn-red w100" onclick="saveCatalog()">💾 Simpan Katalog</button>
+  </div>
+</div>
+
+<!-- ADD DISCOUNT -->
+<div class="moverlay" id="mDisc">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle">Tambah Kode Diskon</div><button class="mclose" onclick="closeM('mDisc')">✕</button></div>
+    <div class="ig"><label class="lbl">Kode Diskon</label><input class="inp" id="dCode" placeholder="DOOM20"></div>
+    <div class="ig"><label class="lbl">Persentase (%)</label><input class="inp" type="number" id="dPct" placeholder="20" min="1" max="100"></div>
+    <div class="ig"><label class="lbl">Min Pembelian IDR (0 = tanpa min)</label><input class="inp" type="number" id="dMin" placeholder="0" min="0"></div>
+    <div class="ig"><label class="lbl">Max Penggunaan (0 = unlimited)</label><input class="inp" type="number" id="dUses" placeholder="0" min="0"></div>
+    <button class="btn btn-red w100" onclick="saveDisc()">Buat Kode</button>
+  </div>
+</div>
+
+<!-- GIFT BADGE -->
+<div class="moverlay" id="mBadge">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle">🏅 Hadiah Badge</div><button class="mclose" onclick="closeM('mBadge')">✕</button></div>
+    <input type="hidden" id="badgeUID">
+    <div style="font-size:.82rem;color:var(--txt2);margin-bottom:14px" id="badgeUserInfo">Hadiahkan badge ke:</div>
+    <div class="ig">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="pm" onclick="selBadge('warrior',this)"><span class="badge bw">⚔ Warrior</span></div>
+        <div class="pm" onclick="selBadge('elite',this)"><span class="badge be">💎 Elite</span></div>
+        <div class="pm" onclick="selBadge('master',this)"><span class="badge bm">👑 Master</span></div>
+        <div class="pm" onclick="selBadge('grandmaster',this)"><span class="badge bg2c">🏆 Grandmaster</span></div>
+        <div class="pm" onclick="selBadge('mythical',this)" style="grid-column:span 2"><span class="badge bmy">🔥 Mythical</span></div>
+        <div class="pm" onclick="selBadge('',this)" style="grid-column:span 2;color:var(--txt3);font-size:.78rem;justify-content:center">✕ Hapus Badge</div>
+      </div>
+    </div>
+    <input type="hidden" id="selBadgeVal">
+    <button class="btn btn-red w100 mt2" onclick="giftBadge()">Konfirmasi</button>
+  </div>
+</div>
+
+<!-- EDIT PROFILE -->
+<div class="moverlay" id="mEditProf">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle">Edit Profil</div><button class="mclose" onclick="closeM('mEditProf')">✕</button></div>
+    <div class="ig"><label class="lbl">Nama Tampilan</label><input class="inp" id="epName" placeholder="Nama kamu"></div>
+    <div class="ig"><label class="lbl">Password Baru (kosong = tidak berubah)</label><input class="inp" type="password" id="epPwd" placeholder="Password baru"></div>
+    <button class="btn btn-red w100" onclick="saveProfile()">Simpan</button>
+  </div>
+</div>
+
+<!-- VIEW PROOF -->
+<div class="moverlay" id="mViewProof">
+  <div class="modal modal-lg">
+    <div class="mhead"><div class="mtitle">Bukti Pembayaran</div><button class="mclose" onclick="closeM('mViewProof')">✕</button></div>
+    <img id="proofImg" src="" style="width:100%;border-radius:8px;max-height:70vh;object-fit:contain">
+  </div>
+</div>
+
+<!-- KENDALA PESANAN -->
+<div class="moverlay" id="mKendala">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle">⚠️ Kendala Pesanan</div><button class="mclose" onclick="closeM('mKendala')">✕</button></div>
+    <div class="help-list">
+      <div class="hi" onclick="closeM('mKendala');goSec('chat')"><div class="hi-ico">💬</div><div><div class="hi-txt">Chat Support</div><div style="font-size:.72rem;color:var(--txt3)">Tanya langsung ke tim</div></div><i class="fas fa-chevron-right hi-arr"></i></div>
+      <div class="hi" onclick="closeM('mKendala');openKomplainForm('Pesanan tidak diterima')"><div class="hi-ico">📦</div><div><div class="hi-txt">Pesanan Tidak Diterima</div><div style="font-size:.72rem;color:var(--txt3)">Belum masuk setelah bayar</div></div><i class="fas fa-chevron-right hi-arr"></i></div>
+      <div class="hi" onclick="closeM('mKendala');openKomplainForm('Produk tidak sesuai')"><div class="hi-ico">❌</div><div><div class="hi-txt">Produk Tidak Sesuai</div><div style="font-size:.72rem;color:var(--txt3)">Beda dari deskripsi</div></div><i class="fas fa-chevron-right hi-arr"></i></div>
+      <div class="hi" onclick="closeM('mKendala');openKomplainForm('Masalah pembayaran')"><div class="hi-ico">💳</div><div><div class="hi-txt">Masalah Pembayaran</div><div style="font-size:.72rem;color:var(--txt3)">Transfer belum diverifikasi</div></div><i class="fas fa-chevron-right hi-arr"></i></div>
+    </div>
+  </div>
+</div>
+
+<!-- PUSAT BANTUAN -->
+<div class="moverlay" id="mPusatBantuan">
+  <div class="modal modal-lg">
+    <div class="mhead"><div class="mtitle">❓ Pusat Bantuan</div><button class="mclose" onclick="closeM('mPusatBantuan')">✕</button></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="card card-p">
+        <div style="font-weight:700;margin-bottom:8px;font-size:.88rem">🛒 Cara Pembelian</div>
+        <ol style="color:var(--txt2);font-size:.82rem;line-height:2.1;padding-left:18px">
+          <li>Buka <strong>Produk</strong> dan pilih item yang diinginkan</li>
+          <li>Klik <strong>Beli Sekarang</strong>, pilih metode bayar</li>
+          <li>Tambahkan catatan jika perlu (ID game, dll)</li>
+          <li>Transfer sesuai nominal &amp; upload bukti</li>
+          <li>Tunggu verifikasi owner ⚡</li>
+        </ol>
+      </div>
+      <div class="card card-p">
+        <div style="font-weight:700;margin-bottom:8px;font-size:.88rem;color:var(--gold)">🪙 Tentang Coins</div>
+        <div style="color:var(--txt2);font-size:.82rem;line-height:1.8">Coins bisa digunakan untuk beli produk dengan harga lebih hemat.<br>• Top Up IDR → Coins via menu Top Up<br>• Coins tidak bisa dikembalikan ke IDR</div>
+      </div>
+      <div class="frow gap2 fwrap">
+        <button class="btn w100" onclick="closeM('mPusatBantuan');goSec('chat')"><i class="fas fa-comments"></i> Live Chat</button>
+        <a class="btn w100" id="bantDiscord" href="#" target="_blank" style="justify-content:center;border-color:#5865f2;color:#7289da"><i class="fab fa-discord"></i> Discord</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM KOMPLAIN -->
+<div class="moverlay" id="mKomplainForm">
+  <div class="modal">
+    <div class="mhead"><div class="mtitle">📝 Buat Komplain</div><button class="mclose" onclick="closeM('mKomplainForm')">✕</button></div>
+    <div class="ig"><label class="lbl">Kategori</label><input class="inp" id="kpKat" readonly style="background:var(--bg4)"></div>
+    <div class="ig"><label class="lbl">Order ID (Opsional)</label><input class="inp" id="kpOrdId" placeholder="ORD-..."></div>
+    <div class="ig"><label class="lbl">Deskripsi Masalah</label><textarea class="inp" id="kpDesc" placeholder="Jelaskan detail masalahmu..."></textarea></div>
+    <button class="btn btn-red w100" onclick="submitKomplain()">Kirim Komplain →</button>
+  </div>
+</div>
+
+<!-- DAFTAR KOMPLAIN -->
+<div class="moverlay" id="mKomplainList">
+  <div class="modal modal-lg">
+    <div class="mhead">
+      <div class="mtitle">📋 Komplain Saya</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-sm btn-red" onclick="closeM('mKomplainList');openKomplainForm('Kendala lainnya')"><i class="fas fa-plus"></i> Baru</button>
+        <button class="mclose" onclick="closeM('mKomplainList')">✕</button>
+      </div>
+    </div>
+    <div id="komplainListEl"><div class="empty"><i class="fas fa-spinner fa-spin"></i></div></div>
+  </div>
+</div>
+
+
+
+<script>
+'use strict';
+// ================================================================
+// GLOBAL STATE
+// ================================================================
+let CU = null;          // current user
+let prods = [];         // all products
+let allRevs = [];       // all reviews
+let storeSet = {};      // store settings
+let paySet = {};        // payment settings
+let ownerCred = {};     // owner credentials
+let buyProd = null;     // product being bought
+let buyMode = 'idr';    // 'idr' or 'coin'
+let buyMethod = null;   // selected pay method id
+let appliedDisc = null; // applied discount object
+let rating = 5;         // current star rating
+let prodImgB64 = '';    // product image base64
+let proofB64 = '';      // payment proof base64
+let tuProofB64 = '';    // topup proof base64
+let chatUnsub = null;   // firebase listener unsubscribe
+let oChatUnsub = null;  // owner chat listener unsubscribe
+let oChatUID = null;    // owner: selected chat user
+let tuMethod = null;    // selected topup method
+let payContext = null;  // context object for current payment
+let qrisB64 = '';      // QRIS image base64
+let notifs = [];       // notification list
+const DEF_OWNER_UN = 'doominiks_owner';
+const DEF_OWNER_PW = 'doominiks123';
+
+// ================================================================
+// FIREBASE HELPERS
+// ================================================================
+function getFS()  { return window.FS; }
+function getRDB() { return window.RDB; }
+function getFO()  { return window.FO; }
+
+async function dbSet(col, id, data) {
+  await getFO().setDoc(getFO().doc(getFS(), col, id), data, { merge: true });
+}
+async function dbGet(col, id) {
+  const s = await getFO().getDoc(getFO().doc(getFS(), col, id));
+  return s.exists() ? { id: s.id, ...s.data() } : null;
+}
+async function dbGetAll(col) {
+  const s = await getFO().getDocs(getFO().collection(getFS(), col));
+  return s.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+async function dbAdd(col, data) {
+  data.createdAt = Date.now();
+  const r = await getFO().addDoc(getFO().collection(getFS(), col), data);
+  return r.id;
+}
+async function dbUpd(col, id, data) {
+  await getFO().updateDoc(getFO().doc(getFS(), col, id), data);
+}
+async function dbDel(col, id) {
+  await getFO().deleteDoc(getFO().doc(getFS(), col, id));
+}
+async function rtSet(path, val) {
+  await getFO().set(getFO().ref(getRDB(), path), val);
+}
+async function rtGet(path) {
+  const s = await getFO().get(getFO().ref(getRDB(), path));
+  return s.exists() ? s.val() : null;
+}
+function rtListen(path, cb) {
+  return getFO().onValue(getFO().ref(getRDB(), path), s => cb(s.exists() ? s.val() : null));
+}
+async function rtPush(path, data) {
+  data.ts = Date.now();
+  await getFO().push(getFO().ref(getRDB(), path), data);
+}
+// ================================================================
+// LOADING
+// ================================================================
+
+
+// Auto-init on load
+document.addEventListener('DOMContentLoaded', () => initApp());
+
+// ================================================================
+// INIT
+// ================================================================
+async function initApp() {
+  // Restore session
+  try { const s = localStorage.getItem('doomCU'); if (s) CU = JSON.parse(s); } catch(e) {}
+  // Wait Firebase
+  if (!window.firebaseReady) await new Promise(r => document.addEventListener('firebaseReady', r, {once:true}));
+  await loadSettings();
+  await loadAllProds();
+  await loadCatalogs();
+  renderCatalogStrip();
+  updateNav();
+  if (CU && !CU.isOwner) await refreshCU();
+  // Real-time stock
+  rtListen('stocks', stocks => {
+    if (!stocks) return;
+    prods.forEach(p => { if (stocks[p.id] !== undefined) p.stock = stocks[p.id]; });
+    if (document.getElementById('sec-products').classList.contains('act')) renderProds();
+  });
+  // Announcement
+  if (storeSet.announce) toast('📢 ' + storeSet.announce, 'inf');
+  if (CU) loadNotifs();
+  renderFeat();
+  loadHomeRevs();
+  updateHomeStats();
+}
+
+async function loadSettings() {
+  try {
+    const [ss, ps, os] = await Promise.all([dbGet('settings','store'), dbGet('settings','payments'), dbGet('settings','owner')]);
+    storeSet = ss || {};
+    paySet   = ps || {};
+    ownerCred = os || {};
+    applyDiscordLinks();
+  } catch(e) {}
+}
+
+function applyDiscordLinks() {
+  const link = storeSet.discord || '#';
+  document.getElementById('navDiscord').href = link;
+  document.getElementById('heroDiscord').href = link;
+  const bd = document.getElementById('bantDiscord');
+  if (bd) bd.href = link;
+}
+
+async function loadAllProds() {
+  try {
+    prods = await dbGetAll('products');
+    // Populate category filter
+    const cats = [...new Set(prods.map(p => p.cat).filter(Boolean))];
+    const pcatSel = document.getElementById('pcat');
+    cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; pcatSel.appendChild(o); });
+    // Populate review product filter
+    const rfSel = document.getElementById('revFilter');
+    prods.forEach(p => { const o = document.createElement('option'); o.value = p.id; o.textContent = p.name||p.id; rfSel.appendChild(o); });
+  } catch(e) {}
+}
+
+async function refreshCU() {
+  if (!CU || CU.isOwner) return;
+  try {
+    const fresh = await dbGet('users', CU.id);
+    if (fresh) { CU = {...CU, ...fresh}; saveCU(); }
+  } catch(e) {}
+}
+function saveCU() { localStorage.setItem('doomCU', JSON.stringify(CU)); }
+
+async function updateHomeStats() {
+  // Hero stats removed - clean design
+}
+
+// ================================================================
+// NAVIGATION
+// ================================================================
+function goSec(sec) {
+  if (['orders','profile','chat','topup','favorit'].includes(sec) && !CU) { openM('mAuth'); return; }
+  if (sec === 'owner' && (!CU || !CU.isOwner)) { toast('Access denied', 'err'); return; }
+  // If leaving chat section, mark chatIsOpen false
+  const prevSec = document.querySelector('.sec.act')?.id?.replace('sec-','');
+  if (prevSec === 'chat' && sec !== 'chat') onLeaveChatSec();
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('act'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('act'));
+  const el = document.getElementById('sec-'+sec);
+  if (el) el.classList.add('act');
+  const nb = document.querySelector(`.nb[data-sec="${sec}"]`);
+  if (nb) nb.classList.add('act');
+  // Sync bottom nav
+  setBNavByKey(sec);
+  // Lazy load
+  const loaders = {
+    home: () => { renderHomePage(); loadHomeRevs(); if(CU) loadActivityCounts(); },
+    products: renderProds,
+    reviews: loadRevs,
+    orders: loadOrders,
+    profile: loadProfile,
+    chat: initMyChat,
+    owner: initOwner,
+    favorit: renderFavGrid,
+  };
+  if (loaders[sec]) loaders[sec]();
+  window.scrollTo(0,0);
+}
+
+function updateNav() {
+  const li = !!CU;
+  document.getElementById('nLogin').style.display = li ? 'none' : '';
+  document.getElementById('nLogout').style.display = li ? '' : 'none';
+  document.getElementById('nChat').style.display = li && !CU.isOwner ? '' : 'none';
+  document.getElementById('navBell').style.display = li ? '' : 'none';
+  document.getElementById('navAv').style.display = li ? '' : 'none';
+  document.getElementById('nOwner').style.display = (li && CU.isOwner) ? '' : 'none';
+  const nLoginEl = document.getElementById('nLogin');
+  if(nLoginEl) nLoginEl.style.display = li ? 'none' : '';
+  if (li) {
+    document.getElementById('navAv').textContent = (CU.username||CU.id||'U')[0].toUpperCase();
+    loadActivityCounts();
+    loadNotifs();
+    loadProfChatUnread();
+    const bd = document.getElementById('bantDiscord');
+    if (bd) bd.href = storeSet.discord || '#';
+    if (!CU.isOwner) initChatListener();
+  }
+}
+
+// ================================================================
+// BOTTOM NAV
+// ================================================================
+function setBNav(el) {
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('act'));
+  if (el) el.classList.add('act');
+}
+function setBNavByKey(key) {
+  const el = document.querySelector(`.bnav-item[data-bsec="${key}"]`);
+  setBNav(el);
+}
+
+// ================================================================
+// RIWAYAT AKTIVITAS — count badges
+// ================================================================
+async function loadActivityCounts() {
+  if (!CU) return;
+  try {
+    const orders = await dbGetAll('orders');
+    const mine = orders.filter(o => o.userId === CU.id);
+    const counts = {
+      pending:    mine.filter(o => o.status === 'pending').length,
+      processing: mine.filter(o => o.status === 'processing').length,
+      delivered:  mine.filter(o => o.status === 'delivered').length,
+      total:      mine.length,
+    };
+    const setCount = (id, n) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.textContent = n;
+      // Support both act-count (old home) and prof-act-badge (new profile)
+      el.classList.toggle('show', n > 0);
+      el.style.display = n > 0 ? 'flex' : 'none';
+    };
+    setCount('actCountPending',    counts.pending);
+    setCount('actCountProcessing', counts.processing);
+    setCount('actCountDelivered',  counts.delivered);
+    setCount('actCountDone',       counts.total);
+    // Badge on bottom nav Transaksi
+    const txBadge = document.getElementById('bnavBadgeTx');
+    if (txBadge) {
+      const pending = counts.pending + counts.processing;
+      txBadge.textContent = pending;
+      txBadge.style.display = pending > 0 ? 'flex' : 'none';
+    }
+  } catch(e) {}
+}
+
+// Update profile chat unread badge
+function loadProfChatUnread() {
+  const el = document.getElementById('profChatUnread');
+  if (!el) return;
+  if (chatUnreadN > 0) {
+    el.textContent = chatUnreadN;
+    el.style.display = 'flex';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+// ================================================================
+// FAVORIT SYSTEM
+// ================================================================
+let favorites = JSON.parse(localStorage.getItem('doomFavs') || '[]');
+
+function saveFavs() { localStorage.setItem('doomFavs', JSON.stringify(favorites)); }
+
+function toggleFav(prodId, e) {
+  if (e) e.stopPropagation();
+  const idx = favorites.indexOf(prodId);
+  if (idx >= 0) {
+    favorites.splice(idx, 1);
+    toast('Dihapus dari Favorit','inf');
+  } else {
+    favorites.push(prodId);
+    toast('Ditambahkan ke Favorit ❤','ok');
+  }
+  saveFavs();
+  renderFavGrid();
+}
+
+function isFav(prodId) { return favorites.includes(prodId); }
+
+function renderFavGrid() {
+  const el = document.getElementById('favGrid');
+  if (!el) return;
+  const favProds = prods.filter(p => favorites.includes(p.id));
+  if (!favProds.length) {
+    el.innerHTML = '<div class="empty"><i class="fas fa-heart"></i><p>Belum ada favorit</p><p class="txs td mt1">Tekan ❤ pada produk</p></div>';
+    return;
+  }
+  el.innerHTML = favProds.map(p => pCard(p)).join('');
+}
+
+
+function openKomplain() {
+  if (!CU) { openM('mAuth'); return; }
+  loadKomplainList();
+  openM('mKomplainList');
+}
+
+function openKomplainForm(kategori) {
+  if (!CU) { openM('mAuth'); return; }
+  document.getElementById('kpKat').value = kategori || '';
+  document.getElementById('kpOrdId').value = '';
+  document.getElementById('kpDesc').value = '';
+  openM('mKomplainForm');
+}
+
+async function submitKomplain() {
+  if (!CU) { toast('Login dulu','err'); return; }
+  const kat  = document.getElementById('kpKat').value.trim();
+  const desc = document.getElementById('kpDesc').value.trim();
+  const ordId = document.getElementById('kpOrdId').value.trim();
+  if (!desc) { toast('Tulis deskripsi masalahmu','err'); return; }
+  try {
+    const kId = 'KP-' + Date.now();
+    await dbSet('komplain', kId, {
+      id: kId, userId: CU.id, username: CU.username||CU.id,
+      kategori: kat, orderId: ordId||'', deskripsi: desc,
+      status: 'open', createdAt: Date.now()
+    });
+    // Send webhook
+    sendWebhook('chat', {
+      'Tipe': '📋 Komplain Baru',
+      'User': CU.username||CU.id,
+      'Kategori': kat,
+      'Order ID': ordId||'-',
+      'Deskripsi': desc.slice(0,300),
+    }).catch(()=>{});
+    closeM('mKomplainForm');
+    toast('Komplain berhasil dikirim! Tim kami akan segera menindaklanjuti.','ok');
+    // Redirect to chat
+    setTimeout(() => { goSec('chat'); setBNavByKey('chat'); }, 800);
+  } catch(e) { toast('Gagal mengirim: '+e.message,'err'); }
+}
+
+async function loadKomplainList() {
+  const el = document.getElementById('komplainListEl');
+  if (!el||!CU) return;
+  el.innerHTML = '<div class="empty"><i class="fas fa-spinner fa-spin"></i></div>';
+  try {
+    const all = await dbGetAll('komplain');
+    const mine = all.filter(k => k.userId === CU.id).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    if (!mine.length) {
+      el.innerHTML = '<div class="empty"><i class="fas fa-clipboard-list"></i><p>Belum ada komplain</p></div>';
+      return;
+    }
+    el.innerHTML = mine.map(k => `
+      <div class="komplain-item">
+        <div class="ki-status ${k.status==='resolved'?'resolved':'open'}"></div>
+        <div style="flex:1">
+          <div class="frow gap2 mb1">
+            <div class="tbold tsm">${esc(k.kategori||'Komplain')}</div>
+            <span class="sta ${k.status==='resolved'?'st-d':'st-a'}" style="font-size:.65rem">${k.status==='resolved'?'✅ Resolved':'⏳ Open'}</span>
+          </div>
+          ${k.orderId?`<div class="txs fmono tm mb1">Order: ${esc(k.orderId)}</div>`:''}
+          <div class="tsm td" style="line-height:1.6">${esc(k.deskripsi||'')}</div>
+          <div class="txs tm mt1 fmono">${fmtDate(k.createdAt)}</div>
+        </div>
+      </div>`).join('');
+  } catch(e) { el.innerHTML = '<div class="empty"><p>Gagal memuat</p></div>'; }
+}
+
+// ================================================================
+// AUTH
+// ================================================================
+function switchAuth(tab) {
+  document.getElementById('fLogin').style.display = tab==='login'?'':'none';
+  document.getElementById('fReg').style.display   = tab==='reg'  ?'':'none';
+  document.getElementById('atLogin').classList.toggle('act', tab==='login');
+  document.getElementById('atReg').classList.toggle('act', tab==='reg');
+  document.getElementById('mAuthTitle').textContent = tab==='login'?'Welcome Back':'Create Account';
+}
+
+async function doLogin() {
+  const un = document.getElementById('lUN').value.trim();
+  const pw = document.getElementById('lPW').value;
+  if (!un||!pw) { toast('Fill all fields','err'); return; }
+  try {
+    // Check owner
+    const oUN = ownerCred.ownerUsername || DEF_OWNER_UN;
+    const oPW = ownerCred.ownerPassword || DEF_OWNER_PW;
+    if (un === oUN && pw === oPW) {
+      CU = { id:'owner', username:oUN, isOwner:true, balance:0, coins:0, badge:'owner' };
+      saveCU(); closeM('mAuth'); updateNav(); toast('Welcome back, Owner! 👑','ok');
+      return;
+    }
+    const user = await dbGet('users', un.toLowerCase());
+    if (!user) { toast('User not found','err'); return; }
+    if (user.password !== btoa(unescape(encodeURIComponent(pw)))) { toast('Wrong password','err'); return; }
+    CU = { id:un.toLowerCase(), ...user };
+    saveCU(); closeM('mAuth'); updateNav();
+    toast('Welcome back, '+CU.username+'! 🎉','ok');
+  } catch(e) { toast('Login error: '+e.message,'err'); }
+}
+
+async function doReg() {
+  const un = document.getElementById('rUN').value.trim().toLowerCase();
+  const em = document.getElementById('rEM').value.trim();
+  const pw = document.getElementById('rPW').value;
+  if (!un||!em||!pw) { toast('Fill all fields','err'); return; }
+  if (pw.length < 6) { toast('Password min 6 chars','err'); return; }
+  if (!/^[a-z0-9_-]+$/.test(un)) { toast('Username: a-z, 0-9, _, - only','err'); return; }
+  try {
+    const existing = await dbGet('users', un);
+    if (existing) { toast('Username already taken','err'); return; }
+    const data = { username:un, email:em, password:btoa(unescape(encodeURIComponent(pw))), balance:0, coins:0, badge:'', createdAt:Date.now() };
+    await dbSet('users', un, data);
+    CU = { id:un, ...data };
+    saveCU(); closeM('mAuth'); updateNav();
+    toast('Account created! Welcome, '+un+' 🎉','ok');
+  } catch(e) { toast('Register error: '+e.message,'err'); }
+}
+
+function doLogout() {
+  CU = null; localStorage.removeItem('doomCU');
+  updateNav(); goSec('home'); toast('Logged out','inf');
+}
+
+async function saveProfile() {
+  if (!CU||CU.isOwner) return;
+  const name = document.getElementById('epName').value.trim();
+  const pw   = document.getElementById('epPwd').value;
+  const upd  = {};
+  if (name) upd.displayName = name;
+  if (pw) { if (pw.length<6) { toast('Password min 6 chars','err'); return; } upd.password = btoa(unescape(encodeURIComponent(pw))); }
+  if (!Object.keys(upd).length) { toast('Nothing to update','inf'); return; }
+  await dbUpd('users', CU.id, upd);
+  CU = {...CU, ...upd}; saveCU(); updateNav();
+  closeM('mEditProf'); toast('Profile updated!','ok');
+}
+function openEditProfile() { document.getElementById('epName').value=CU.displayName||CU.username||''; document.getElementById('epPwd').value=''; openM('mEditProf'); }
+
+// ================================================================
+// PRODUCTS
+// ================================================================
+function renderFeat() {
+  renderHomePage();
+}
+
+function renderProds() {
+  const search = (document.getElementById('psearch')?.value||'').toLowerCase();
+  const sort   = document.getElementById('psort')?.value||'';
+  const cat    = document.getElementById('pcat')?.value||'';
+  let list = [...prods];
+  if (search) list = list.filter(p => (p.name||'').toLowerCase().includes(search)||(p.desc||'').toLowerCase().includes(search));
+  if (cat)    list = list.filter(p => (p.cat||'')=== cat);
+  if (sort==='pa') list.sort((a,b)=>(a.price||0)-(b.price||0));
+  else if (sort==='pd') list.sort((a,b)=>(b.price||0)-(a.price||0));
+  else if (sort==='rat') list.sort((a,b)=>(b.avgRating||0)-(a.avgRating||0));
+  else if (sort==='new') list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  const grid = document.getElementById('prodsGrid');
+  grid.innerHTML = list.length ? list.map(p=>pCard(p)).join('') : '<div class="empty" style="grid-column:1/-1"><i class="fas fa-box-open"></i><p>No products found</p></div>';
+}
+
+function pCard(p, extraClass='') {
+  const dp = discPrice(p);
+  const stockCls = p.stock<=0?'out':p.stock<=3?'low':'';
+  const imgContent = p.imgB64 ? `<img src="${p.imgB64}" alt="${esc(p.name)}">` : p.imgUrl ? `<img src="${p.imgUrl}" alt="${esc(p.name)}" onerror="this.style.display='none'">` : `<div class="pcard-img-ph"><i class="fas fa-box"></i></div>`;
+  const favd = isFav(p.id);
+  return `<div class="pcard" onclick="openProd('${p.id}')">
+    <div class="pimg" style="position:relative">${img}${p.discountPct?`<div class="pdisc-badge">-${p.discountPct}%</div>`:''}${p.stock<=0?'<div class="pout-badge">OUT OF STOCK</div>':''}
+      <button onclick="event.stopPropagation();toggleFav('${p.id}',event)" style="position:absolute;top:8px;left:8px;background:rgba(0,0,0,.55);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.88rem;transition:transform .2s" title="${favd?'Hapus dari Favorit':'Tambah ke Favorit'}">${favd?'❤️':'🤍'}</button>
+    </div>
+    <div class="pinfo">
+      <div class="pname">${esc(p.name||'')}</div>
+      <div class="pdesc">${esc((p.desc||'').slice(0,85))}${(p.desc||'').length>85?'...':''}</div>
+      <div class="pprice">
+        <span class="pprice-main">Rp ${dp.toLocaleString()}</span>
+        ${p.discountPct?`<span class="pprice-orig">Rp ${(p.price||0).toLocaleString()}</span>`:''}
+        ${p.coinPrice?`<span class="pprice-coin">🪙 ${p.coinPrice}</span>`:''}
+        ${p.balancePrice?`<span style="font-size:.72rem;color:var(--green);margin-left:4px;display:flex;align-items:center;gap:2px">💰 ${p.balancePrice.toLocaleString()}</span>`:''}      </div>
+      <div class="pstock ${stockCls}">${stockTxt}</div>
+    </div>
+    <div class="pfoot">
+      <div class="stars">${stars(p.avgRating||0)} <span class="txs tm">(${p.reviewCount||0})</span></div>
+      <button class="btn btn-prim btn-sm" onclick="event.stopPropagation();openProd('${p.id}')">Buy Now</button>
+    </div>
+  </div>`;
+}
+
+function discPrice(p) {
+  const dp = p.discountPct || 0;
+  return dp ? Math.round((p.price||0)*(1-dp/100)) : (p.price||0);
+}
+
+function openProd(id) {
+  const p = prods.find(x=>x.id===id);
+  if (!p) return;
+  buyProd = p; buyMode = 'idr'; buyMethod = null; appliedDisc = null;
+  document.getElementById('mBuyTitle').textContent = p.name||'Product';
+  const dp = discPrice(p);
+  const img = p.imgB64 ? `<img src="${p.imgB64}" style="width:100%;height:165px;object-fit:cover;border-radius:6px">` : p.imgUrl ? `<img src="${p.imgUrl}" style="width:100%;height:165px;object-fit:cover;border-radius:6px" onerror="this.style.display='none'">` : `<div style="width:100%;height:165px;background:var(--bg5);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--txt3)"><i class="fas fa-box"></i></div>`;
+  document.getElementById('mBuyBody').innerHTML = `
+    <div>
+      ${img}
+      <div style="font-size:.7rem;color:var(--txt3);margin-top:6px">${esc(p.cat||'')}</div>
+    </div>
+    <div>
+      <div style="font-size:.82rem;color:var(--txt2);margin-bottom:10px;line-height:1.6">${esc((p.desc||'').slice(0,150))}</div>
+      <div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;margin-bottom:8px">
+        <span style="font-size:1.3rem;font-weight:700;color:var(--pri)">Rp ${dp.toLocaleString()}</span>
+        ${p.discountPct?`<span style="font-size:.78rem;color:var(--txt3);text-decoration:line-through">Rp ${(p.price||0).toLocaleString()}</span>`:''}
+      </div>
+      ${p.coinPrice?`<div style="font-size:.78rem;color:var(--gold);margin-bottom:4px">🪙 ${p.coinPrice} Coins</div>`:''}
+      ${p.balancePrice?`<div style="font-size:.78rem;color:var(--green);margin-bottom:4px">💰 Rp ${p.balancePrice.toLocaleString()} (Balance)</div>`:''}
+      <div style="font-size:.75rem;color:var(--gold);margin-bottom:6px">★ ${(p.avgRating||0).toFixed(1)} <span style="color:var(--txt3)">(${p.reviewCount||0} ulasan)</span></div>
+      <div style="font-size:.75rem;color:${p.stock<=0?'#ef4444':p.stock<=3?'#f59e0b':'var(--green)'}">${p.stock<=0?'❌ Stok Habis':p.stock<=3?`⚠ Sisa ${p.stock}`:`✓ ${p.stock} tersedia`}</div>
+    </div>`;
+  // Payment methods
+  const methods = buildPayMethods();
+  document.getElementById('buyMethods').innerHTML = methods || '<span class="tm tsm">No payment methods configured. Contact owner.</span>';
+  document.getElementById('discInp').value=''; document.getElementById('discMsg').style.display='none';
+  document.getElementById('bwIDR').classList.remove('btn-prim');
+  document.getElementById('bwCoin').classList.remove('btn-prim');
+  document.getElementById('bwBal').classList.remove('btn-prim');
+  document.getElementById('bwIDR').classList.add('btn-prim');
+  // Show/hide balance button based on product having balancePrice
+  document.getElementById('bwBal').style.display = p.balancePrice ? '' : 'none';
+  document.getElementById('bwCoin').style.display = p.coinPrice ? '' : 'none';
+  const buyMethodsWrap = document.getElementById('buyMethodsWrap');
+  if (buyMethodsWrap) buyMethodsWrap.style.display = '';
+  // Clear note
+  const noteEl = document.getElementById('buyNote');
+  if (noteEl) noteEl.value = '';
+  document.getElementById('discRow').style.display='';
+  updateBuyTotal();
+  openM('mBuy');
+}
+
+function buildPayMethods() {
+  const logos = {
+    bca:'https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg',
+    bni:'https://upload.wikimedia.org/wikipedia/id/5/55/BNI_logo.svg',
+    seabank:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/SeaBank_Logo.svg/512px-SeaBank_Logo.svg.png',
+    gopay:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Gopay_logo.svg/512px-Gopay_logo.svg.png',
+    dana:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_dana_blue.svg/512px-Logo_dana_blue.svg.png',
+    qris:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_QRIS.svg/512px-Logo_QRIS.svg.png',
+  };
+  const labels = {bca:'BCA',bni:'BNI',seabank:'SeaBank',gopay:'GoPay',dana:'DANA',qris:'QRIS'};
+  const active = ['bca','bni','seabank','gopay','dana','qris'].filter(id=>{
+    if(id==='qris') return !!paySet.qrisImg;
+    return !!paySet[id];
+  });
+  return active.map(id=>`<div class="pm" data-m="${id}" onclick="selBuyMethod('${id}',this)">
+    <img class="pm-logo" src="${logos[id]||''}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${labels[id]}">
+    <div class="pm-logo-fallback" style="display:none">${labels[id]}</div>
+    <div class="pm-label">${labels[id]}</div>
+  </div>`).join('');
+}
+
+function selBuyMethod(id, el) {
+  document.querySelectorAll('#buyMethods .pm').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel'); buyMethod = id;
+}
+
+function setBuyMode(mode) {
+  buyMode = mode;
+  document.getElementById('bwIDR').classList.toggle('btn-prim', mode==='idr');
+  document.getElementById('bwCoin').classList.toggle('btn-prim', mode==='coin');
+  document.getElementById('bwBal').classList.toggle('btn-prim', mode==='balance');
+  // Show payment method only for IDR transfer
+  const bmWrap = document.getElementById('buyMethodsWrap'); if(bmWrap) bmWrap.style.display = mode==='idr' ? '' : 'none';
+  document.getElementById('discRow').style.display = mode==='idr' ? '' : 'none';
+  // Show balance hint
+  const balInfo = document.getElementById('buyBalanceInfo');
+  if (balInfo) {
+    if (mode === 'balance') {
+      const userBal = CU ? (CU.balance||0) : 0;
+      const bp = buyProd ? (buyProd.balancePrice||0) : 0;
+      const enough = userBal >= bp;
+      balInfo.style.display = '';
+      balInfo.style.color = enough ? 'var(--green)' : '#f44';
+      balInfo.textContent = `Saldo kamu: Rp ${userBal.toLocaleString()} ${enough ? '✓ Cukup' : '— Kurang Rp ' + (bp - userBal).toLocaleString()}`;
+    } else if (mode === 'coin') {
+      const userCoins = CU ? (CU.coins||0) : 0;
+      const cp = buyProd ? (buyProd.coinPrice||0) : 0;
+      const enough = userCoins >= cp;
+      balInfo.style.display = '';
+      balInfo.style.color = enough ? 'var(--green)' : '#f44';
+      balInfo.textContent = `Coins kamu: ${userCoins.toLocaleString()} ${enough ? '✓ Cukup' : '— Kurang ' + (cp - userCoins) + ' coins'}`;
+    } else {
+      balInfo.style.display = 'none';
+    }
+  }
+  updateBuyTotal();
+}
+
+async function applyDisc() {
+  const code = document.getElementById('discInp').value.trim().toUpperCase();
+  const msgEl = document.getElementById('discMsg');
+  msgEl.style.display='';
+  if (!code) { msgEl.className='txs mt1 tr'; msgEl.textContent='Enter a code'; return; }
+  try {
+    const d = await dbGet('discounts', code);
+    if (!d) { msgEl.className='txs mt1 tr'; msgEl.textContent='Invalid code'; appliedDisc=null; updateBuyTotal(); return; }
+    if (d.usesLeft !== undefined && d.usesLeft !== null && d.usesLeft <= 0 && d.usesLeft !== -1) {
+      msgEl.className='txs mt1 tr'; msgEl.textContent='Code has expired / max uses reached'; appliedDisc=null; updateBuyTotal(); return;
+    }
+    const dp = discPrice(buyProd);
+    if (d.minPurchase && dp < d.minPurchase) {
+      msgEl.className='txs mt1 tr'; msgEl.textContent=`Min purchase Rp ${d.minPurchase.toLocaleString()} required`; appliedDisc=null; updateBuyTotal(); return;
+    }
+    appliedDisc = d;
+    msgEl.className='txs mt1 tgr'; msgEl.textContent=`✓ Code applied! ${d.pct}% discount`;
+    updateBuyTotal();
+  } catch(e) { msgEl.className='txs mt1 tr'; msgEl.textContent='Error checking code'; }
+}
+
+function calcFinalPrice() {
+  if (!buyProd) return 0;
+  let price = discPrice(buyProd);
+  if (appliedDisc) price = Math.round(price * (1 - appliedDisc.pct/100));
+  return price;
+}
+
+function updateBuyTotal() {
+  const el = document.getElementById('buyTotal');
+  if (!buyProd) return;
+  if (buyMode === 'coin') { el.textContent = `🪙 ${buyProd.coinPrice||0} Coins`; }
+  else if (buyMode === 'balance') {
+    const bp = buyProd.balancePrice || 0;
+    el.textContent = bp ? `💰 Rp ${bp.toLocaleString()} (Balance)` : '❌ Tidak tersedia';
+  }
+  else { el.textContent = `Rp ${calcFinalPrice().toLocaleString()}`; }
+}
+
+async function doBuy() {
+  if (!CU) { closeM('mBuy'); openM('mAuth'); return; }
+  if (!buyProd) return;
+  if ((buyProd.stock||0) <= 0) { toast('Out of stock!','err'); return; }
+  if (buyMode === 'idr' && !buyMethod) { toast('Pilih metode pembayaran','err'); return; }
+  const buyNote = (document.getElementById('buyNote')||{}).value?.trim()||'';
+  if (buyMode === 'coin') {
+    const cp = buyProd.coinPrice||0;
+    if (!cp) { toast('This product cannot be bought with coins','err'); return; }
+    if ((CU.coins||0) < cp) { toast(`Need ${cp} coins. You have ${CU.coins||0}. Top up first!`,'err'); return; }
+    await buyCoin();
+    return;
+  }
+  if (buyMode === 'balance') {
+    const bp = buyProd.balancePrice||0;
+    if (!bp) { toast('Produk ini tidak tersedia untuk pembelian dengan Balance IDR','err'); return; }
+    if ((CU.balance||0) < bp) { toast(`Saldo tidak cukup. Butuh Rp ${bp.toLocaleString()}, saldo kamu Rp ${(CU.balance||0).toLocaleString()}. Top up dulu!`,'err'); return; }
+    await buyBalance();
+    return;
+  }
+  // IDR flow → show payment modal
+  const finalPrice = calcFinalPrice();
+  payContext = { type:'product', prod:buyProd, method:buyMethod, finalPrice, disc:appliedDisc, note:buyNote };
+  const mName = {bca:'BCA Transfer',bni:'BNI Transfer',gopay:'GoPay',ovo:'OVO',dana:'DANA',qris:'QRIS'};
+  let instrHtml = '';
+  if (buyMethod === 'qris') {
+    instrHtml = `<div class="tm txs fmono mb2">SCAN QRIS UNTUK BAYAR:</div>
+    ${paySet.qrisImg?`<img src="${paySet.qrisImg}" style="width:100%;max-width:220px;display:block;margin:10px auto;border-radius:10px;border:1px solid var(--border)">`:'<div class="tr tsm">QRIS belum di-upload.</div>'}
+    <div class="tm tsm mt2">Nominal: <strong class="tr">Rp ${finalPrice.toLocaleString()}</strong></div>
+    <div class="tm txs mt1">⚠ Screenshot bukti pembayaran setelah scan</div>`;
+  } else {
+    instrHtml = `<div class="tm txs fmono mb2">TRANSFER TO:</div>
+    <div class="tbold" style="font-size:1.05rem">${mName[buyMethod]||buyMethod}</div>
+    <div class="ftitle tr" style="font-size:1.4rem;margin:8px 0">${paySet[buyMethod]||'Contact owner for details'}</div>
+    <div class="tm tsm">Exact amount: <strong class="tr">Rp ${finalPrice.toLocaleString()}</strong></div>
+    <div class="tm txs mt2">⚠ Keep your transfer receipt/screenshot as proof</div>`;
+  }
+  document.getElementById('payInstr').innerHTML = instrHtml;
+  document.getElementById('payTotalBox').innerHTML = `<div class="info-box" style="text-align:center"><div class="tm txs">Total to Transfer</div><div class="ftitle tr" style="font-size:1.8rem">Rp ${finalPrice.toLocaleString()}</div></div>`;
+  document.getElementById('proofPrev').style.display='none'; proofB64='';
+  document.getElementById('proofFile').value='';
+  closeM('mBuy'); openM('mPay');
+}
+
+async function buyCoin() {
+  try {
+    const cp = buyProd.coinPrice;
+    const ordId = 'ORD-'+Date.now();
+    // Deduct coins
+    await dbUpd('users', CU.id, { coins: (CU.coins||0)-cp });
+    CU.coins = (CU.coins||0)-cp; saveCU(); updateNav();
+    // Reduce stock
+    const ns = Math.max(0,(buyProd.stock||0)-1);
+    await rtSet('stocks/'+buyProd.id, ns); buyProd.stock=ns;
+    // Create order
+    const buyNoteC = (document.getElementById('buyNote')||{}).value?.trim()||'';
+    await dbSet('orders', ordId, { id:ordId, userId:CU.id, username:CU.username||CU.id, productId:buyProd.id, productName:buyProd.name, amount:cp, currency:'coin', method:'coins', delivery:buyProd.delivery||'', status:'delivered', note:buyNoteC, createdAt:Date.now() });
+    // 🔔 WEBHOOK: order coin (langsung delivered)
+    sendWebhook('order', {
+      'Order ID': ordId,
+      'Produk': buyProd.name||'',
+      'Customer': CU.username||CU.id,
+      'Total': `🪙 ${cp} Coins`,
+      'Metode': 'Coins',
+      'Status': '✅ Delivered (Coin Purchase)'
+    }).catch(()=>{});
+    closeM('mBuy');
+    toast('Purchase successful! Check your Orders.','ok');
+    addNotif('✅ Pembelian Berhasil', `${buyProd.name} — 🪙 ${cp} Coins`, '✅', ()=>{goSec('orders');});
+    goSec('orders');
+  } catch(e) { toast('Purchase failed: '+e.message,'err'); }
+}
+
+async function buyBalance() {
+  try {
+    const bp = buyProd.balancePrice;
+    const ordId = 'ORD-'+Date.now();
+    // Deduct balance
+    const newBal = (CU.balance||0) - bp;
+    await dbUpd('users', CU.id, { balance: newBal });
+    CU.balance = newBal; saveCU(); updateNav();
+    // Reduce stock
+    const ns = Math.max(0,(buyProd.stock||0)-1);
+    await rtSet('stocks/'+buyProd.id, ns); buyProd.stock=ns;
+    // Create order
+    const buyNoteB = (document.getElementById('buyNote')||{}).value?.trim()||'';
+    await dbSet('orders', ordId, { id:ordId, userId:CU.id, username:CU.username||CU.id, productId:buyProd.id, productName:buyProd.name, amount:bp, currency:'balance', method:'Balance IDR', delivery:buyProd.delivery||'', status:'delivered', note:buyNoteB, createdAt:Date.now() });
+    // 🔔 WEBHOOK
+    sendWebhook('order', {
+      'Order ID': ordId,
+      'Produk': buyProd.name||'',
+      'Customer': CU.username||CU.id,
+      'Total': `Rp ${bp.toLocaleString()} (Balance IDR)`,
+      'Metode': 'Balance IDR',
+      'Status': '✅ Delivered (Balance Purchase)'
+    }).catch(()=>{});
+    closeM('mBuy');
+    toast('Pembelian berhasil! Cek Orders kamu.','ok');
+    addNotif('✅ Pembelian Berhasil', `${buyProd.name} — Rp ${bp.toLocaleString()} Balance`, '✅', ()=>{goSec('orders');});
+    goSec('orders');
+  } catch(e) { toast('Pembelian gagal: '+e.message,'err'); }
+}
+
+function prevProof(inp) {
+  const f = inp.files[0]; if (!f) return;
+  if (f.size>3*1024*1024) { toast('Max 3MB','err'); return; }
+  const r = new FileReader();
+  r.onload = e => { proofB64=e.target.result; const i=document.getElementById('proofPrev'); i.src=e.target.result; i.style.display=''; };
+  r.readAsDataURL(f);
+}
+
+async function submitProof() {
+  if (!proofB64) { toast('Upload payment proof first','err'); return; }
+  if (!payContext) return;
+  try {
+    if (payContext.type === 'product') {
+      const ordId = 'ORD-'+Date.now();
+      const ns = Math.max(0,(payContext.prod.stock||0)-1);
+      await rtSet('stocks/'+payContext.prod.id, ns); payContext.prod.stock=ns;
+      await dbSet('orders', ordId, { id:ordId, userId:CU.id, username:CU.username||CU.id, productId:payContext.prod.id, productName:payContext.prod.name, amount:payContext.finalPrice, currency:'idr', method:payContext.method, proof:proofB64, delivery:payContext.prod.delivery||'', status:'pending', discountCode:payContext.disc?.id||'', note:payContext.note||'', createdAt:Date.now() });
+      if (payContext.disc) {
+        const usesLeft = payContext.disc.usesLeft;
+        if (usesLeft > 0) await dbUpd('discounts', payContext.disc.id, { usesLeft: usesLeft-1 });
+      }
+      // 🔔 WEBHOOK: order baru
+      sendWebhook('order', {
+        'Order ID': ordId,
+        'Produk': payContext.prod.name||'',
+        'Customer': CU.username||CU.id,
+        'Total': `Rp ${payContext.finalPrice.toLocaleString()}`,
+        'Metode': payContext.method,
+        'Diskon': payContext.disc ? payContext.disc.id+' (-'+payContext.disc.pct+'%)' : 'Tidak ada',
+        'Status': 'pending — menunggu verifikasi'
+      }).catch(()=>{});
+      closeM('mPay'); toast('Order placed! Awaiting verification.','ok');
+      addNotif('📦 Order Dikirim', `${payContext.prod.name} menunggu verifikasi`, '📦', ()=>{goSec('orders');});
+      goSec('orders');
+    }
+  } catch(e) { toast('Error: '+e.message,'err'); }
+}
+
+// ================================================================
+// REVIEWS
+// ================================================================
+async function loadRevs() {
+  const grid = document.getElementById('revGrid');
+  grid.innerHTML = '<div class="empty"><i class="fas fa-spinner fa-spin"></i></div>';
+  try {
+    allRevs = await dbGetAll('reviews');
+    renderReviews();
+  } catch(e) { grid.innerHTML = '<div class="empty"><p>Error loading</p></div>'; }
+}
+
+function renderReviews() {
+  const prodFilter = document.getElementById('revFilter')?.value||'';
+  const sort = document.getElementById('revSort')?.value||'new';
+  let list = [...allRevs];
+  if (prodFilter) list = list.filter(r=>r.productId===prodFilter);
+  if (sort==='new') list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  else if (sort==='top') list.sort((a,b)=>(b.rating||0)-(a.rating||0));
+  else if (sort==='low') list.sort((a,b)=>(a.rating||0)-(b.rating||0));
+  const grid = document.getElementById('revGrid');
+  grid.innerHTML = list.length ? list.map(revCard).join('') : '<div class="empty" style="grid-column:1/-1"><i class="fas fa-star"></i><p>No reviews yet</p></div>';
+}
+
+async function loadHomeRevs() {
+  try {
+    const revs = await dbGetAll('reviews');
+    allRevs = revs;
+    const latest = revs.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,3);
+    document.getElementById('homeRevs').innerHTML = latest.length ? latest.map(revCard).join('') : '<div class="empty"><p>No reviews yet</p></div>';
+  } catch(e) {}
+}
+
+function revCard(r) {
+  const badgeCls = {warrior:'bw',elite:'be',master:'bm',grandmaster:'bg2c',mythical:'bmy',owner:'bo'}[r.badge]||'';
+  const badgeHtml = r.badge&&badgeCls ? `<span class="badge ${badgeCls}" style="margin-left:5px">${badgeLbl(r.badge)}</span>` : '';
+  return `<div class="rcard">
+    <div class="rhead">
+      <div class="ravatar">${(r.username||'U')[0].toUpperCase()}</div>
+      <div>
+        <div class="rname">${esc(r.username||'Anonymous')}${badgeHtml}</div>
+        <div class="stars">${stars(r.rating||5)}</div>
+        <div class="rdate">${esc(r.productName||'')} &bull; ${fmtDate(r.createdAt)}</div>
+      </div>
+    </div>
+    <div class="rtext">${esc(r.text||'')}</div>
+  </div>`;
+}
+
+let selRating = 5;
+function setRating(n) {
+  selRating=n;
+  document.getElementById('ratingLbl').textContent = n+' / 5 stars';
+  const spans = document.querySelectorAll('#starPick span');
+  spans.forEach((s,i)=>s.style.opacity=i<n?'1':'0.3');
+}
+
+function openRevModal(ordId, prodId, prodName) {
+  document.getElementById('revOrdId').value=ordId;
+  document.getElementById('revProdId').value=prodId;
+  document.getElementById('revProdName').value=prodName||'';
+  document.getElementById('revText').value='';
+  setRating(5);
+  openM('mRev');
+}
+
+async function submitRev() {
+  if (!CU) { toast('Login first','err'); return; }
+  const text = document.getElementById('revText').value.trim();
+  if (!text) { toast('Write your review','err'); return; }
+  const ordId = document.getElementById('revOrdId').value;
+  const prodId = document.getElementById('revProdId').value;
+  const prodName = document.getElementById('revProdName').value;
+  try {
+    const revId = 'REV-'+Date.now();
+    await dbSet('reviews', revId, { id:revId, orderId:ordId, productId:prodId, productName:prodName, userId:CU.id, username:CU.username||CU.id, badge:CU.badge||'', rating:selRating, text, createdAt:Date.now() });
+    // Update product rating
+    const allR = await dbGetAll('reviews');
+    const pr = allR.filter(r=>r.productId===prodId);
+    const avg = pr.length ? pr.reduce((s,r)=>s+(r.rating||0),0)/pr.length : 0;
+    await dbUpd('products', prodId, { avgRating:Math.round(avg*10)/10, reviewCount:pr.length });
+    // Update local
+    const idx = prods.findIndex(p=>p.id===prodId);
+    if (idx>=0) { prods[idx].avgRating=Math.round(avg*10)/10; prods[idx].reviewCount=pr.length; }
+    closeM('mRev'); toast('Review submitted! Thank you.','ok');
+    await loadHomeRevs();
+  } catch(e) { toast('Error: '+e.message,'err'); }
+}
+
+// ================================================================
+// ORDERS
+// ================================================================
+async function loadOrders() {
+  const list = document.getElementById('ordList');
+  list.innerHTML='<div class="empty"><i class="fas fa-spinner fa-spin"></i></div>';
+  if (!CU) { list.innerHTML='<div class="empty"><p>Login to view orders</p></div>'; return; }
+  try {
+    const orders = await dbGetAll('orders');
+    const mine = orders.filter(o=>o.userId===CU.id).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    renderOrders(mine);
+  } catch(e) { list.innerHTML='<div class="empty"><p>Error loading</p></div>'; }
+}
+
+function renderOrders(data) {
+  const f = document.getElementById('ordFilter')?.value||'';
+  let list2 = data || [];
+  if (!data) {
+    // called from filter change - need to reload
+    loadOrders(); return;
+  }
+  if (f) list2 = list2.filter(o=>o.status===f);
+  const el = document.getElementById('ordList');
+  el.innerHTML = list2.length ? list2.map(oCard).join('') : '<div class="empty"><i class="fas fa-shopping-bag"></i><p>No orders found</p></div>';
+}
+
+function oCard(o) {
+  const scls = {pending:'st-p',processing:'st-pr',delivered:'st-d',cancelled:'st-c'}[o.status]||'st-p';
+  const slbl = {pending:'Menunggu Verifikasi',processing:'Diproses',delivered:'Terkirim ✓',cancelled:'Dibatalkan'}[o.status]||o.status;
+  const amt  = o.currency==='coin'?`🪙 ${o.amount}`:o.currency==='balance'?`💰 Rp ${(o.amount||0).toLocaleString()} (Balance)`:`Rp ${(o.amount||0).toLocaleString()}`;
+  const noteHtml = o.note ? `<div style="font-size:.72rem;color:var(--gold);margin-top:3px">📝 ${esc(o.note)}</div>` : '';
+  const canRev = o.status==='delivered';
+  const pimg = (() => {
+    const prod = prods.find(x=>x.id===o.productId);
+    if(prod?.imgB64) return `<img class="o-thumb" src="${prod.imgB64}">`;
+    if(prod?.imgUrl) return `<img class="o-thumb" src="${prod.imgUrl}" onerror="this.style.display='none'">`;
+    return `<div class="o-thumb" style="display:flex;align-items:center;justify-content:center;font-size:1.2rem">📦</div>`;
+  })();
+  return `<div class="ocard">
+    ${pimg}
+    <div class="o-info" style="flex:1">
+      <div class="o-id">${esc(o.id)} &bull; ${fmtDate(o.createdAt)}</div>
+      <div class="o-name">${esc(o.productName||'')}</div>
+      <div class="o-amt">${amt}</div>
+      <div class="o-method">via ${esc(o.method||'')}${o.currency==='coin'?' (Coins)':o.currency==='balance'?' (Balance)':''}</div>
+      ${noteHtml}
+      ${o.status==='delivered'&&o.delivery?`<div class="delivery-box">${esc(o.delivery)}</div>`:''}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
+      <span class="sta ${scls}"><span class="sta-dot"></span>${slbl}</span>
+      ${canRev?`<button class="btn btn-sm" onclick="openRevModal('${o.id}','${o.productId}','${esc(o.productName||'')}')">⭐ Ulasan</button>`:''}
+      ${o.proof?`<button class="btn btn-xs" onclick="viewProof('${o.id}')">📄 Bukti</button>`:''}
+    </div>
+  </div>`;
+}
+
+async function viewProof(ordId) {
+  const ord = await dbGet('orders', ordId);
+  if (ord?.proof) { document.getElementById('proofImg').src=ord.proof; openM('mViewProof'); }
+}
+
+// ================================================================
+// PROFILE
+// ================================================================
+async function loadProfile() {
+  if (!CU) return;
+  await refreshCU();
+  const displayName = CU.displayName||CU.username||CU.id;
+  document.getElementById('profAv').textContent = displayName[0].toUpperCase();
+  document.getElementById('profName').textContent = displayName;
+  document.getElementById('profEmail').textContent = CU.email||'';
+  document.getElementById('profBal').textContent = `Rp ${(CU.balance||0).toLocaleString()}`;
+  document.getElementById('profCoins').textContent = `${(CU.coins||0).toLocaleString()} 🪙`;
+  // Badges
+  const bcls = {warrior:'bw',elite:'be',master:'bm',grandmaster:'bg2c',mythical:'bmy',owner:'bo'};
+  let bh = '';
+  if (CU.isOwner||CU.badge==='owner') bh='<span class="badge bo"><i class="fas fa-crown"></i> OWNER</span>';
+  else if (CU.badge&&bcls[CU.badge]) bh=`<span class="badge ${bcls[CU.badge]}">${badgeLbl(CU.badge)}</span>`;
+  document.getElementById('profBadges').innerHTML=bh;
+  // Count orders
+  try {
+    const ords = await dbGetAll('orders');
+    document.getElementById('profOrdC').textContent = ords.filter(o=>o.userId===CU.id).length;
+  } catch(e) {}
+  // My reviews
+  try {
+    const revs = await dbGetAll('reviews');
+    const mine = revs.filter(r=>r.userId===CU.id).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    document.getElementById('myRevs').innerHTML = mine.length ? mine.map(revCard).join('') : '<div class="empty"><i class="fas fa-star"></i><p>You haven\'t reviewed anything yet</p></div>';
+  } catch(e) {}
+}
+
+// ================================================================
+// CHAT — Real-time dengan notifikasi untuk customer
+// ================================================================
+// chatUnsub already declared in globals above
+let chatLastTs   = 0;    // timestamp pesan terakhir yang sudah dilihat
+let chatUnreadN  = 0;    // jumlah pesan belum dibaca
+let chatIsOpen   = false; // apakah section chat sedang aktif
+
+// --- Inisialisasi listener global (dipanggil setelah login) ---
+function initChatListener() {
+  if (!CU || CU.isOwner) return;
+  // Baca timestamp terakhir yang sudah dibaca dari localStorage
+  chatLastTs = parseInt(localStorage.getItem('doomChatRead_'+CU.id)||'0');
+  // Listen real-time pada seluruh percakapan user ini
+  rtListen('chats/'+CU.id, msgs => {
+    if (!msgs) return;
+    const list = Object.values(msgs).sort((a,b)=>a.ts-b.ts);
+    // Hitung pesan baru dari owner yang belum dibaca
+    const newMsgs = list.filter(m => m.sender === 'owner' && m.ts > chatLastTs);
+    chatUnreadN = newMsgs.length;
+    updateUnreadUI();
+    // Tampilkan popup notifikasi untuk setiap pesan baru
+    if (!chatIsOpen && newMsgs.length > 0) {
+      const latest = newMsgs[newMsgs.length-1];
+      const lastShown = parseInt(localStorage.getItem('doomChatNotifTs_'+CU.id)||'0');
+      if (latest.ts > lastShown) {
+        showChatNotif(latest.text, latest.ts);
+        localStorage.setItem('doomChatNotifTs_'+CU.id, latest.ts);
+        // Also add to bell notif
+        addNotif('💬 Pesan Support', latest.text.slice(0,60)+'...', '💬', () => { goSec('chat'); setBNavByKey('chat'); });
+      }
+    }
+    // Jika chat sedang terbuka, render ulang & mark read
+    if (chatIsOpen) {
+      renderChatMsgs(list);
+      markAllRead();
+    }
+  });
+}
+
+function updateUnreadUI() {
+  // Dot merah di nav
+  const dot = document.getElementById('navChatDot');
+  if (dot) dot.style.display = chatUnreadN > 0 ? 'block' : 'none';
+  // Badge di bottom nav Transaksi (reuse) — atau bisa kita tunjukkan di badge chat nav
+  const wrap = document.getElementById('chatUnreadBadgeWrap');
+  const badge = document.getElementById('chatUnreadBadge');
+  if (wrap && badge) {
+    wrap.style.display = chatUnreadN > 0 ? 'flex' : 'none';
+    badge.textContent = chatUnreadN + (chatUnreadN===1?' pesan belum dibaca':' pesan belum dibaca');
+  }
+}
+
+function markAllRead() {
+  chatLastTs = Date.now();
+  localStorage.setItem('doomChatRead_'+CU.id, chatLastTs);
+  chatUnreadN = 0;
+  updateUnreadUI();
+}
+
+// --- Popup notifikasi floating ---
+function showChatNotif(text, ts) {
+  playNotifSound();
+  const bubble = document.getElementById('chatNotifBubble');
+  if (!bubble) return;
+  bubble.style.display = 'flex';
+
+  const card = document.createElement('div');
+  card.className = 'chat-notif-card';
+  card.innerHTML = `
+    <div class="chat-notif-av">S</div>
+    <div class="chat-notif-body">
+      <div class="chat-notif-name">🛡 Support Team</div>
+      <div class="chat-notif-text">${esc(text||'')}</div>
+      <div class="chat-notif-time">${fmtTime(ts)} &bull; Ketuk untuk membalas</div>
+    </div>
+    <button class="chat-notif-close" onclick="event.stopPropagation();dismissNotif(this.parentElement)">✕</button>`;
+  card.addEventListener('click', () => {
+    dismissNotif(card);
+    goSec('chat');
+    setBNavByKey('chat');
+  });
+  bubble.appendChild(card);
+
+  // Auto-dismiss setelah 6 detik
+  setTimeout(() => dismissNotif(card), 6000);
+}
+
+function dismissNotif(card) {
+  if (!card || !card.parentElement) return;
+  card.style.opacity = '0';
+  card.style.transform = 'translateX(110%)';
+  setTimeout(() => {
+    card.remove();
+    const bubble = document.getElementById('chatNotifBubble');
+    if (bubble && !bubble.children.length) bubble.style.display = 'none';
+  }, 320);
+}
+
+function playNotifSound() {
+  try {
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime+0.12);
+    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.25);
+    osc.start(); osc.stop(ctx.currentTime+0.25);
+  } catch(e) {}
+}
+
+// --- Render pesan di chat section ---
+function renderChatMsgs(list) {
+  const el = document.getElementById('chatMsgsFull');
+  if (!el) return;
+  if (!list || !list.length) {
+    el.innerHTML = `<div style="text-align:center;padding:30px 0">
+      <div style="font-size:2.5rem;margin-bottom:12px">💬</div>
+      <div style="color:var(--txt2);font-size:.88rem">Belum ada pesan</div>
+      <div style="color:var(--txt3);font-size:.75rem;margin-top:5px;font-family:var(--f3)">Kirim pesan untuk memulai percakapan dengan Support Team</div>
+    </div>`;
+    return;
+  }
+  let html = '';
+  let lastDate = '';
+  list.forEach(m => {
+    const mine = m.sender === CU.id;
+    const dateStr = new Date(m.ts).toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});
+    if (dateStr !== lastDate) {
+      html += `<div class="chat-date-sep">— ${dateStr} —</div>`;
+      lastDate = dateStr;
+    }
+    const isNew = !mine && m.ts > chatLastTs;
+    html += `<div class="msg-bubble-wrap ${mine?'mine':''}" ${isNew?'style="animation:fadeup .4s ease"':''}>
+      <div class="msg-av-sm ${mine?'':'owner-av'}">${mine?(CU.username||'U')[0].toUpperCase():'S'}</div>
+      <div class="msg-content">
+        <div class="mbubble-new ${mine?'mine-b':'theirs'}">${esc(m.text||'')}</div>
+        <div class="mmeta-new">${mine?'Kamu':'Support'} &bull; ${fmtTime(m.ts)}${isNew?' &bull; <span style="color:var(--cyan)">Baru</span>':''}</div>
+      </div>
+    </div>`;
+  });
+  el.innerHTML = html;
+  el.scrollTop = el.scrollHeight;
+}
+
+function initMyChat() {
+  if (!CU || CU.isOwner) return;
+  chatIsOpen = true;
+  markAllRead();
+  // Re-listen dan render langsung
+  if (chatUnsub) { chatUnsub(); chatUnsub = null; }
+  chatUnsub = rtListen('chats/'+CU.id, msgs => {
+    const list = msgs ? Object.values(msgs).sort((a,b)=>a.ts-b.ts) : [];
+    renderChatMsgs(list);
+    if (chatIsOpen) markAllRead();
+  });
+}
+
+// Ketika user meninggalkan chat section
+function onLeaveChatSec() {
+  chatIsOpen = false;
+}
+
+async function sendMsg() {
+  const inp = document.getElementById('chatInp');
+  const text = inp.value.trim();
+  if (!text || !CU) return;
+  inp.value = '';
+  inp.focus();
+  await rtPush('chats/'+CU.id, { sender:CU.id, text, ts:Date.now() });
+  // 🔔 WEBHOOK: pesan chat baru dari user
+  sendWebhook('chat', {
+    'Dari': CU.username||CU.id,
+    'Pesan': text.slice(0,300),
+    'Waktu': new Date().toLocaleString('id-ID'),
+  }).catch(()=>{});
+}
+
+// ================================================================
+// TOP UP
+// ================================================================
+function tuTypeChange() {
+  const t = document.getElementById('tuType').value;
+  document.getElementById('tuAmtLbl').textContent = t==='coins'?'Amount (IDR) to convert to coins':'Amount (IDR)';
+  document.getElementById('tuConv').style.display = t==='coins'?'':'none';
+}
+
+function selTuMethod(el) {
+  document.querySelectorAll('#tuMethods .pm').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel'); tuMethod = el.dataset.m;
+}
+
+async function procTopup() {
+  if (!CU) { openM('mAuth'); return; }
+  const type = document.getElementById('tuType').value;
+  const amt  = parseInt(document.getElementById('tuAmt').value);
+  if (!amt||amt<5000) { toast('Min Rp 5.000','err'); return; }
+  if (!tuMethod) { toast('Select payment method','err'); return; }
+  const mName = {bca:'BCA',bni:'BNI',seabank:'SeaBank',gopay:'GoPay',dana:'DANA',qris:'QRIS'};
+  const coinRate = storeSet.coinRate||1000;
+  const coins = type==='coins' ? Math.floor(amt/coinRate) : 0;
+  let tuInstrHtml = '';
+  if (tuMethod === 'qris') {
+    tuInstrHtml = `<div class="tm txs fmono mb2">SCAN QRIS BERIKUT:</div>
+    ${paySet.qrisImg?`<img src="${paySet.qrisImg}" style="width:100%;max-width:220px;display:block;margin:10px auto;border-radius:10px;border:1px solid var(--border)">`:'<div class="tr tsm">QRIS belum di-upload. Hubungi owner.</div>'}
+    <div class="tm tsm mt2">Transfer exact: <strong class="tr">Rp ${amt.toLocaleString()}</strong></div>
+    ${type==='coins'?`<div class="tg txs mt1">Kamu akan dapat: 🪙 ${coins.toLocaleString()} coins</div>`:''}`;
+  } else {
+    tuInstrHtml = `<div class="tm txs fmono mb2">TRANSFER TO (${mName[tuMethod]||tuMethod}):</div>
+    <div class="ftitle tr" style="font-size:1.4rem">${paySet[tuMethod]||'Contact owner for details'}</div>
+    <div class="tm tsm mt2">Transfer exactly: <strong class="tr">Rp ${amt.toLocaleString()}</strong></div>
+    ${type==='coins'?`<div class="tg txs mt1">You will receive: 🪙 ${coins.toLocaleString()} coins (rate: 1 coin = Rp ${coinRate.toLocaleString()})</div>`:''}`;
+  }
+  document.getElementById('tuPayInstr').innerHTML = tuInstrHtml;
+  document.getElementById('tuPayTotal').innerHTML = `<div class="info-box" style="text-align:center"><div class="tm txs">Total to Transfer</div><div class="ftitle tr" style="font-size:1.8rem">Rp ${amt.toLocaleString()}</div>${coins?`<div class="tg tsm">→ ${coins.toLocaleString()} Coins</div>`:''}</div>`;
+  document.getElementById('tuProofPrev').style.display='none'; tuProofB64='';
+  document.getElementById('tuProofFile').value='';
+  openM('mTuPay');
+}
+
+function prevTuProof(inp) {
+  const f=inp.files[0]; if(!f) return;
+  if(f.size>3*1024*1024){toast('Max 3MB','err');return;}
+  const r=new FileReader();
+  r.onload=e=>{tuProofB64=e.target.result;const i=document.getElementById('tuProofPrev');i.src=e.target.result;i.style.display='';};
+  r.readAsDataURL(f);
+}
+
+async function submitTuProof() {
+  if (!tuProofB64) { toast('Upload payment proof','err'); return; }
+  const type    = document.getElementById('tuType').value;
+  const amt     = parseInt(document.getElementById('tuAmt').value);
+  const coinRate= storeSet.coinRate||1000;
+  const coins   = type==='coins'?Math.floor(amt/coinRate):0;
+  try {
+    const txId='TX-'+Date.now();
+    await dbSet('transactions',txId,{id:txId,userId:CU.id,username:CU.username||CU.id,type:'topup-'+type,amount:amt,coins,method:tuMethod,proof:tuProofB64,status:'pending',createdAt:Date.now()});
+    // 🔔 WEBHOOK: topup request masuk
+    sendWebhook('topup', {
+      'TX ID': txId,
+      'User': CU.username||CU.id,
+      'Tipe': type==='coins'?'Topup Coins':'Topup Balance',
+      'Jumlah': `Rp ${amt.toLocaleString()}`,
+      'Coins': coins ? `🪙 ${coins.toLocaleString()}` : '-',
+      'Metode': tuMethod,
+      'Status': 'pending — menunggu verifikasi'
+    }).catch(()=>{});
+    closeM('mTuPay'); toast('Topup request submitted! Waiting for verification.','ok');
+    addNotif('💰 Topup Dikirim', `Rp ${amt.toLocaleString()} menunggu verifikasi owner`, '💰');
+  } catch(e) { toast('Error: '+e.message,'err'); }
+}
+
+// ================================================================
+// OWNER PANEL
+// ================================================================
+function initOwner() {
+  if (!CU?.isOwner) return;
+  otab(document.querySelector('.otab.act')||document.querySelector('.otab'), 'dash');
+}
+
+function otab(el, sec) {
+  document.querySelectorAll('.otab').forEach(t=>t.classList.remove('act'));
+  document.querySelectorAll('.osec').forEach(s=>s.classList.remove('act'));
+  if(el) el.classList.add('act');
+  const os=document.getElementById('o-'+sec);
+  if(os) os.classList.add('act');
+  const loaders={dash:oLoadDash,prods:oLoadProds,ords:loadOOrders,txs:oLoadTxs,users:oLoadUsers,ochat:oLoadChats,catalog:oLoadCatalog,discs:oLoadDiscs,komplain:oLoadKomplain,settings:oLoadSettings};
+  if(loaders[sec]) loaders[sec]();
+}
+
+async function oLoadKomplain() {
+  const tb = document.getElementById('oKpTb');
+  tb.innerHTML='<tr><td colspan="8" class="tm" style="text-align:center">Loading...</td></tr>';
+  try {
+    const all = await dbGetAll('komplain');
+    const f = document.getElementById('oKpFilter')?.value||'';
+    let list = all.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    if (f) list = list.filter(k=>k.status===f);
+    tb.innerHTML = list.length ? list.map(k=>`<tr>
+      <td class="fmono txs">${esc(k.id)}</td>
+      <td><strong>${esc(k.username||k.userId)}</strong></td>
+      <td>${esc(k.kategori||'')}</td>
+      <td class="fmono txs">${esc(k.orderId||'-')}</td>
+      <td style="max-width:200px;white-space:normal;line-height:1.4">${esc((k.deskripsi||'').slice(0,120))}${(k.deskripsi||'').length>120?'...':''}</td>
+      <td><span class="sta ${k.status==='resolved'?'st-d':'st-a'}">${k.status==='resolved'?'✅ Resolved':'⏳ Open'}</span></td>
+      <td class="fmono txs">${fmtDate(k.createdAt)}</td>
+      <td><div class="frow gap1">
+        ${k.status==='open'?`<button class="btn btn-xs btn-success" onclick="oResolveKomplain('${k.id}')">✓ Resolve</button>`:''}
+        <button class="btn btn-xs" onclick="oReplyKomplain('${k.userId}')">💬 Chat</button>
+        <button class="btn btn-xs btn-danger" onclick="oDelKomplain('${k.id}')">🗑</button>
+      </div></td>
+    </tr>`).join('') : '<tr><td colspan="8" class="tm" style="text-align:center">Tidak ada komplain</td></tr>';
+  } catch(e) { tb.innerHTML='<tr><td colspan="8" class="tr">Error</td></tr>'; }
+}
+
+async function oResolveKomplain(id) {
+  await dbUpd('komplain', id, {status:'resolved', resolvedAt:Date.now()});
+  toast('Komplain ditandai Resolved ✅','ok');
+  oLoadKomplain();
+}
+
+async function oDelKomplain(id) {
+  await dbDel('komplain', id);
+  toast('Komplain dihapus','inf');
+  oLoadKomplain();
+}
+
+function oReplyKomplain(userId) {
+  // Switch to chat tab and select user
+  otab(document.querySelector('.otab[onclick*="ochat"]'), 'ochat');
+  setTimeout(()=>oSelChat(userId), 400);
+}
+
+async function oLoadDash() {
+  try {
+    const [ords,users,prods2,txs] = await Promise.all([dbGetAll('orders'),dbGetAll('users'),dbGetAll('products'),dbGetAll('transactions')]);
+    const rev = ords.filter(o=>o.status==='delivered').reduce((s,o)=>s+(o.amount||0),0);
+    document.getElementById('oRev').textContent=`Rp ${rev.toLocaleString()}`;
+    document.getElementById('oPend').textContent=ords.filter(o=>o.status==='pending').length;
+    document.getElementById('oUc').textContent=users.length;
+    document.getElementById('oDel').textContent=ords.filter(o=>o.status==='delivered').length;
+    document.getElementById('oPTx').textContent=txs.filter(t=>t.status==='pending').length;
+    document.getElementById('oPrc').textContent=prods2.length;
+    const log=document.getElementById('oLog');
+    const recent=[...ords].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,8);
+    log.innerHTML=recent.length?recent.map(o=>`<div class="fbetween" style="padding:9px 0;border-bottom:1px solid var(--border)">
+      <div><div class="tsm tbold">${esc(o.productName||'')} <span class="txs tm">&bull; ${esc(o.username||o.userId)}</span></div><div class="txs fmono tm">${esc(o.id)}</div></div>
+      <div class="frow gap2"><span class="sta ${staCls(o.status)}">${o.status}</span><span class="tr tsm tbold">${o.currency==='coin'?'🪙':'Rp '+(o.amount||0).toLocaleString()}</span></div>
+    </div>`).join(''):'<div class="tm tsm">No activity yet</div>';
+  } catch(e) {}
+}
+
+async function oLoadProds() {
+  const tb=document.getElementById('oProdTb');
+  tb.innerHTML='<tr><td colspan="9" class="tm" style="text-align:center">Loading...</td></tr>';
+  try {
+    const [ps,stks]=await Promise.all([dbGetAll('products'),rtGet('stocks')]);
+    prods=ps;
+    const stocks=stks||{};
+    tb.innerHTML=ps.length?ps.map(p=>{
+      const stk=stocks[p.id]!==undefined?stocks[p.id]:(p.stock||0);
+      const thumb=p.imgB64?`<img src="${p.imgB64}" style="width:38px;height:38px;object-fit:cover;border-radius:4px">`:p.imgUrl?`<img src="${p.imgUrl}" style="width:38px;height:38px;object-fit:cover;border-radius:4px">`:'-';
+      return `<tr>
+        <td>${thumb}</td>
+        <td><strong>${esc(p.name||'')}</strong><div class="txs tm">${esc(p.cat||'')}</div></td>
+        <td>Rp ${(p.price||0).toLocaleString()}</td>
+        <td>${p.balancePrice?`💰 Rp ${p.balancePrice.toLocaleString()}`:'-'}</td>
+        <td>${p.coinPrice?`🪙 ${p.coinPrice}`:'-'}</td>
+        <td class="${stk<=0?'tr':stk<=3?'tg':''}">${stk}</td>
+        <td>${p.discountPct?p.discountPct+'%':'-'}</td>
+        <td>${stars(p.avgRating||0)} <span class="txs">(${p.reviewCount||0})</span></td>
+        <td><div class="frow gap1">
+          <button class="btn btn-xs" onclick="oEditProd('${p.id}')">✏</button>
+          <button class="btn btn-xs btn-danger" onclick="oDelProd('${p.id}')">🗑</button>
+        </div></td>
+      </tr>`;
+    }).join(''):'<tr><td colspan="9" class="tm" style="text-align:center">No products yet</td></tr>';
+  } catch(e) { tb.innerHTML='<tr><td colspan="9" class="tr">Error</td></tr>'; }
+}
+
+function openAddProd() {
+  document.getElementById('mProdTitle').textContent='Add Product';
+  document.getElementById('eProdId').value='';
+  ['pName','pDesc','pCat','pDeliv','pImgUrl'].forEach(id=>document.getElementById(id).value='');
+  ['pPrice','pBalPrice','pCoinP','pStock','pDisc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pFeat').value='0';
+  document.getElementById('pImgPrev').style.display='none'; prodImgB64='';
+  document.getElementById('pImgFile').value='';
+  openM('mProd');
+}
+
+async function oEditProd(id) {
+  const p=await dbGet('products',id); if(!p) return;
+  const stk=await rtGet('stocks/'+id);
+  document.getElementById('mProdTitle').textContent='Edit Product';
+  document.getElementById('eProdId').value=id;
+  document.getElementById('pName').value=p.name||'';
+  document.getElementById('pDesc').value=p.desc||'';
+  document.getElementById('pPrice').value=p.price||'';
+  document.getElementById('pBalPrice').value=p.balancePrice||'';
+  document.getElementById('pCoinP').value=p.coinPrice||'';
+  document.getElementById('pStock').value=stk!==null?stk:(p.stock||0);
+  document.getElementById('pCat').value=p.cat||'';
+  document.getElementById('pDeliv').value=p.delivery||'';
+  document.getElementById('pImgUrl').value=p.imgUrl||'';
+  document.getElementById('pDisc').value=p.discountPct||'';
+  document.getElementById('pFeat').value=p.featured?'1':'0';
+  if(p.imgB64){document.getElementById('pImgPrev').src=p.imgB64;document.getElementById('pImgPrev').style.display='';prodImgB64=p.imgB64;}
+  else{document.getElementById('pImgPrev').style.display='';prodImgB64='';}
+  openM('mProd');
+}
+
+function prevProdImg(inp) {
+  const f=inp.files[0]; if(!f) return;
+  if(f.size>2*1024*1024){toast('Max 2MB image','err');return;}
+  const r=new FileReader();
+  r.onload=e=>{prodImgB64=e.target.result;const i=document.getElementById('pImgPrev');i.src=e.target.result;i.style.display='';document.getElementById('pImgUrl').value='';};
+  r.readAsDataURL(f);
+}
+function onPImgUrl(){prodImgB64='';document.getElementById('pImgPrev').style.display='none';}
+
+function prevQris(inp) {
+  const f=inp.files[0]; if(!f) return;
+  if(f.size>2*1024*1024){toast('Max 2MB','err');return;}
+  const r=new FileReader();
+  r.onload=e=>{
+    qrisB64=e.target.result;
+    const p=document.getElementById('qrisPrev');
+    if(p){p.src=e.target.result;p.style.display='block';}
+    const s=document.getElementById('qrisStatus');
+    if(s){s.textContent='✓ QRIS siap disimpan';s.style.color='var(--green)';}
+  };
+  r.readAsDataURL(f);
+}
+
+// ================================================================
+// NOTIFICATION BELL SYSTEM
+// ================================================================
+function addNotif(title, sub, icon='🔔', action=null) {
+  const n = { id: Date.now(), title, sub, icon, action, ts: Date.now(), read: false };
+  notifs.unshift(n);
+  if (notifs.length > 30) notifs = notifs.slice(0, 30);
+  try { localStorage.setItem('doomNotifs_'+(CU?.id||''), JSON.stringify(notifs)); } catch(e){}
+  updateBellUI();
+  return n;
+}
+
+function loadNotifs() {
+  try {
+    const s = localStorage.getItem('doomNotifs_'+(CU?.id||''));
+    if (s) notifs = JSON.parse(s);
+    // Merge global notifs (product updates etc)
+    const gs = localStorage.getItem('doomGlobalNotifs');
+    if (gs) {
+      const gn = JSON.parse(gs);
+      const seenKey = 'doomGlobalSeen_'+(CU?.id||'');
+      const seen = parseInt(localStorage.getItem(seenKey)||'0');
+      const fresh = gn.filter(n=>n.ts>seen);
+      if(fresh.length) {
+        notifs = [...fresh, ...notifs].slice(0,30);
+        localStorage.setItem(seenKey, Date.now());
+        localStorage.setItem('doomNotifs_'+(CU?.id||''), JSON.stringify(notifs));
+      }
+    }
+  } catch(e) { notifs = []; }
+  updateBellUI();
+}
+
+function updateBellUI() {
+  const unread = notifs.filter(n=>!n.read).length;
+  const badge = document.getElementById('bellBadge');
+  const bell = document.getElementById('navBell');
+  if (badge) {
+    badge.textContent = unread > 9 ? '9+' : unread;
+    badge.style.display = unread > 0 ? 'flex' : 'none';
+    if (bell) bell.style.color = unread > 0 ? 'var(--red)' : '';
+  }
+}
+
+function renderNotifList() {
+  const el = document.getElementById('notifList');
+  if (!el) return;
+  if (!notifs.length) {
+    el.innerHTML = '<div class="notif-empty"><i class="fas fa-bell-slash" style="font-size:1.8rem;margin-bottom:8px;display:block"></i>Belum ada notifikasi</div>';
+    return;
+  }
+  el.innerHTML = notifs.map(n => `
+    <div class="notif-item ${n.read?'':'unread'}" onclick="clickNotif('${n.id}')">
+      <div class="notif-ic">${n.icon}</div>
+      <div class="notif-body">
+        <div class="notif-title">${n.title}</div>
+        <div class="notif-sub">${n.sub}</div>
+        <div class="notif-time">${fmtTime(n.ts)} &bull; ${fmtDate(n.ts)}</div>
+      </div>
+    </div>`).join('');
+}
+
+function clickNotif(id) {
+  const n = notifs.find(x=>String(x.id)===String(id));
+  if (n) {
+    n.read = true;
+    try { localStorage.setItem('doomNotifs_'+(CU?.id||''), JSON.stringify(notifs)); } catch(e){}
+    updateBellUI();
+    renderNotifList();
+    if (n.action) n.action();
+  }
+}
+
+function clearNotifs() {
+  notifs = [];
+  try { localStorage.removeItem('doomNotifs_'+(CU?.id||'')); } catch(e){}
+  updateBellUI();
+  renderNotifList();
+}
+
+function toggleNotifPanel() {
+  const p = document.getElementById('notifPanel');
+  if (!p) return;
+  const visible = p.style.display !== 'none';
+  if (visible) { closeNotifPanel(); return; }
+  // Mark all as read when opened
+  notifs.forEach(n=>n.read=true);
+  try { localStorage.setItem('doomNotifs_'+(CU?.id||''), JSON.stringify(notifs)); } catch(e){}
+  updateBellUI();
+  renderNotifList();
+  p.style.display = 'block';
+  // Close on outside click
+  setTimeout(() => {
+    const handler = (e) => {
+      const bell = document.getElementById('navBell');
+      if (!p.contains(e.target) && !bell?.contains(e.target)) { closeNotifPanel(); document.removeEventListener('click', handler); }
+    };
+    document.addEventListener('click', handler);
+  }, 50);
+}
+
+function closeNotifPanel() {
+  const p = document.getElementById('notifPanel');
+  if (p) p.style.display = 'none';
+}
+
+async function saveProd() {
+  const name=document.getElementById('pName').value.trim();
+  const price=parseInt(document.getElementById('pPrice').value)||0;
+  const stock=parseInt(document.getElementById('pStock').value)||0;
+  if(!name||!price){toast('Name and price required','err');return;}
+  const id=document.getElementById('eProdId').value||'PROD-'+Date.now();
+  const imgUrl=document.getElementById('pImgUrl').value.trim();
+  const data={
+    id,name,
+    desc:document.getElementById('pDesc').value.trim(),
+    price,
+    coinPrice:parseInt(document.getElementById('pCoinP').value)||0,
+    balancePrice:parseInt(document.getElementById('pBalPrice').value)||0,
+    stock,
+    cat:document.getElementById('pCat').value.trim(),
+    delivery:document.getElementById('pDeliv').value.trim(),
+    imgUrl,
+    discountPct:parseInt(document.getElementById('pDisc').value)||0,
+    featured:document.getElementById('pFeat').value==='1',
+    avgRating:0, reviewCount:0
+  };
+  if(prodImgB64) data.imgB64=prodImgB64;
+  try{
+    await dbSet('products',id,data);
+    await rtSet('stocks/'+id,stock);
+    const isNew = !document.getElementById('eProdId').value;
+    closeM('mProd');toast(isNew?'Product added!':'Product updated!','ok');
+    // Store new product notification for broadcast
+    if(isNew){
+      try{
+        const nList=JSON.parse(localStorage.getItem('doomGlobalNotifs')||'[]');
+        nList.unshift({id:Date.now(),title:'🆕 Produk Baru!',sub:data.name+(data.cat?' — '+data.cat:''),icon:'🆕',ts:Date.now(),read:false});
+        localStorage.setItem('doomGlobalNotifs',JSON.stringify(nList.slice(0,10)));
+      }catch(e){}
+    }
+    prods=await dbGetAll('products');
+    oLoadProds();
+    renderFeat();
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+async function oDelProd(id) {
+  if(!confirm('Delete this product? This cannot be undone.')) return;
+  await dbDel('products',id);
+  prods=prods.filter(p=>p.id!==id);
+  oLoadProds(); renderFeat(); toast('Product deleted','inf');
+}
+
+async function loadOOrders() {
+  const tb=document.getElementById('oOrdTb');
+  tb.innerHTML='<tr><td colspan="8" class="tm" style="text-align:center">Loading...</td></tr>';
+  try {
+    const ords=await dbGetAll('orders');
+    const f=document.getElementById('oOrdFilter')?.value||'';
+    let list=ords.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    if(f) list=list.filter(o=>o.status===f);
+    tb.innerHTML=list.length?list.map(o=>`<tr>
+      <td class="fmono txs">${esc(o.id)}</td>
+      <td>${esc(o.username||o.userId)}</td>
+      <td>${esc(o.productName||'')}</td>
+      <td>${o.currency==='coin'?`🪙 ${o.amount}`:o.currency==='balance'?`💰 Rp ${(o.amount||0).toLocaleString()}(Bal)`:`Rp ${(o.amount||0).toLocaleString()}`}</td>
+      <td>${esc(o.method||'')}</td>
+      <td><span class="sta ${staCls(o.status)}">${o.status}</span></td>
+      <td>${o.proof?`<button class="btn btn-xs" onclick="viewProofAdmin('${o.id}')">View</button>`:'—'}</td>
+      <td>
+        <select class="inp" style="width:120px;padding:4px 7px;font-size:.73rem" onchange="oUpdOrdStatus('${o.id}',this.value)">
+          <option value="pending"    ${o.status==='pending'   ?'selected':''}>Pending</option>
+          <option value="processing" ${o.status==='processing'?'selected':''}>Processing</option>
+          <option value="delivered"  ${o.status==='delivered' ?'selected':''}>Delivered</option>
+          <option value="cancelled"  ${o.status==='cancelled' ?'selected':''}>Cancelled</option>
+        </select>
+      </td>
+    </tr>`).join(''):'<tr><td colspan="8" class="tm" style="text-align:center">No orders</td></tr>';
+  }catch(e){tb.innerHTML='<tr><td colspan="8" class="tr">Error loading</td></tr>';}
+}
+
+async function viewProofAdmin(ordId) {
+  const ord=await dbGet('orders',ordId);
+  if(ord?.proof){document.getElementById('proofImg').src=ord.proof;openM('mViewProof');}
+}
+
+async function oUpdOrdStatus(ordId,status) {
+  try{
+    const ord = await dbGet('orders', ordId);
+    await dbUpd('orders',ordId,{status});
+    toast('Order status updated!','ok');
+    // Add notif for the user (stored in user's notifs via their next login)
+    try {
+      const userNotifKey = 'doomNotifs_'+(ord?.userId||'');
+      const existing = JSON.parse(localStorage.getItem(userNotifKey)||'[]');
+      const statusIcons = {pending:'⏳',processing:'⚙️',delivered:'✅',cancelled:'❌'};
+      const statusLabelsN = {pending:'Menunggu Pembayaran',processing:'Sedang Diproses',delivered:'Sudah Dikirim! Cek Orders',cancelled:'Pesanan Dibatalkan'};
+      existing.unshift({id:Date.now(),title:`${statusIcons[status]||'📦'} Status Pesanan Update`,sub:`${ord?.productName||''} — ${statusLabelsN[status]||status}`,icon:statusIcons[status]||'📦',ts:Date.now(),read:false});
+      localStorage.setItem(userNotifKey, JSON.stringify(existing.slice(0,30)));
+    } catch(e){}
+    // 🔔 WEBHOOK: status update
+    const statusLabels = {pending:'⏳ Pending',processing:'⚙ Diproses',delivered:'✅ Delivered',cancelled:'❌ Dibatalkan'};
+    sendWebhook('status', {
+      'Order ID': ordId,
+      'Produk': ord?.productName||'',
+      'Customer': ord?.username||ord?.userId||'',
+      'Status Baru': statusLabels[status]||status,
+      'Total': ord?.currency==='coin'?`🪙 ${ord?.amount}`:`Rp ${(ord?.amount||0).toLocaleString()}`,
+    }).catch(()=>{});
+    setTimeout(loadOOrders,300);
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+async function oLoadTxs() {
+  const tb=document.getElementById('oTxTb');
+  tb.innerHTML='<tr><td colspan="10" class="tm" style="text-align:center">Loading...</td></tr>';
+  try{
+    const txs=await dbGetAll('transactions');
+    txs.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    tb.innerHTML=txs.length?txs.map(tx=>`<tr>
+      <td class="fmono txs">${esc(tx.id)}</td>
+      <td>${esc(tx.username||tx.userId)}</td>
+      <td>${esc(tx.type)}</td>
+      <td>Rp ${(tx.amount||0).toLocaleString()}</td>
+      <td>${tx.coins?`🪙 ${tx.coins}`:'-'}</td>
+      <td>${esc(tx.method||'')}</td>
+      <td><span class="sta ${staCls(tx.status)}">${tx.status}</span></td>
+      <td class="fmono txs">${fmtDate(tx.createdAt)}</td>
+      <td>${tx.proof?`<button class="btn btn-xs" onclick="viewTxProof('${tx.id}')">View</button>`:'—'}</td>
+      <td>${tx.status==='pending'?`<div class="frow gap1"><button class="btn btn-xs btn-success" onclick="approveTx('${tx.id}')">✓ Approve</button><button class="btn btn-xs btn-danger" onclick="rejectTx('${tx.id}')">✗ Reject</button></div>`:'—'}</td>
+    </tr>`).join(''):'<tr><td colspan="10" class="tm" style="text-align:center">No transactions</td></tr>';
+  }catch(e){tb.innerHTML='<tr><td colspan="10" class="tr">Error</td></tr>';}
+}
+
+async function viewTxProof(txId) {
+  const tx=await dbGet('transactions',txId);
+  if(tx?.proof){document.getElementById('proofImg').src=tx.proof;openM('mViewProof');}
+}
+
+async function approveTx(txId) {
+  const tx=await dbGet('transactions',txId); if(!tx) return;
+  try{
+    await dbUpd('transactions',txId,{status:'approved'});
+    if(tx.type==='topup-balance'){
+      const u=await dbGet('users',tx.userId);
+      if(u) await dbUpd('users',tx.userId,{balance:(u.balance||0)+tx.amount});
+    } else if(tx.type==='topup-coins'){
+      const u=await dbGet('users',tx.userId);
+      if(u) await dbUpd('users',tx.userId,{coins:(u.coins||0)+(tx.coins||0)});
+    }
+    toast('Transaction approved & balance/coins added!','ok'); oLoadTxs();
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+async function rejectTx(txId) {
+  await dbUpd('transactions',txId,{status:'rejected'});
+  toast('Transaction rejected','inf'); oLoadTxs();
+}
+
+async function oLoadUsers() {
+  const tb=document.getElementById('oUserTb');
+  tb.innerHTML='<tr><td colspan="7" class="tm" style="text-align:center">Loading...</td></tr>';
+  try{
+    const users=await dbGetAll('users');
+    const ords=await dbGetAll('orders');
+    document.getElementById('oUc').textContent=users.length;
+    tb.innerHTML=users.length?users.map(u=>{
+      const uc=ords.filter(o=>o.userId===u.id||o.userId===u.username).length;
+      return `<tr>
+        <td><strong>${esc(u.username||u.id)}</strong></td>
+        <td class="txs tm">${esc(u.email||'-')}</td>
+        <td>Rp ${(u.balance||0).toLocaleString()}</td>
+        <td>🪙 ${(u.coins||0).toLocaleString()}</td>
+        <td>${u.badge?`<span class="badge ${badgeCls2(u.badge)}">${badgeLbl(u.badge)}</span>`:'—'}</td>
+        <td>${uc}</td>
+        <td><div class="frow gap1">
+          <button class="btn btn-xs" onclick="openGiftBadge('${esc(u.id||u.username)}','${esc(u.username||u.id)}')">🏅 Badge</button>
+          <button class="btn btn-xs btn-success" onclick="addUserBal('${esc(u.id||u.username)}')">+ Bal</button>
+        </div></td>
+      </tr>`;
+    }).join(''):'<tr><td colspan="7" class="tm" style="text-align:center">No users</td></tr>';
+  }catch(e){tb.innerHTML='<tr><td colspan="7" class="tr">Error</td></tr>';}
+}
+
+async function addUserBal(uid) {
+  const amt=prompt('Add balance (IDR) to '+uid+':');
+  if(!amt||isNaN(amt)) return;
+  const u=await dbGet('users',uid);
+  if(!u){toast('User not found','err');return;}
+  await dbUpd('users',uid,{balance:(u.balance||0)+parseInt(amt)});
+  toast(`Added Rp ${parseInt(amt).toLocaleString()} to ${uid}`,'ok');
+  oLoadUsers();
+}
+
+function openGiftBadge(uid,uname) {
+  document.getElementById('badgeUID').value=uid;
+  document.getElementById('badgeUserInfo').innerHTML=`Gifting badge to: <strong class="tr">${esc(uname)}</strong>`;
+  document.getElementById('selBadgeVal').value='';
+  document.querySelectorAll('#mBadge .pm').forEach(e=>e.classList.remove('sel'));
+  openM('mBadge');
+}
+
+let selectedBadge='';
+function selBadge(b,el) {
+  selectedBadge=b;
+  document.getElementById('selBadgeVal').value=b;
+  document.querySelectorAll('#mBadge .pm').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+async function giftBadge() {
+  const uid=document.getElementById('badgeUID').value;
+  const b=document.getElementById('selBadgeVal').value;
+  if(b===''&&b!=='') return; // allow empty to remove
+  try{
+    await dbUpd('users',uid,{badge:b});
+    closeM('mBadge'); toast(b?`Badge ${b} gifted to ${uid}!`:`Badge removed from ${uid}`,'ok');
+    oLoadUsers();
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+// Owner Chat
+function oLoadChats() {
+  rtListen('chats',chats=>{
+    const el=document.getElementById('oChatList');
+    if(!chats){el.innerHTML='<div class="empty" style="padding:20px"><p>No chats yet</p></div>';return;}
+    const uids=Object.keys(chats);
+    // Sort by last message timestamp
+    const sorted = uids.sort((a,b)=>{
+      const ma = Object.values(chats[a]||{});
+      const mb = Object.values(chats[b]||{});
+      const la = ma.length ? Math.max(...ma.map(m=>m.ts||0)) : 0;
+      const lb = mb.length ? Math.max(...mb.map(m=>m.ts||0)) : 0;
+      return lb - la;
+    });
+    el.innerHTML=sorted.map(uid=>{
+      const msgs=Object.values(chats[uid]||{}).sort((a,b)=>b.ts-a.ts);
+      const last=msgs[0];
+      // Count unread (messages from user not yet replied to)
+      const userMsgs = msgs.filter(m=>m.sender!=='owner');
+      const ownerMsgs = msgs.filter(m=>m.sender==='owner');
+      const lastOwnerTs = ownerMsgs.length ? Math.max(...ownerMsgs.map(m=>m.ts||0)) : 0;
+      const unread = userMsgs.filter(m=>(m.ts||0)>lastOwnerTs).length;
+      return `<div class="cui ${oChatUID===uid?'act':''}" onclick="oSelChat('${uid}')">
+        <div class="cuav">${uid[0].toUpperCase()}</div>
+        <div style="flex:1;min-width:0">
+          <div class="cuname">${esc(uid)}</div>
+          <div class="txs tm" style="max-width:130px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${esc((last?.text||'').slice(0,30))}</div>
+        </div>
+        ${unread>0?`<div class="cunread">${unread}</div>`:''}
+      </div>`;
+    }).join('');
+  });
+}
+
+function oSelChat(uid) {
+  oChatUID=uid;
+  document.getElementById('oChatName').textContent=uid;
+  document.getElementById('oChatInpRow').style.display='';
+  if(oChatUnsub){oChatUnsub();oChatUnsub=null;}
+  const msgsEl=document.getElementById('oChatMsgs');
+  oChatUnsub=rtListen('chats/'+uid,msgs=>{
+    if(!msgs){msgsEl.innerHTML='<div class="empty"><p>No messages</p></div>';return;}
+    const list=Object.values(msgs).sort((a,b)=>a.ts-b.ts);
+    msgsEl.innerHTML=list.map(m=>{
+      const mine=m.sender==='owner';
+      return `<div class="msg-row ${mine?'mine':''}">
+        <div><div class="mbubble">${esc(m.text||'')}</div><div class="mmeta">${mine?'You (Owner)':uid} &bull; ${fmtTime(m.ts)}</div></div>
+      </div>`;
+    }).join('');
+    msgsEl.scrollTop=msgsEl.scrollHeight;
+  });
+  oLoadChats();
+}
+
+async function sendOwnerMsg() {
+  if(!oChatUID) return;
+  const inp=document.getElementById('oChatInp');
+  const text=inp.value.trim(); if(!text) return;
+  inp.value='';
+  await rtPush('chats/'+oChatUID,{sender:'owner',text,ts:Date.now()});
+}
+
+async function oLoadDiscs() {
+  const tb=document.getElementById('oDiscTb');
+  tb.innerHTML='<tr><td colspan="6" class="tm" style="text-align:center">Loading...</td></tr>';
+  try{
+    const ds=await dbGetAll('discounts');
+    tb.innerHTML=ds.length?ds.map(d=>`<tr>
+      <td class="fmono tbold tr">${esc(d.id)}</td>
+      <td>${d.pct}%</td>
+      <td>Rp ${(d.minPurchase||0).toLocaleString()}</td>
+      <td>${d.usesLeft===-1||d.usesLeft===0?'Unlimited':(d.usesLeft||'Unlimited')}</td>
+      <td class="txs fmono">${fmtDate(d.createdAt)}</td>
+      <td><button class="btn btn-xs btn-danger" onclick="oDelDisc('${d.id}')">🗑 Delete</button></td>
+    </tr>`).join(''):'<tr><td colspan="6" class="tm" style="text-align:center">No discount codes</td></tr>';
+  }catch(e){}
+}
+
+async function saveDisc() {
+  const code=document.getElementById('dCode').value.trim().toUpperCase();
+  const pct=parseInt(document.getElementById('dPct').value);
+  const min=parseInt(document.getElementById('dMin').value)||0;
+  const uses=parseInt(document.getElementById('dUses').value)||0;
+  if(!code||!pct){toast('Code and % required','err');return;}
+  try{
+    await dbSet('discounts',code,{id:code,pct,minPurchase:min,usesLeft:uses===0?-1:uses,createdAt:Date.now()});
+    closeM('mDisc');toast('Discount code created!','ok');oLoadDiscs();
+  }catch(e){toast('Error: '+e.message,'err');}
+}
+
+async function oDelDisc(id) {
+  await dbDel('discounts',id); toast('Discount deleted','inf'); oLoadDiscs();
+}
+
+// ================================================================
+// WEBHOOK SYSTEM
+// ================================================================
+let webhookSet = {};
+
+async function loadWebhookSet() {
+  try { webhookSet = (await dbGet('settings','webhook')) || {}; } catch(e) { webhookSet = {}; }
+}
+
+function whTypeChange() {
+  const t = document.getElementById('sWHType')?.value || 'discord';
+  document.getElementById('whDiscordRow').style.display  = t==='discord'  ? '' : 'none';
+  document.getElementById('whTelegramRow').style.display = t==='telegram' ? '' : 'none';
+  document.getElementById('whCustomRow').style.display   = t==='custom'   ? '' : 'none';
+}
+
+async function saveWebhookSet() {
+  const type = document.getElementById('sWHType').value;
+  const evts = {
+    order:  document.getElementById('whEvtOrder').checked,
+    chat:   document.getElementById('whEvtChat').checked,
+    status: document.getElementById('whEvtStatus').checked,
+    topup:  document.getElementById('whEvtTopup').checked,
+  };
+  const data = { type, evts };
+  if (type==='discord')  data.discordUrl = document.getElementById('sWHDiscord').value.trim();
+  if (type==='telegram') { data.tgToken = document.getElementById('sWHTGToken').value.trim(); data.tgChat = document.getElementById('sWHTGChat').value.trim(); }
+  if (type==='custom')   data.customUrl = document.getElementById('sWHCustom').value.trim();
+  await dbSet('settings','webhook',data);
+  webhookSet = data;
+  toast('Webhook settings saved! ✅','ok');
+}
+
+function loadWhUI() {
+  if (!webhookSet || !webhookSet.type) return;
+  const t = webhookSet.type;
+  const el = document.getElementById('sWHType'); if(el) el.value = t;
+  whTypeChange();
+  if (t==='discord'  && document.getElementById('sWHDiscord'))  document.getElementById('sWHDiscord').value  = webhookSet.discordUrl||'';
+  if (t==='telegram') {
+    if (document.getElementById('sWHTGToken')) document.getElementById('sWHTGToken').value = webhookSet.tgToken||'';
+    if (document.getElementById('sWHTGChat'))  document.getElementById('sWHTGChat').value  = webhookSet.tgChat||'';
+  }
+  if (t==='custom'   && document.getElementById('sWHCustom'))   document.getElementById('sWHCustom').value   = webhookSet.customUrl||'';
+  const evts = webhookSet.evts||{};
+  ['Order','Chat','Status','Topup'].forEach(k => {
+    const el2 = document.getElementById('whEvt'+k);
+    if (el2) el2.checked = evts[k.toLowerCase()]!==false;
+  });
+}
+
+// ---- Core send function ----
+async function sendWebhook(eventType, payload) {
+  await loadWebhookSet();
+  const cfg = webhookSet;
+  if (!cfg || !cfg.type) return; // not configured
+  const evts = cfg.evts || {};
+  if (!evts[eventType]) return; // event disabled
+
+  const storeName = 'DOOMINIKS STORE';
+  const now = new Date().toLocaleString('id-ID');
+
+  try {
+    if (cfg.type === 'discord' && cfg.discordUrl) {
+      await sendDiscordWebhook(cfg.discordUrl, eventType, payload, storeName, now);
+    } else if (cfg.type === 'telegram' && cfg.tgToken && cfg.tgChat) {
+      await sendTelegramWebhook(cfg.tgToken, cfg.tgChat, eventType, payload, storeName, now);
+    } else if (cfg.type === 'custom' && cfg.customUrl) {
+      await sendCustomWebhook(cfg.customUrl, eventType, payload, storeName, now);
+    }
+  } catch(e) {
+    console.warn('[Webhook] Send failed:', e.message);
+  }
+}
+
+function buildDiscordEmbed(eventType, payload, storeName, now) {
+  const colors = { order:0xff0033, chat:0x00d4ff, status:0x00ff88, topup:0xffd700 };
+  const icons  = { order:'🛒', chat:'💬', status:'📦', topup:'💳' };
+  const titles = {
+    order:  `${icons.order} Order Baru Masuk!`,
+    chat:   `${icons.chat} Pesan Chat Baru`,
+    status: `${icons.status} Status Order Diupdate`,
+    topup:  `${icons.topup} Topup Request Masuk`,
+  };
+  const fields = Object.entries(payload).map(([k,v])=>({ name:k, value:String(v).slice(0,1024)||'—', inline:true }));
+  return {
+    username: storeName,
+    embeds: [{
+      title: titles[eventType] || '🔔 Notifikasi',
+      color: colors[eventType] || 0xff0033,
+      fields,
+      footer: { text: `${storeName} • ${now}` },
+      timestamp: new Date().toISOString()
+    }]
+  };
+}
+
+async function sendDiscordWebhook(url, eventType, payload, storeName, now) {
+  const body = buildDiscordEmbed(eventType, payload, storeName, now);
+  await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+}
+
+function buildTelegramMsg(eventType, payload, storeName, now) {
+  const icons = { order:'🛒', chat:'💬', status:'📦', topup:'💳' };
+  const labels = { order:'ORDER BARU', chat:'PESAN CHAT', status:'STATUS UPDATE', topup:'TOPUP REQUEST' };
+  const icon = icons[eventType]||'🔔';
+  const label = labels[eventType]||'NOTIFIKASI';
+  let text = `*${icon} ${label} — ${storeName}*\n`;
+  text += `_${now}_\n\n`;
+  Object.entries(payload).forEach(([k,v]) => { text += `*${k}:* ${String(v).slice(0,300)}\n`; });
+  return text;
+}
+
+async function sendTelegramWebhook(token, chatId, eventType, payload, storeName, now) {
+  const text = buildTelegramMsg(eventType, payload, storeName, now);
+  const url = `https://api.telegram.org/bot${token}/sendMessage`;
+  await fetch(url, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ chat_id:chatId, text, parse_mode:'Markdown' })
+  });
+}
+
+async function sendCustomWebhook(url, eventType, payload, storeName, now) {
+  const body = { event:eventType, store:storeName, timestamp:now, data:payload };
+  await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+}
+
+async function testWebhook() {
+  const statusEl = document.getElementById('whStatus');
+  statusEl.textContent = '⏳ Mengirim test...';
+  statusEl.style.color = 'var(--txt2)';
+  const testPayload = { 'Order ID':'ORD-TEST-001', 'Produk':'[TEST] Demo Product', 'User':'testuser', 'Amount':'Rp 150.000', 'Method':'BCA Transfer', 'Status':'pending' };
+  try {
+    await saveWebhookSet();
+    await sendWebhook('order', testPayload);
+    statusEl.textContent = '✅ Test berhasil dikirim! Cek channel/bot kamu.';
+    statusEl.style.color = 'var(--green)';
+  } catch(e) {
+    statusEl.textContent = '❌ Gagal: ' + e.message;
+    statusEl.style.color = '#f44';
+  }
+}
+
+// ================================================================
+// END WEBHOOK SYSTEM
+// ================================================================
+
+async function oLoadSettings() {
+  await loadSettings();
+  await loadWebhookSet();
+  document.getElementById('sDiscord').value=storeSet.discord||'';
+  document.getElementById('sCoinRate').value=storeSet.coinRate||1000;
+  document.getElementById('sAnnounce').value=storeSet.announce||'';
+  document.getElementById('sBCA').value=paySet.bca||'';
+  document.getElementById('sBNI').value=paySet.bni||'';
+  document.getElementById('sGopay').value=paySet.gopay||'';
+  document.getElementById('sOVO').value=paySet.ovo||'';
+  document.getElementById('sDANA').value=paySet.dana||'';
+  const seabankEl=document.getElementById('sSeabank');if(seabankEl)seabankEl.value=paySet.seabank||'';
+  // QRIS image
+  if(paySet.qrisImg){const p=document.getElementById('qrisPrev');if(p){p.src=paySet.qrisImg;p.style.display='block';}}
+  document.getElementById('sOwnerUN').value=ownerCred.ownerUsername||DEF_OWNER_UN;
+  loadWhUI();
+  oLoadRevsMgmt();
+}
+
+async function saveOwnerAcc() {
+  const un=document.getElementById('sOwnerUN').value.trim();
+  const oldpw=document.getElementById('sOwnerOldPwd').value;
+  const newpw=document.getElementById('sOwnerPwd').value;
+  const currentPW=ownerCred.ownerPassword||DEF_OWNER_PW;
+  if(oldpw!==currentPW){toast('Current password incorrect','err');return;}
+  const upd={};
+  if(un) upd.ownerUsername=un;
+  if(newpw){if(newpw.length<6){toast('Min 6 chars','err');return;} upd.ownerPassword=newpw;}
+  if(!Object.keys(upd).length){toast('Nothing to update','inf');return;}
+  await dbSet('settings','owner',upd);
+  ownerCred={...ownerCred,...upd};
+  if(CU&&CU.isOwner&&un){CU.username=un;saveCU();updateNav();}
+  toast('Owner account updated!','ok');
+}
+
+async function saveStoreSet() {
+  const discord=document.getElementById('sDiscord').value.trim();
+  const coinRate=parseInt(document.getElementById('sCoinRate').value)||1000;
+  const announce=document.getElementById('sAnnounce').value.trim();
+  await dbSet('settings','store',{discord,coinRate,announce});
+  storeSet={...storeSet,discord,coinRate,announce};
+  applyDiscordLinks(); toast('Store settings saved!','ok');
+}
+
+async function savePaySet() {
+  const p={
+    bca:document.getElementById('sBCA').value.trim(),
+    bni:document.getElementById('sBNI').value.trim(),
+    seabank:(document.getElementById('sSeabank')||{}).value?.trim()||paySet.seabank||'',
+    gopay:document.getElementById('sGopay').value.trim(),
+    dana:document.getElementById('sDANA').value.trim(),
+    qrisImg: qrisB64 || paySet.qrisImg || ''
+  };
+  await dbSet('settings','payments',p);
+  paySet=p; toast('Payment settings saved!','ok');
+}
+
+async function oLoadRevsMgmt() {
+  const el=document.getElementById('oRevList');
+  try{
+    const revs=await dbGetAll('reviews');
+    el.innerHTML=revs.length?revs.map(r=>`<div class="fbetween" style="padding:8px 0;border-bottom:1px solid var(--border)">
+      <div><div class="tsm tbold">${esc(r.username||'')} ${stars(r.rating||0)}</div><div class="txs tm">${esc((r.text||'').slice(0,50))}... <span class="fmono">${esc(r.productName||'')}</span></div></div>
+      <button class="btn btn-xs btn-danger" onclick="oDelRev('${r.id}','${r.productId}')">🗑</button>
+    </div>`).join(''):'<div class="tm tsm">No reviews</div>';
+  }catch(e){}
+}
+
+async function oDelRev(id,prodId) {
+  await dbDel('reviews',id);
+  if(prodId){
+    const all=await dbGetAll('reviews');
+    const pr=all.filter(r=>r.productId===prodId);
+    const avg=pr.length?pr.reduce((s,r)=>s+(r.rating||0),0)/pr.length:0;
+    await dbUpd('products',prodId,{avgRating:Math.round(avg*10)/10,reviewCount:pr.length});
+  }
+  toast('Review deleted','inf'); oLoadRevsMgmt();
+}
+
+// ================================================================
+// MODAL HELPERS
+// ================================================================
+function openM(id){document.getElementById(id).classList.add('open')}
+function closeM(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.moverlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+
+// ================================================================
+// TOAST
+// ================================================================
+function toast(msg,type='inf'){
+  const icons={ok:'✅',err:'❌',inf:'ℹ️'};
+  const el=document.createElement('div');
+  el.className=`toast ${type}`;
+  el.innerHTML=`<span>${icons[type]||'•'}</span><span>${esc(msg)}</span>`;
+  document.getElementById('TC').appendChild(el);
+  setTimeout(()=>el.remove(),3800);
+}
+
+// ================================================================
+// UTILITIES
+// ================================================================
+function stars(r){
+  const f=Math.floor(r||0); let s='';
+  for(let i=0;i<5;i++) s+=i<f?'★':'☆';
+  return `<span style="color:var(--gold)">${s}</span>`;
+}
+function esc(str){return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function fmtDate(ts){if(!ts)return'—';return new Date(ts).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});}
+function fmtTime(ts){if(!ts)return'';return new Date(ts).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});}
+function staCls(s){return{pending:'st-p',processing:'st-pr',delivered:'st-d',cancelled:'st-c',approved:'st-d',rejected:'st-c',pending_tx:'st-a'}[s]||'st-p';}
+function badgeLbl(b){return{warrior:'⚔ Warrior',elite:'💎 Elite',master:'👑 Master',grandmaster:'🏆 Grandmaster',mythical:'🔥 Mythical',owner:'👑 Owner'}[b]||b;}
+function badgeCls2(b){return{warrior:'bw',elite:'be',master:'bm',grandmaster:'bg2c',mythical:'bmy',owner:'bo'}[b]||'';}
+// ================================================================
+// CATALOG SYSTEM
+// ================================================================
+let catalogs = [];
+let activeCat = '';
+let catImgB64 = '';
+
+async function loadCatalogs() {
+  try {
+    const all = await dbGetAll('catalogs');
+    catalogs = all.filter(c => c.visible !== false).sort((a,b)=>(a.order||99)-(b.order||99));
+  } catch(e) { catalogs = []; }
+}
+
+function renderCatalogStrip() {
+  const strip = document.getElementById('homeCatalogStrip');
+  if (!strip) return;
+  let html = `<div class="cat-chip ${!activeCat?'act':''}" data-cat="" onclick="setCat('',this)"><div class="cat-chip-icon">🔥</div><span>Semua</span></div>`;
+  catalogs.forEach(c => {
+    const icon = c.imgB64 ? `<img src="${c.imgB64}" alt="${esc(c.name)}">` : `<div class="cat-chip-icon">${c.emoji||'🎮'}</div>`;
+    html += `<div class="cat-chip ${activeCat===c.cat?'act':''}" data-cat="${esc(c.cat||c.name)}" onclick="setCat('${esc(c.cat||c.name)}',this)">${icon}<span>${esc(c.name)}</span></div>`;
+  });
+  strip.innerHTML = html;
+}
+
+function setCat(cat, el) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('act'));
+  if (el) el.classList.add('act');
+  renderHomePage();
+}
+
+// ================================================================
+// HOME PAGE RENDERER
+// ================================================================
+function renderHomePage() {
+  const search = (document.getElementById('homeSearch')||{}).value?.toLowerCase()||'';
+  const sort = (document.getElementById('homeSort')||{}).value||'';
+  let list = [...prods];
+  if (search) list = list.filter(p => (p.name||'').toLowerCase().includes(search)||(p.desc||'').toLowerCase().includes(search)||(p.cat||'').toLowerCase().includes(search));
+  if (activeCat) list = list.filter(p => (p.cat||'') === activeCat);
+  if (sort==='pa') list.sort((a,b)=>(a.price||0)-(b.price||0));
+  else if (sort==='pd') list.sort((a,b)=>(b.price||0)-(a.price||0));
+  else if (sort==='rat') list.sort((a,b)=>(b.avgRating||0)-(a.avgRating||0));
+  else list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+
+  const sectEl = document.getElementById('homeCatalogSections');
+  const allEl = document.getElementById('homeAllProds');
+  if (!sectEl || !allEl) return;
+
+  // If filtering or searching, just show flat grid
+  if (activeCat || search) {
+    sectEl.innerHTML = '';
+    allEl.style.display = '';
+    const grid = document.getElementById('homeProdsGrid');
+    grid.innerHTML = list.length ? list.map(p=>pCard(p)).join('') : '<div class="empty"><i class="fas fa-box-open"></i><p>Tidak ada produk ditemukan</p></div>';
+    return;
+  }
+
+  // Show catalog sections if catalogs exist
+  if (catalogs.length > 0 && !search && !activeCat) {
+    allEl.style.display = 'none';
+    let html = '';
+    catalogs.forEach(cat => {
+      const catProds = list.filter(p => (p.cat||'') === (cat.cat||cat.name)).slice(0, 10);
+      if (!catProds.length) return;
+      html += `<div class="mb4">
+        <div class="sh mb2">
+          <span class="sh-title">${esc(cat.name)}</span>
+          <span class="sh-more" onclick="setCat('${esc(cat.cat||cat.name)}',null)">Lihat Semua <i class="fas fa-chevron-right"></i></span>
+        </div>
+        <div class="scroll-container" style="position:relative">
+          <div class="h-scroll-row" id="hrow_${esc(cat.id||cat.name)}">
+            ${catProds.map(p=>pCard(p,'pcard-h')).join('')}
+          </div>
+        </div>
+      </div>`;
+    });
+    // Featured / uncategorized
+    const featured = list.filter(p=>p.featured||p.feat).slice(0,8);
+    if (featured.length > 0) {
+      html = `<div class="mb4">
+        <div class="sh mb2"><span class="sh-title">⭐ Featured</span><span class="sh-more" onclick="goSec('products')">Lihat Semua <i class="fas fa-chevron-right"></i></span></div>
+        <div class="scroll-container"><div class="h-scroll-row" id="hrow_feat">${featured.map(p=>pCard(p,'pcard-h')).join('')}</div></div>
+      </div>` + html;
+    }
+    sectEl.innerHTML = html || '';
+    if (!html) {
+      allEl.style.display = '';
+      document.getElementById('homeProdsGrid').innerHTML = list.map(p=>pCard(p)).join('') || '<div class="empty"><i class="fas fa-box-open"></i><p>Belum ada produk</p></div>';
+    }
+  } else {
+    // No catalogs - show flat grid
+    sectEl.innerHTML = '';
+    allEl.style.display = '';
+    const grid = document.getElementById('homeProdsGrid');
+    grid.innerHTML = list.length ? list.map(p=>pCard(p)).join('') : '<div class="empty"><i class="fas fa-box-open"></i><p>Belum ada produk</p></div>';
+  }
+}
+
+function filterHomeProds(val) {
+  renderHomePage();
+}
+
+function doNavSearch(val) {
+  if (val && val.length > 1) {
+    goSec('products');
+    document.getElementById('psearch').value = val;
+    renderProds();
+  }
+}
+
+function goSearchResults() {
+  const val = document.getElementById('navSearch').value;
+  if (val) {
+    goSec('products');
+    document.getElementById('psearch').value = val;
+    renderProds();
+  }
+}
+
+// ================================================================
+// CATALOG MANAGEMENT (OWNER)
+// ================================================================
+async function oLoadCatalog() {
+  const el = document.getElementById('oCatalogList');
+  el.innerHTML = '<div class="empty"><i class="fas fa-spinner fa-spin"></i></div>';
+  try {
+    const all = await dbGetAll('catalogs');
+    all.sort((a,b)=>(a.order||99)-(b.order||99));
+    if (!all.length) { el.innerHTML = '<div class="empty"><i class="fas fa-tags"></i><p>Belum ada katalog</p></div>'; return; }
+    el.innerHTML = all.map(c => `
+      <div class="cat-manage-item">
+        ${c.imgB64?`<img src="${c.imgB64}" style="width:32px;height:32px;border-radius:6px;object-fit:cover">`:c.emoji?`<div class="cat-manage-icon-ph">${c.emoji}</div>`:`<div class="cat-manage-icon-ph">🎮</div>`}
+        <div style="flex:1">
+          <div style="font-size:.85rem;font-weight:700">${esc(c.name||'')}</div>
+          <div style="font-size:.72rem;color:var(--txt3)">Kategori: ${esc(c.cat||'-')} &bull; Urutan: ${c.order||0} &bull; ${c.visible===false?'<span style="color:#ef4444">Tersembunyi</span>':'<span style="color:var(--green)">Tampil</span>'}</div>
+        </div>
+        <div style="display:flex;gap:5px">
+          <button class="btn btn-xs" onclick="oEditCatalog('${c.id}')"><i class="fas fa-pen"></i></button>
+          <button class="btn btn-xs btn-danger" onclick="oDelCatalog('${c.id}')"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>`).join('');
+  } catch(e) { el.innerHTML = '<div class="empty"><p>Error</p></div>'; }
+}
+
+function openAddCatalog() {
+  document.getElementById('mCatalogTitle').textContent = 'Tambah Katalog';
+  document.getElementById('eCatalogId').value = '';
+  document.getElementById('cName').value = '';
+  document.getElementById('cCat').value = '';
+  document.getElementById('cEmoji').value = '';
+  document.getElementById('cVisible').value = '1';
+  document.getElementById('cOrder').value = '0';
+  const prev = document.getElementById('catImgPrev');
+  if (prev) prev.style.display = 'none';
+  catImgB64 = '';
+  openM('mCatalog');
+}
+
+async function oEditCatalog(id) {
+  const c = await dbGet('catalogs', id);
+  if (!c) return;
+  document.getElementById('mCatalogTitle').textContent = 'Edit Katalog';
+  document.getElementById('eCatalogId').value = id;
+  document.getElementById('cName').value = c.name||'';
+  document.getElementById('cCat').value = c.cat||'';
+  document.getElementById('cEmoji').value = c.emoji||'';
+  document.getElementById('cVisible').value = c.visible===false ? '0' : '1';
+  document.getElementById('cOrder').value = c.order||0;
+  catImgB64 = c.imgB64||'';
+  const prev = document.getElementById('catImgPrev');
+  if (prev && catImgB64) { prev.src = catImgB64; prev.style.display = 'block'; }
+  openM('mCatalog');
+}
+
+async function saveCatalog() {
+  const name = document.getElementById('cName').value.trim();
+  if (!name) { toast('Nama katalog wajib diisi','err'); return; }
+  const id = document.getElementById('eCatalogId').value || 'CAT-'+Date.now();
+  const data = {
+    id, name,
+    cat: document.getElementById('cCat').value.trim(),
+    emoji: document.getElementById('cEmoji').value.trim(),
+    visible: document.getElementById('cVisible').value === '1',
+    order: parseInt(document.getElementById('cOrder').value)||0,
+  };
+  if (catImgB64) data.imgB64 = catImgB64;
+  try {
+    await dbSet('catalogs', id, data);
+    closeM('mCatalog');
+    toast('Katalog disimpan!','ok');
+    await loadCatalogs();
+    renderCatalogStrip();
+    oLoadCatalog();
+  } catch(e) { toast('Error: '+e.message,'err'); }
+}
+
+async function oDelCatalog(id) {
+  if (!confirm('Hapus katalog ini?')) return;
+  await dbDel('catalogs', id);
+  await loadCatalogs();
+  renderCatalogStrip();
+  oLoadCatalog();
+  toast('Katalog dihapus','inf');
+}
+
+function prevCatImg(inp) {
+  const f = inp.files[0]; if (!f) return;
+  if (f.size > 2*1024*1024) { toast('Max 2MB','err'); return; }
+  const r = new FileReader();
+  r.onload = e => { catImgB64=e.target.result; const p=document.getElementById('catImgPrev'); if(p){p.src=e.target.result;p.style.display='block';} };
+  r.readAsDataURL(f);
+}
+
+// ================================================================
+// RENDER HELPERS - updated renderFeat to use new system
+// ================================================================
+function renderFeat() {
+  renderHomePage();
+}
+
+
+
+// ================================================================
+// TOPUP method for QRIS proc
+// ================================================================
+
+</script>
+</body>
+</html>
