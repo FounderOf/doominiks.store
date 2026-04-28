@@ -12,13 +12,13 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
   const firebaseConfig = {
-    apiKey: "AIzaSyDECWw2-w_HdtmIFp5eJB1es_h8lpT0Gt4",
-    authDomain: "doominiks-niks.firebaseapp.com",
-    databaseURL: "https://doominiks-niks-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "doominiks-niks",
-    storageBucket: "doominiks-niks.firebasestorage.app",
-    messagingSenderId: "504521349704",
-    appId: "1:504521349704:web:15f0305b8cf9da746f567d"
+    apiKey: "AIzaSyAuZLwwomxlNUjcPp4JYILdSz4EAWtoRxY",
+    authDomain: "dooniniks-paradise.firebaseapp.com",
+    databaseURL: "https://dooniniks-paradise-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "dooniniks-paradise",
+    storageBucket: "dooniniks-paradise.firebasestorage.app",
+    messagingSenderId: "140802324914",
+    appId: "1:140802324914:web:f2e4f4f4656b75b240ccab"
   };
   firebase.initializeApp(firebaseConfig);
   window._db  = firebase.firestore();
@@ -162,19 +162,61 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 .atab.act{background:var(--pri);color:#fff}
 
 /* ══════════════════════════════════
-   HOME PAGE
+   HOME PAGE — New Design
 ══════════════════════════════════ */
-/* Hero banner */
-.hero-banner{background:linear-gradient(135deg,#1a0a0a 0%,#1a0505 50%,#0d0d0d 100%);border-bottom:1px solid var(--border);padding:32px 0;overflow:hidden;position:relative}
-.hero-banner::before{content:'';position:absolute;top:-50%;right:-10%;width:500px;height:500px;background:radial-gradient(ellipse,rgba(229,57,53,.12) 0,transparent 65%);pointer-events:none}
-.hero-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
-.hero-text h1{font-size:clamp(1.5rem,4vw,2.4rem);font-weight:800;line-height:1.1;letter-spacing:-.03em}
-.hero-text h1 span{color:var(--pri)}
-.hero-text p{font-size:.88rem;color:var(--txt2);margin-top:8px;line-height:1.6}
-.hero-btns{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+/* Hero Slider */
+.hero-slider{position:relative;width:100%;overflow:hidden;background:#000;border-bottom:1px solid var(--border)}
+.hero-slider-track{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+.hero-slide{min-width:100%;position:relative;height:clamp(200px,40vw,480px);overflow:hidden;flex-shrink:0}
+.hero-slide img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-slide-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(0,0,0,.85) 100%)}
+.hero-slide-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;background:linear-gradient(135deg,#1a0a0a,#1a0505)}
+.hero-slide-content{position:absolute;bottom:0;left:0;right:0;padding:20px 20px 24px;display:flex;align-items:flex-end;justify-content:space-between}
+.hero-slide-text h2{font-size:clamp(1rem,3vw,1.8rem);font-weight:800;text-shadow:0 2px 8px rgba(0,0,0,.8);line-height:1.2;margin-bottom:4px}
+.hero-slide-text p{font-size:clamp(.72rem,1.5vw,.88rem);color:rgba(255,255,255,.8);text-shadow:0 1px 4px rgba(0,0,0,.8)}
+.hero-slide-badge{background:var(--pri);color:#fff;padding:5px 12px;border-radius:20px;font-size:.72rem;font-weight:700;white-space:nowrap;flex-shrink:0;margin-left:10px}
+.hero-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:10}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:all .3s;border:none;padding:0}
+.hero-dot.act{background:#fff;width:18px;border-radius:3px}
+.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:.82rem;z-index:10;transition:all .2s;backdrop-filter:blur(4px)}
+.hero-arrow:hover{background:var(--pri);border-color:var(--pri)}
+.hero-arrow.left{left:12px}
+.hero-arrow.right{right:12px}
+@media(max-width:600px){.hero-arrow{display:none}}
 
-/* Search bar (home) */
-.home-search-wrap{padding:16px 0;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:58px;z-index:100}
+/* Store Logo & Title Bar */
+.store-title-bar{background:var(--bg);border-bottom:1px solid var(--border);padding:12px 0}
+.store-title-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:14px}
+.store-logo-circle{width:44px;height:44px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;flex-shrink:0;border:2px solid var(--pri2);box-shadow:0 0 16px rgba(229,57,53,.3)}
+.store-title-text{flex:1}
+.store-title-name{font-size:1.1rem;font-weight:800;letter-spacing:-.02em}
+.store-title-name span{color:var(--pri)}
+.store-title-sub{font-size:.72rem;color:var(--txt3);margin-top:1px}
+.store-title-discord a{display:flex;align-items:center;gap:6px;background:#5865f2;color:#fff;padding:7px 12px;border-radius:6px;font-size:.78rem;font-weight:600;transition:all .2s;white-space:nowrap}
+.store-title-discord a:hover{background:#4752c4}
+
+/* Home category chips bar */
+.home-cats-bar{background:var(--bg);border-bottom:2px solid var(--border);padding:10px 0;position:sticky;top:58px;z-index:100;overflow:hidden}
+.home-cats-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.home-cats-inner::-webkit-scrollbar{display:none}
+.home-cat-pill{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0;min-width:64px}
+.home-cat-pill-icon{width:32px;height:32px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:var(--bg4)}
+.home-cat-pill-icon img{width:100%;height:100%;object-fit:cover}
+.home-cat-pill-label{font-size:.65rem;font-weight:700;color:var(--txt2);text-align:center;line-height:1.2}
+.home-cat-pill:hover,.home-cat-pill.act{background:rgba(229,57,53,.1);border-color:var(--pri)}
+.home-cat-pill.act .home-cat-pill-label{color:var(--pri)}
+
+/* Old catalog strip — keep but hide on home, still used in filtering */
+.catalog-strip{padding:14px 0;background:var(--bg);border-bottom:1px solid var(--border)}
+.catalog-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.catalog-inner::-webkit-scrollbar{display:none}
+.cat-chip{display:flex;align-items:center;gap:7px;padding:7px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0;font-size:.8rem;font-weight:600;color:var(--txt2)}
+.cat-chip img{width:22px;height:22px;border-radius:4px;object-fit:cover}
+.cat-chip .cat-chip-icon{width:22px;height:22px;border-radius:4px;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-size:.75rem}
+.cat-chip:hover,.cat-chip.act{background:rgba(229,57,53,.12);border-color:var(--pri);color:var(--pri)}
+
+/* Search bar (home) — now inside product section only */
+.home-search-wrap{padding:16px 0;background:var(--bg);border-bottom:1px solid var(--border)}
 .home-search-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:8px;align-items:center}
 .home-search-box{flex:1;max-width:500px;position:relative}
 .home-search-box input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--txt);font-family:var(--f);font-size:.9rem;padding:10px 14px 10px 38px;border-radius:8px;outline:none;transition:all .2s}
@@ -236,14 +278,16 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 @media(max-width:600px){.pcard-h{width:155px}}
 
 /* ══════════════════════════════════
-   PAYMENT LOGOS
+   PAYMENT LOGOS — Real Images
 ══════════════════════════════════ */
-.pay-methods{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
-.pm{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r3);padding:10px 12px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
-.pm:hover,.pm.sel{border-color:var(--pri);background:rgba(229,57,53,.08)}
-.pm-logo{height:26px;object-fit:contain;width:auto;max-width:80px}
-.pm-logo-fallback{height:26px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--txt2)}
-.pm-label{font-size:.7rem;color:var(--txt2);font-weight:600}
+.pay-methods{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.pm{background:var(--bg3);border:2px solid var(--border2);border-radius:10px;padding:12px 10px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;position:relative}
+.pm:hover,.pm.sel{border-color:var(--pri);background:rgba(229,57,53,.08);transform:translateY(-1px);box-shadow:0 4px 12px rgba(229,57,53,.15)}
+.pm.sel::after{content:'✓';position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:#fff;border:2px solid var(--bg)}
+.pm-logo-wrap{height:36px;display:flex;align-items:center;justify-content:center;width:100%}
+.pm-logo{height:32px;object-fit:contain;width:auto;max-width:90px}
+.pm-logo-fallback{height:32px;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;color:var(--txt2);background:var(--bg4);border-radius:6px;width:90px}
+.pm-label{font-size:.68rem;color:var(--txt2);font-weight:600;margin-top:2px}
 .pm.sel .pm-label{color:var(--pri)}
 
 /* ══════════════════════════════════
@@ -318,12 +362,13 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 .info-box{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r3);padding:14px;margin-bottom:14px}
 
 /* ══════════════════════════════════
-   OWNER PANEL
+   OWNER PANEL — Elegant tabs
 ══════════════════════════════════ */
-.otabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:10px}
-.otab{background:none;border:1px solid transparent;color:var(--txt3);padding:5px 12px;border-radius:5px;cursor:pointer;font-family:var(--f);font-size:.76rem;font-weight:600;transition:all .2s}
-.otab.act,.otab:hover{border-color:var(--border2);color:var(--txt);background:var(--bg3)}
-.otab.act{border-color:var(--pri);color:var(--pri);background:rgba(229,57,53,.08)}
+.otabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:6px;gap:3px}
+.otab{background:none;border:1px solid transparent;color:var(--txt3);padding:7px 13px;border-radius:7px;cursor:pointer;font-family:var(--f);font-size:.76rem;font-weight:600;transition:all .18s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.otab i{font-size:.75rem}
+.otab.act,.otab:hover{border-color:transparent;color:var(--txt);background:var(--bg3)}
+.otab.act{border-color:var(--pri);color:var(--pri);background:rgba(229,57,53,.08);box-shadow:0 1px 4px rgba(229,57,53,.15)}
 .osec{display:none}
 .osec.act{display:block}
 .dtable{width:100%;border-collapse:collapse}
@@ -572,21 +617,53 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
   HOME SECTION
 ════════════════════════════════════ -->
 <section class="sec act" id="sec-home">
-  <!-- Hero Banner -->
-  <div class="hero-banner">
-    <div class="hero-inner">
-      <div class="hero-text">
-        <h1>Digital Store<br><span>Terpercaya</span></h1>
-        <p>Game top up, akun, dan produk digital terbaik.<br>Transaksi cepat & aman.</p>
-        <div class="hero-btns">
-          <button class="btn btn-red" onclick="goSec('products')"><i class="fas fa-shopping-bag"></i> Belanja Sekarang</button>
-          <a class="btn" id="heroDiscord" href="#" target="_blank" style="border-color:#5865f2;color:#7289da"><i class="fab fa-discord"></i> Discord</a>
+  <!-- ── HERO SLIDER ── -->
+  <div class="hero-slider" id="heroSlider">
+    <div class="hero-slider-track" id="heroTrack">
+      <!-- Slides injected by renderHeroSlider() -->
+      <div class="hero-slide">
+        <div class="hero-slide-ph">🎮</div>
+        <div class="hero-slide-overlay"></div>
+        <div class="hero-slide-content">
+          <div class="hero-slide-text">
+            <h2>DOOMINIKS STORE</h2>
+            <p>Game top up, akun & produk digital terpercaya</p>
+          </div>
+          <span class="hero-slide-badge">Promo Aktif!</span>
         </div>
+      </div>
+    </div>
+    <button class="hero-arrow left" onclick="slideHero(-1)"><i class="fas fa-chevron-left"></i></button>
+    <button class="hero-arrow right" onclick="slideHero(1)"><i class="fas fa-chevron-right"></i></button>
+    <div class="hero-dots" id="heroDots"></div>
+  </div>
+
+  <!-- ── STORE LOGO + NAME ── -->
+  <div class="store-title-bar">
+    <div class="store-title-inner">
+      <div class="store-logo-circle">D</div>
+      <div class="store-title-text">
+        <div class="store-title-name">DOOMINIKS<span>STORE</span></div>
+        <div class="store-title-sub">Game Top Up &bull; Akun Digital &bull; Joki</div>
+      </div>
+      <div class="store-title-discord">
+        <a id="heroDiscord" href="#" target="_blank"><i class="fab fa-discord"></i> Discord</a>
       </div>
     </div>
   </div>
 
-  <!-- Search + Filter Bar -->
+  <!-- ── GAME CATEGORY PILLS ── -->
+  <div class="home-cats-bar">
+    <div class="home-cats-inner" id="homeCatPills">
+      <div class="home-cat-pill act" data-cat="" onclick="setHomeCat('',this)">
+        <div class="home-cat-pill-icon">🔥</div>
+        <div class="home-cat-pill-label">Semua</div>
+      </div>
+      <!-- injected by renderHomeCatPills() -->
+    </div>
+  </div>
+
+  <!-- ── SEARCH + SORT (inside content area) ── -->
   <div class="home-search-wrap">
     <div class="home-search-inner">
       <div class="home-search-box">
@@ -602,8 +679,8 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
     </div>
   </div>
 
-  <!-- Catalog Chips -->
-  <div class="catalog-strip">
+  <!-- keep hidden catalog strip for backward compat -->
+  <div class="catalog-strip" style="display:none">
     <div class="catalog-inner" id="homeCatalogStrip">
       <div class="cat-chip act" data-cat="" onclick="setCat('',this)">
         <div class="cat-chip-icon">🔥</div>
@@ -613,10 +690,8 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
   </div>
 
   <div class="ctn" style="padding-top:20px">
-
     <!-- Catalog Sections (dynamic) -->
     <div id="homeCatalogSections"></div>
-
     <!-- All Products Fallback -->
     <div id="homeAllProds">
       <div class="sh mb2 mt2">
@@ -625,10 +700,9 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
       </div>
       <div class="pgrid" id="homeProdsGrid"><div class="empty"><i class="fas fa-spinner fa-spin"></i></div></div>
     </div>
-
     <!-- Reviews -->
     <div class="mb4 mt4">
-      <div class="sh mb2"><span class="sh-title">Ulasan Terbaru</span></div>
+      <div class="sh mb2"><span class="sh-title">⭐ Ulasan Terbaru</span></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px" id="homeRevs"></div>
     </div>
   </div>
@@ -871,33 +945,45 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
         <label class="lbl">Metode Pembayaran</label>
         <div class="pay-methods" id="tuMethods">
           <div class="pm" data-m="bca" onclick="selTuMethod(this)">
-            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="BCA">
-            <div class="pm-logo-fallback" style="display:none">BCA</div>
+            <div class="pm-logo-wrap">
+              <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="BCA">
+              <div class="pm-logo-fallback" style="display:none">BCA</div>
+            </div>
             <div class="pm-label">BCA</div>
           </div>
           <div class="pm" data-m="bni" onclick="selTuMethod(this)">
-            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/id/5/55/BNI_logo.svg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="BNI">
-            <div class="pm-logo-fallback" style="display:none">BNI</div>
+            <div class="pm-logo-wrap">
+              <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/id/5/55/BNI_logo.svg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="BNI">
+              <div class="pm-logo-fallback" style="display:none">BNI</div>
+            </div>
             <div class="pm-label">BNI</div>
           </div>
           <div class="pm" data-m="seabank" onclick="selTuMethod(this)">
-            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/SeaBank_Logo.svg/512px-SeaBank_Logo.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="SeaBank">
-            <div class="pm-logo-fallback" style="display:none">SeaBank</div>
+            <div class="pm-logo-wrap">
+              <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/SeaBank_Logo.svg/512px-SeaBank_Logo.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="SeaBank">
+              <div class="pm-logo-fallback" style="display:none">SeaBank</div>
+            </div>
             <div class="pm-label">SeaBank</div>
           </div>
           <div class="pm" data-m="gopay" onclick="selTuMethod(this)">
-            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Gopay_logo.svg/512px-Gopay_logo.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="GoPay">
-            <div class="pm-logo-fallback" style="display:none">GoPay</div>
+            <div class="pm-logo-wrap">
+              <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Gopay_logo.svg/512px-Gopay_logo.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="GoPay">
+              <div class="pm-logo-fallback" style="display:none">GoPay</div>
+            </div>
             <div class="pm-label">GoPay</div>
           </div>
           <div class="pm" data-m="dana" onclick="selTuMethod(this)">
-            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_dana_blue.svg/512px-Logo_dana_blue.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="DANA">
-            <div class="pm-logo-fallback" style="display:none">DANA</div>
+            <div class="pm-logo-wrap">
+              <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_dana_blue.svg/512px-Logo_dana_blue.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="DANA">
+              <div class="pm-logo-fallback" style="display:none">DANA</div>
+            </div>
             <div class="pm-label">DANA</div>
           </div>
           <div class="pm" data-m="qris" onclick="selTuMethod(this)">
-            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_QRIS.svg/512px-Logo_QRIS.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="QRIS">
-            <div class="pm-logo-fallback" style="display:none">QRIS</div>
+            <div class="pm-logo-wrap">
+              <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_QRIS.svg/512px-Logo_QRIS.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="QRIS">
+              <div class="pm-logo-fallback" style="display:none">QRIS</div>
+            </div>
             <div class="pm-label">QRIS</div>
           </div>
         </div>
@@ -913,20 +999,25 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 <section class="sec" id="sec-owner">
   <div class="ctn" style="padding-top:20px">
     <div class="fbetween mb3 fwrap gap2">
-      <div><div class="sec-hd">⚙ Owner Panel</div></div>
+      <div>
+        <div class="sec-hd" style="display:flex;align-items:center;gap:8px">
+          <span style="width:32px;height:32px;border-radius:8px;background:var(--pri);display:inline-flex;align-items:center;justify-content:center;font-size:.9rem">⚙</span>
+          Owner Panel
+        </div>
+      </div>
       <span class="badge bo"><i class="fas fa-crown"></i> OWNER</span>
     </div>
     <div class="otabs">
-      <button class="otab act" onclick="otab(this,'dash')">Dashboard</button>
-      <button class="otab" onclick="otab(this,'prods')">Produk</button>
-      <button class="otab" onclick="otab(this,'ords')">Orders</button>
-      <button class="otab" onclick="otab(this,'txs')">Transaksi</button>
-      <button class="otab" onclick="otab(this,'users')">Users</button>
-      <button class="otab" onclick="otab(this,'ochat')">Chat</button>
-      <button class="otab" onclick="otab(this,'catalog')">Katalog</button>
-      <button class="otab" onclick="otab(this,'discs')">Diskon</button>
-      <button class="otab" onclick="otab(this,'komplain')">Komplain</button>
-      <button class="otab" onclick="otab(this,'settings')">Settings</button>
+      <button class="otab act" onclick="otab(this,'dash')"><i class="fas fa-chart-bar"></i> Dashboard</button>
+      <button class="otab" onclick="otab(this,'prods')"><i class="fas fa-box"></i> Produk</button>
+      <button class="otab" onclick="otab(this,'ords')"><i class="fas fa-shopping-cart"></i> Orders</button>
+      <button class="otab" onclick="otab(this,'txs')"><i class="fas fa-money-bill-wave"></i> Transaksi</button>
+      <button class="otab" onclick="otab(this,'users')"><i class="fas fa-users"></i> Users</button>
+      <button class="otab" onclick="otab(this,'ochat')"><i class="fas fa-comments"></i> Chat</button>
+      <button class="otab" onclick="otab(this,'catalog')"><i class="fas fa-tags"></i> Katalog</button>
+      <button class="otab" onclick="otab(this,'discs')"><i class="fas fa-percent"></i> Diskon</button>
+      <button class="otab" onclick="otab(this,'komplain')"><i class="fas fa-exclamation-circle"></i> Komplain</button>
+      <button class="otab" onclick="otab(this,'settings')"><i class="fas fa-cog"></i> Settings</button>
     </div>
 
     <!-- DASHBOARD -->
@@ -1253,12 +1344,13 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
       <div>
         <div class="ig">
           <label class="lbl">Gambar Produk</label>
-          <div class="uparea" onclick="document.getElementById('pImgFile').click()">
-            <i class="fas fa-image" style="font-size:2rem;color:var(--txt3);margin-bottom:6px;display:block"></i>
-            <div style="font-size:.82rem;color:var(--txt2)">Klik upload gambar</div>
-            <div style="font-size:.7rem;color:var(--txt3);margin-top:3px">Max 2MB</div>
+          <div class="uparea" id="pImgDropZone" onclick="document.getElementById('pImgFile').click()" ondragover="event.preventDefault();this.style.borderColor='var(--pri)'" ondragleave="this.style.borderColor=''" ondrop="handleImgDrop(event,'prod')">
+            <i class="fas fa-cloud-upload-alt" style="font-size:2rem;color:var(--txt3);margin-bottom:6px;display:block"></i>
+            <div style="font-size:.82rem;color:var(--txt2)">Klik atau drag gambar ke sini</div>
+            <div style="font-size:.7rem;color:var(--txt3);margin-top:3px">JPG, PNG, WEBP — Max 2MB</div>
             <img id="pImgPrev" class="uppreview">
           </div>
+          <div id="pImgStatus" style="display:none;margin-top:6px;font-size:.75rem;padding:6px 10px;border-radius:6px;font-weight:600"></div>
           <input type="file" id="pImgFile" accept="image/*" style="display:none" onchange="prevProdImg(this)">
         </div>
         <div class="ig"><label class="lbl">Atau URL Gambar</label><input class="inp" id="pImgUrl" placeholder="https://..." oninput="onPImgUrl()"></div>
@@ -1523,6 +1615,8 @@ async function initApp() {
   if (CU) loadNotifs();
   // Render home page with products
   renderHomePage();
+  renderHeroSlider();
+  renderHomeCatPills();
   loadHomeRevs();
   updateHomeStats();
 }
@@ -1593,7 +1687,7 @@ function goSec(sec) {
   setBNavByKey(sec);
   // Lazy load
   const loaders = {
-    home: () => { renderHomePage(); loadHomeRevs(); if(CU) loadActivityCounts(); },
+    home: () => { renderHomePage(); renderHeroSlider(); renderHomeCatPills(); loadHomeRevs(); if(CU) loadActivityCounts(); },
     products: renderProds,
     reviews: loadRevs,
     orders: loadOrders,
@@ -1623,7 +1717,10 @@ function updateNav() {
     loadProfChatUnread();
     const bd = document.getElementById('bantDiscord');
     if (bd) bd.href = storeSet.discord || '#';
-    if (!CU.isOwner) initChatListener();
+    if (!CU.isOwner) {
+      initChatListener();
+      initPushForUser();
+    }
   }
 }
 
@@ -1974,8 +2071,10 @@ function buildPayMethods() {
     return !!paySet[id];
   });
   return active.map(id=>`<div class="pm" data-m="${id}" onclick="selBuyMethod('${id}',this)">
-    <img class="pm-logo" src="${logos[id]||''}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${labels[id]}">
-    <div class="pm-logo-fallback" style="display:none">${labels[id]}</div>
+    <div class="pm-logo-wrap">
+      <img class="pm-logo" src="${logos[id]||''}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${labels[id]}">
+      <div class="pm-logo-fallback" style="display:none">${labels[id]}</div>
+    </div>
     <div class="pm-label">${labels[id]}</div>
   </div>`).join('');
 }
@@ -2190,9 +2289,11 @@ async function submitProof() {
         'Diskon': payContext.disc ? payContext.disc.id+' (-'+payContext.disc.pct+'%)' : 'Tidak ada',
         'Status': 'pending — menunggu verifikasi'
       }).catch(()=>{});
-      closeM('mPay'); toast('Order placed! Awaiting verification.','ok');
+      closeM('mPay');
+      toast('Order berhasil! Menunggu verifikasi owner.','ok');
       addNotif('📦 Order Dikirim', `${payContext.prod.name} menunggu verifikasi`, '📦', ()=>{goSec('orders');});
-      goSec('orders');
+      // ✅ Redirect ke orders setelah pembayaran berhasil
+      setTimeout(()=>{ goSec('orders'); }, 400);
     }
   } catch(e) { toast('Error: '+e.message,'err'); }
 }
@@ -2283,6 +2384,8 @@ async function submitRev() {
     if (idx>=0) { prods[idx].avgRating=Math.round(avg*10)/10; prods[idx].reviewCount=pr.length; }
     closeM('mRev'); toast('Review submitted! +20 XP earned ⭐','ok');
     await loadHomeRevs();
+    // Send webhook notif
+    sendWebhookReview({ productName: prodName, username: CU.username||CU.id, rating: selRating, text }).catch(()=>{});
     // Refresh level card if on profile
     if (document.getElementById('sec-profile').classList.contains('act')) renderLevelCard();
   } catch(e) { toast('Error: '+e.message,'err'); }
@@ -2408,6 +2511,8 @@ function initChatListener() {
       if (latest.ts > lastShown) {
         showChatNotif(latest.text, latest.ts);
         localStorage.setItem('doomChatNotifTs_'+CU.id, latest.ts);
+        // Push notification ke device
+        showPushNotif('💬 Support DOOMINIKS', latest.text.slice(0,80), null, () => { goSec('chat'); setBNavByKey('chat'); });
         // Also add to bell notif
         addNotif('💬 Pesan Support', latest.text.slice(0,60)+'...', '💬', () => { goSec('chat'); setBNavByKey('chat'); });
       }
@@ -2418,6 +2523,34 @@ function initChatListener() {
       markAllRead();
     }
   });
+
+  // ── Listen real-time Firestore notif (order status updates dari owner) ──
+  listenUserFirestoreNotifs();
+}
+
+let firestoreNotifUnsub = null;
+function listenUserFirestoreNotifs() {
+  if (!CU || CU.isOwner) return;
+  if (firestoreNotifUnsub) { firestoreNotifUnsub(); firestoreNotifUnsub = null; }
+  const lastNotifTs = parseInt(localStorage.getItem('doomFSNotifTs_'+CU.id)||'0');
+  firestoreNotifUnsub = getDB().collection('user_notifs')
+    .where('userId','==', CU.id)
+    .where('ts', '>', lastNotifTs)
+    .onSnapshot(snap => {
+      snap.docChanges().forEach(change => {
+        if (change.type === 'added') {
+          const n = change.doc.data();
+          const title = n.title || '🔔 Notifikasi';
+          const body = n.body || '';
+          // Show popup notification on device
+          showPushNotif(title, body, null, n.action==='orders' ? ()=>goSec('orders') : null);
+          // Add to bell
+          addNotif(title, body, n.title?.split(' ')[0]||'🔔', n.action==='orders' ? ()=>goSec('orders') : null);
+          // Update localStorage timestamp
+          localStorage.setItem('doomFSNotifTs_'+CU.id, Date.now());
+        }
+      });
+    });
 }
 
 function updateUnreadUI() {
@@ -2779,10 +2912,60 @@ function prevProdImg(inp) {
   const f=inp.files[0]; if(!f) return;
   if(f.size>2*1024*1024){toast('Max 2MB image','err');return;}
   const r=new FileReader();
-  r.onload=e=>{prodImgB64=e.target.result;const i=document.getElementById('pImgPrev');i.src=e.target.result;i.style.display='';document.getElementById('pImgUrl').value='';};
+  r.onload=e=>{
+    prodImgB64=e.target.result;
+    const i=document.getElementById('pImgPrev');
+    i.src=e.target.result; i.style.display='';
+    document.getElementById('pImgUrl').value='';
+    // ✅ Tampilkan notifikasi berhasil upload
+    const statusEl = document.getElementById('pImgStatus');
+    if (statusEl) {
+      statusEl.style.display = '';
+      statusEl.style.background = 'rgba(16,185,129,.12)';
+      statusEl.style.color = 'var(--green)';
+      statusEl.style.border = '1px solid rgba(16,185,129,.3)';
+      statusEl.innerHTML = `✅ Gambar berhasil diupload! <span style="color:var(--txt3);font-weight:400">${f.name} (${(f.size/1024).toFixed(0)} KB)</span>`;
+    }
+    // Update drop zone appearance
+    const dz = document.getElementById('pImgDropZone');
+    if (dz) dz.style.borderColor = 'var(--green)';
+    toast('✅ Gambar produk berhasil diupload!','ok');
+  };
   r.readAsDataURL(f);
 }
-function onPImgUrl(){prodImgB64='';document.getElementById('pImgPrev').style.display='none';}
+function onPImgUrl(){
+  prodImgB64='';
+  document.getElementById('pImgPrev').style.display='none';
+  const statusEl = document.getElementById('pImgStatus');
+  if (statusEl) statusEl.style.display = 'none';
+  const dz = document.getElementById('pImgDropZone');
+  if (dz) dz.style.borderColor = '';
+}
+
+function handleImgDrop(e, type) {
+  e.preventDefault();
+  const dz = e.currentTarget; if(dz) dz.style.borderColor='';
+  const f = e.dataTransfer?.files?.[0];
+  if (!f || !f.type.startsWith('image/')) { toast('Upload file gambar (JPG/PNG/WEBP)','err'); return; }
+  if (type === 'prod') {
+    if (f.size > 2*1024*1024) { toast('Max 2MB image','err'); return; }
+    const r = new FileReader();
+    r.onload = ev => {
+      prodImgB64 = ev.target.result;
+      const i = document.getElementById('pImgPrev'); i.src = ev.target.result; i.style.display = '';
+      document.getElementById('pImgUrl').value = '';
+      const statusEl = document.getElementById('pImgStatus');
+      if (statusEl) {
+        statusEl.style.display=''; statusEl.style.background='rgba(16,185,129,.12)';
+        statusEl.style.color='var(--green)'; statusEl.style.border='1px solid rgba(16,185,129,.3)';
+        statusEl.innerHTML=`✅ Gambar berhasil diupload via drag! <span style="color:var(--txt3);font-weight:400">${f.name} (${(f.size/1024).toFixed(0)} KB)</span>`;
+      }
+      if(dz) dz.style.borderColor='var(--green)';
+      toast('✅ Gambar produk berhasil diupload!','ok');
+    };
+    r.readAsDataURL(f);
+  }
+}
 
 function prevQris(inp) {
   const f=inp.files[0]; if(!f) return;
@@ -3013,6 +3196,18 @@ async function oUpdOrdStatus(ordId,status) {
       'Status Baru': statusLabels[status]||status,
       'Total': ord?.currency==='coin'?`🪙 ${ord?.amount}`:`Rp ${(ord?.amount||0).toLocaleString()}`,
     }).catch(()=>{});
+    // 🔔 Simpan notif ke Firestore agar customer bisa baca real-time
+    try {
+      const statusIcons2 = {pending:'⏳',processing:'⚙️',delivered:'✅',cancelled:'❌'};
+      const statusMsg = {pending:'Menunggu Pembayaran',processing:'Sedang Diproses',delivered:'Sudah Dikirim! Cek pesananmu',cancelled:'Pesanan Dibatalkan'};
+      await dbSet('user_notifs', `${ord?.userId}_${Date.now()}`, {
+        userId: ord?.userId||'',
+        title: `${statusIcons2[status]||'📦'} Status Pesanan Update`,
+        body: `${ord?.productName||''} — ${statusMsg[status]||status}`,
+        ts: Date.now(), read: false,
+        action: 'orders'
+      });
+    } catch(e){}
     setTimeout(loadOOrders,300);
   }catch(e){toast('Error: '+e.message,'err');}
 }
@@ -3295,23 +3490,32 @@ async function sendWebhook(eventType, payload) {
 }
 
 function buildDiscordEmbed(eventType, payload, storeName, now) {
-  const colors = { order:0xff0033, chat:0x00d4ff, status:0x00ff88, topup:0xffd700 };
-  const icons  = { order:'🛒', chat:'💬', status:'📦', topup:'💳' };
+  const colors = { order:0xe53935, chat:0x00d4ff, status:0x00ff88, topup:0xffd700, review:0xa855f7 };
+  const icons  = { order:'🛒', chat:'💬', status:'📦', topup:'💳', review:'⭐' };
   const titles = {
-    order:  `${icons.order} Order Baru Masuk!`,
-    chat:   `${icons.chat} Pesan Chat Baru`,
-    status: `${icons.status} Status Order Diupdate`,
-    topup:  `${icons.topup} Topup Request Masuk`,
+    order:  `🛒 Order Baru Masuk — ${storeName}`,
+    chat:   `💬 Pesan Chat Baru — ${storeName}`,
+    status: `📦 Status Order Diupdate — ${storeName}`,
+    topup:  `💳 Top Up Request Masuk — ${storeName}`,
+    review: `⭐ Review Baru — ${storeName}`,
   };
+  // Topup gets a distinctive gold color and different footer
+  const isTopup = eventType === 'topup';
   const fields = Object.entries(payload).map(([k,v])=>({ name:k, value:String(v).slice(0,1024)||'—', inline:true }));
   return {
     username: storeName,
+    avatar_url: 'https://i.imgur.com/AfFp7pu.png',
     embeds: [{
-      title: titles[eventType] || '🔔 Notifikasi',
-      color: colors[eventType] || 0xff0033,
+      title: titles[eventType] || `🔔 Notifikasi — ${storeName}`,
+      color: colors[eventType] || 0xe53935,
       fields,
-      footer: { text: `${storeName} • ${now}` },
-      timestamp: new Date().toISOString()
+      footer: {
+        text: isTopup
+          ? `💳 TOPUP REQUEST • ${storeName} • ${now}`
+          : `${storeName} • ${now}`
+      },
+      timestamp: new Date().toISOString(),
+      thumbnail: isTopup ? { url: 'https://i.imgur.com/lfVzNl6.png' } : undefined,
     }]
   };
 }
@@ -3936,6 +4140,165 @@ async function renderLevelCard() {
   } catch(e) {
     console.warn('Level card error:', e);
   }
+}
+
+// ================================================================
+// HERO SLIDER
+// ================================================================
+let heroSlideIdx = 0;
+let heroSlideTimer = null;
+
+function renderHeroSlider() {
+  const track = document.getElementById('heroTrack');
+  const dotsEl = document.getElementById('heroDots');
+  if (!track) return;
+
+  // Build slides from: catalog images + product images (featured first)
+  const slides = [];
+
+  // Add featured products as slides
+  const featured = prods.filter(p => p.featured && (p.imgB64 || p.imgUrl)).slice(0, 6);
+  featured.forEach(p => {
+    slides.push({ img: p.imgB64 || p.imgUrl, title: p.name, sub: p.cat || 'Game Digital', badge: `Rp ${discPrice(p).toLocaleString()}`, id: p.id });
+  });
+
+  // Add catalog images as slides if fewer than 3 product slides
+  if (slides.length < 3) {
+    catalogs.forEach(c => {
+      if (c.imgB64) slides.push({ img: c.imgB64, title: c.name, sub: 'Tersedia sekarang', badge: '🎮 Game' });
+    });
+  }
+
+  // Default slide if nothing
+  if (!slides.length) {
+    slides.push({ img: null, title: 'DOOMINIKS STORE', sub: 'Game top up, akun & produk digital terpercaya', badge: 'Promo Aktif!' });
+  }
+
+  track.innerHTML = slides.map((s, i) => {
+    const imgHtml = s.img
+      ? `<img src="${s.img}" alt="${esc(s.title||'')}" style="width:100%;height:100%;object-fit:cover">`
+      : `<div class="hero-slide-ph">🎮</div>`;
+    return `<div class="hero-slide" onclick="${s.id?`openProd('${s.id}')`:''}">
+      ${imgHtml}
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-slide-content">
+        <div class="hero-slide-text">
+          <h2>${esc(s.title||'')}</h2>
+          <p>${esc(s.sub||'')}</p>
+        </div>
+        ${s.badge?`<span class="hero-slide-badge">${esc(s.badge)}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  if (dotsEl) {
+    dotsEl.innerHTML = slides.map((_, i) => `<button class="hero-dot ${i===0?'act':''}" onclick="goToSlide(${i})"></button>`).join('');
+  }
+
+  heroSlideIdx = 0;
+  clearInterval(heroSlideTimer);
+  if (slides.length > 1) heroSlideTimer = setInterval(() => slideHero(1), 4500);
+}
+
+function slideHero(dir) {
+  const track = document.getElementById('heroTrack');
+  if (!track) return;
+  const total = track.children.length;
+  if (total <= 1) return;
+  heroSlideIdx = (heroSlideIdx + dir + total) % total;
+  track.style.transform = `translateX(-${heroSlideIdx * 100}%)`;
+  document.querySelectorAll('.hero-dot').forEach((d, i) => d.classList.toggle('act', i === heroSlideIdx));
+}
+
+function goToSlide(idx) {
+  const track = document.getElementById('heroTrack');
+  if (!track) return;
+  heroSlideIdx = idx;
+  track.style.transform = `translateX(-${idx * 100}%)`;
+  document.querySelectorAll('.hero-dot').forEach((d, i) => d.classList.toggle('act', i === idx));
+}
+
+// ================================================================
+// HOME CATEGORY PILLS
+// ================================================================
+function renderHomeCatPills() {
+  const el = document.getElementById('homeCatPills');
+  if (!el) return;
+  let html = `<div class="home-cat-pill act" data-cat="" onclick="setHomeCat('',this)">
+    <div class="home-cat-pill-icon">🔥</div>
+    <div class="home-cat-pill-label">Semua</div>
+  </div>`;
+  catalogs.forEach(c => {
+    const catKey = c.cat || c.name;
+    const iconHtml = c.imgB64
+      ? `<img src="${c.imgB64}" alt="${esc(c.name)}">`
+      : (c.emoji || '🎮');
+    html += `<div class="home-cat-pill" data-cat="${esc(catKey)}" onclick="setHomeCat('${esc(catKey)}',this)">
+      <div class="home-cat-pill-icon">${c.imgB64?`<img src="${c.imgB64}" alt="${esc(c.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:6px">`:(c.emoji||'🎮')}</div>
+      <div class="home-cat-pill-label">${esc(c.name)}</div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+function setHomeCat(cat, el) {
+  activeCat = cat;
+  // Update pill active state
+  document.querySelectorAll('.home-cat-pill').forEach(c => c.classList.remove('act'));
+  if (el) el.classList.add('act');
+  // Also sync old hidden catalog chips
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.toggle('act', c.dataset.cat === cat));
+  renderHomePage();
+}
+
+// ================================================================
+// PUSH NOTIFICATION (Web Push untuk customer)
+// ================================================================
+async function requestPushPermission() {
+  if (!('Notification' in window)) return false;
+  if (Notification.permission === 'granted') return true;
+  if (Notification.permission === 'denied') return false;
+  const result = await Notification.requestPermission();
+  return result === 'granted';
+}
+
+function showPushNotif(title, body, icon, onClick) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  try {
+    const n = new Notification(title, {
+      body,
+      icon: icon || '/favicon.ico',
+      badge: '/favicon.ico',
+      tag: 'doominiks-' + Date.now(),
+      requireInteraction: false,
+    });
+    if (onClick) n.onclick = () => { window.focus(); onClick(); n.close(); };
+    setTimeout(() => n.close(), 6000);
+  } catch(e) {}
+}
+
+// Request permission saat user login
+async function initPushForUser() {
+  if (!CU || CU.isOwner) return;
+  const granted = await requestPushPermission();
+  if (granted) {
+    // Show a welcome push notif
+    setTimeout(() => {
+      showPushNotif('DOOMINIKS STORE 🎮', `Selamat datang, ${CU.username}! Notifikasi aktif.`, null, () => goSec('home'));
+    }, 1500);
+  }
+}
+
+// ================================================================
+// SEND WEBHOOK — tambah event review
+// ================================================================
+async function sendWebhookReview(r) {
+  sendWebhook('review', {
+    'Produk': r.productName||'',
+    'Customer': r.username||'',
+    'Rating': `${'⭐'.repeat(r.rating||5)} (${r.rating}/5)`,
+    'Ulasan': (r.text||'').slice(0,300),
+  }).catch(()=>{});
 }
 
 // ================================================================
