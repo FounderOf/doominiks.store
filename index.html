@@ -162,61 +162,33 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 .atab.act{background:var(--pri);color:#fff}
 
 /* ══════════════════════════════════
-   HOME PAGE — New Design
+   HOME PAGE — HERO SLIDESHOW
 ══════════════════════════════════ */
-/* Hero Slider */
-.hero-slider{position:relative;width:100%;overflow:hidden;background:#000;border-bottom:1px solid var(--border)}
-.hero-slider-track{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1)}
-.hero-slide{min-width:100%;position:relative;height:clamp(200px,40vw,480px);overflow:hidden;flex-shrink:0}
-.hero-slide img{width:100%;height:100%;object-fit:cover;display:block}
-.hero-slide-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(0,0,0,.85) 100%)}
-.hero-slide-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;background:linear-gradient(135deg,#1a0a0a,#1a0505)}
-.hero-slide-content{position:absolute;bottom:0;left:0;right:0;padding:20px 20px 24px;display:flex;align-items:flex-end;justify-content:space-between}
-.hero-slide-text h2{font-size:clamp(1rem,3vw,1.8rem);font-weight:800;text-shadow:0 2px 8px rgba(0,0,0,.8);line-height:1.2;margin-bottom:4px}
-.hero-slide-text p{font-size:clamp(.72rem,1.5vw,.88rem);color:rgba(255,255,255,.8);text-shadow:0 1px 4px rgba(0,0,0,.8)}
-.hero-slide-badge{background:var(--pri);color:#fff;padding:5px 12px;border-radius:20px;font-size:.72rem;font-weight:700;white-space:nowrap;flex-shrink:0;margin-left:10px}
-.hero-dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:10}
-.hero-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:all .3s;border:none;padding:0}
-.hero-dot.act{background:#fff;width:18px;border-radius:3px}
-.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:.82rem;z-index:10;transition:all .2s;backdrop-filter:blur(4px)}
-.hero-arrow:hover{background:var(--pri);border-color:var(--pri)}
-.hero-arrow.left{left:12px}
-.hero-arrow.right{right:12px}
-@media(max-width:600px){.hero-arrow{display:none}}
+.hero-slideshow{position:relative;width:100%;height:320px;overflow:hidden;background:#0d0d0d;border-bottom:1px solid var(--border)}
+@media(max-width:600px){.hero-slideshow{height:240px}}
+.slide-track{display:flex;width:100%;height:100%;transition:transform .65s cubic-bezier(.4,0,.2,1)}
+.slide-item{min-width:100%;height:100%;position:relative;flex-shrink:0;overflow:hidden}
+.slide-item img{width:100%;height:100%;object-fit:cover;display:block}
+.slide-item-bg{width:100%;height:100%;background:linear-gradient(135deg,#1a0505 0%,#0d0d14 50%,#0a0a0a 100%);display:flex;align-items:center;justify-content:center;font-size:3rem}
+.slide-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.25) 0%,rgba(0,0,0,.55) 60%,rgba(0,0,0,.82) 100%)}
+/* Brand overlay on top of slideshow */
+.hero-brand{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;pointer-events:none;text-align:center;padding:0 16px}
+.hero-brand-logo{font-size:clamp(1.8rem,5vw,3rem);font-weight:900;letter-spacing:-.04em;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.7);line-height:1}
+.hero-brand-logo span{color:var(--pri)}
+.hero-brand-sub{font-size:clamp(.7rem,2vw,.88rem);color:rgba(255,255,255,.7);margin-top:6px;letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+.hero-brand-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(229,57,53,.9);color:#fff;font-size:.7rem;font-weight:700;padding:4px 12px;border-radius:20px;margin-top:10px;letter-spacing:.04em;box-shadow:0 2px 12px rgba(229,57,53,.4)}
+/* Slideshow controls */
+.slide-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:11}
+.slide-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4);border:none;cursor:pointer;transition:all .25s;padding:0}
+.slide-dot.act{background:#fff;width:20px;border-radius:3px}
+.slide-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:11;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;transition:all .2s;backdrop-filter:blur(4px)}
+.slide-arrow:hover{background:var(--pri);border-color:var(--pri)}
+.slide-arrow.left{left:12px}
+.slide-arrow.right{right:12px}
+@media(max-width:500px){.slide-arrow{display:none}}
 
-/* Store Logo & Title Bar */
-.store-title-bar{background:var(--bg);border-bottom:1px solid var(--border);padding:12px 0}
-.store-title-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:14px}
-.store-logo-circle{width:44px;height:44px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:900;color:#fff;flex-shrink:0;border:2px solid var(--pri2);box-shadow:0 0 16px rgba(229,57,53,.3)}
-.store-title-text{flex:1}
-.store-title-name{font-size:1.1rem;font-weight:800;letter-spacing:-.02em}
-.store-title-name span{color:var(--pri)}
-.store-title-sub{font-size:.72rem;color:var(--txt3);margin-top:1px}
-.store-title-discord a{display:flex;align-items:center;gap:6px;background:#5865f2;color:#fff;padding:7px 12px;border-radius:6px;font-size:.78rem;font-weight:600;transition:all .2s;white-space:nowrap}
-.store-title-discord a:hover{background:#4752c4}
-
-/* Home category chips bar */
-.home-cats-bar{background:var(--bg);border-bottom:2px solid var(--border);padding:10px 0;position:sticky;top:58px;z-index:100;overflow:hidden}
-.home-cats-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
-.home-cats-inner::-webkit-scrollbar{display:none}
-.home-cat-pill{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0;min-width:64px}
-.home-cat-pill-icon{width:32px;height:32px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:var(--bg4)}
-.home-cat-pill-icon img{width:100%;height:100%;object-fit:cover}
-.home-cat-pill-label{font-size:.65rem;font-weight:700;color:var(--txt2);text-align:center;line-height:1.2}
-.home-cat-pill:hover,.home-cat-pill.act{background:rgba(229,57,53,.1);border-color:var(--pri)}
-.home-cat-pill.act .home-cat-pill-label{color:var(--pri)}
-
-/* Old catalog strip — keep but hide on home, still used in filtering */
-.catalog-strip{padding:14px 0;background:var(--bg);border-bottom:1px solid var(--border)}
-.catalog-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
-.catalog-inner::-webkit-scrollbar{display:none}
-.cat-chip{display:flex;align-items:center;gap:7px;padding:7px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0;font-size:.8rem;font-weight:600;color:var(--txt2)}
-.cat-chip img{width:22px;height:22px;border-radius:4px;object-fit:cover}
-.cat-chip .cat-chip-icon{width:22px;height:22px;border-radius:4px;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-size:.75rem}
-.cat-chip:hover,.cat-chip.act{background:rgba(229,57,53,.12);border-color:var(--pri);color:var(--pri)}
-
-/* Search bar (home) — now inside product section only */
-.home-search-wrap{padding:16px 0;background:var(--bg);border-bottom:1px solid var(--border)}
+/* Search bar (home) */
+.home-search-wrap{padding:12px 0;background:var(--bg);border-bottom:1px solid var(--border);position:sticky;top:58px;z-index:100}
 .home-search-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:8px;align-items:center}
 .home-search-box{flex:1;max-width:500px;position:relative}
 .home-search-box input{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--txt);font-family:var(--f);font-size:.9rem;padding:10px 14px 10px 38px;border-radius:8px;outline:none;transition:all .2s}
@@ -278,16 +250,14 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 @media(max-width:600px){.pcard-h{width:155px}}
 
 /* ══════════════════════════════════
-   PAYMENT LOGOS — Real Images
+   PAYMENT LOGOS
 ══════════════════════════════════ */
-.pay-methods{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
-.pm{background:var(--bg3);border:2px solid var(--border2);border-radius:10px;padding:12px 10px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;position:relative}
-.pm:hover,.pm.sel{border-color:var(--pri);background:rgba(229,57,53,.08);transform:translateY(-1px);box-shadow:0 4px 12px rgba(229,57,53,.15)}
-.pm.sel::after{content:'✓';position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:#fff;border:2px solid var(--bg)}
-.pm-logo-wrap{height:36px;display:flex;align-items:center;justify-content:center;width:100%}
-.pm-logo{height:32px;object-fit:contain;width:auto;max-width:90px}
-.pm-logo-fallback{height:32px;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;color:var(--txt2);background:var(--bg4);border-radius:6px;width:90px}
-.pm-label{font-size:.68rem;color:var(--txt2);font-weight:600;margin-top:2px}
+.pay-methods{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.pm{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r3);padding:10px 12px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.pm:hover,.pm.sel{border-color:var(--pri);background:rgba(229,57,53,.08)}
+.pm-logo{height:26px;object-fit:contain;width:auto;max-width:80px}
+.pm-logo-fallback{height:26px;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--txt2)}
+.pm-label{font-size:.7rem;color:var(--txt2);font-weight:600}
 .pm.sel .pm-label{color:var(--pri)}
 
 /* ══════════════════════════════════
@@ -362,13 +332,12 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 .info-box{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r3);padding:14px;margin-bottom:14px}
 
 /* ══════════════════════════════════
-   OWNER PANEL — Elegant tabs
+   OWNER PANEL
 ══════════════════════════════════ */
-.otabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:6px;gap:3px}
-.otab{background:none;border:1px solid transparent;color:var(--txt3);padding:7px 13px;border-radius:7px;cursor:pointer;font-family:var(--f);font-size:.76rem;font-weight:600;transition:all .18s;display:flex;align-items:center;gap:5px;white-space:nowrap}
-.otab i{font-size:.75rem}
-.otab.act,.otab:hover{border-color:transparent;color:var(--txt);background:var(--bg3)}
-.otab.act{border-color:var(--pri);color:var(--pri);background:rgba(229,57,53,.08);box-shadow:0 1px 4px rgba(229,57,53,.15)}
+.otabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:10px}
+.otab{background:none;border:1px solid transparent;color:var(--txt3);padding:5px 12px;border-radius:5px;cursor:pointer;font-family:var(--f);font-size:.76rem;font-weight:600;transition:all .2s}
+.otab.act,.otab:hover{border-color:var(--border2);color:var(--txt);background:var(--bg3)}
+.otab.act{border-color:var(--pri);color:var(--pri);background:rgba(229,57,53,.08)}
 .osec{display:none}
 .osec.act{display:block}
 .dtable{width:100%;border-collapse:collapse}
@@ -378,9 +347,46 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 .tscroll{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r3)}
 
 /* Upload area */
-.uparea{border:2px dashed var(--border2);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg3)}
+.uparea{border:2px dashed var(--border2);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg3);position:relative}
 .uparea:hover{border-color:var(--pri);background:rgba(229,57,53,.05)}
+.uparea.success{border-color:var(--green)!important;background:rgba(16,185,129,.06)!important}
+.uparea.success .upload-icon-area{color:var(--green)}
+.uparea-success-badge{display:none;position:absolute;top:8px;right:8px;background:var(--green);color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:20px;gap:3px;align-items:center}
+.uparea.success .uparea-success-badge{display:flex}
 .uppreview{max-width:100%;max-height:130px;object-fit:contain;margin-top:10px;border-radius:6px;display:none}
+
+/* Payment method cards - enhanced */
+.pm{background:var(--bg3);border:1.5px solid var(--border2);border-radius:10px;padding:12px 10px;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;position:relative;overflow:hidden}
+.pm:hover,.pm.sel{border-color:var(--pri);background:rgba(229,57,53,.07);transform:translateY(-1px);box-shadow:0 4px 14px rgba(229,57,53,.12)}
+.pm.sel::after{content:'✓';position:absolute;top:4px;right:6px;font-size:.6rem;color:var(--pri);font-weight:700}
+.pm-logo{height:28px;object-fit:contain;width:auto;max-width:88px;display:block}
+.pm-logo-fallback{height:28px;display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--txt2)}
+.pm-label{font-size:.7rem;color:var(--txt2);font-weight:600}
+.pm.sel .pm-label{color:var(--pri)}
+
+/* Owner panel - improved */
+.otabs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:8px;overflow-x:auto;scrollbar-width:none}
+.otabs::-webkit-scrollbar{display:none}
+.otab{background:none;border:1px solid transparent;color:var(--txt3);padding:6px 11px;border-radius:6px;cursor:pointer;font-family:var(--f);font-size:.75rem;font-weight:600;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.otab.act,.otab:hover{border-color:var(--border2);color:var(--txt);background:var(--bg3)}
+.otab.act{border-color:var(--pri);color:var(--pri);background:rgba(229,57,53,.08)}
+
+/* Owner dashboard stat cards */
+.o-stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;position:relative;overflow:hidden;transition:all .2s}
+.o-stat-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.o-stat-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--stat-color,var(--pri));border-radius:0 0 10px 10px}
+.o-stat-icon{width:38px;height:38px;border-radius:8px;background:rgba(var(--stat-rgb,229,57,53),.12);display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:10px}
+.o-stat-val{font-size:1.5rem;font-weight:800;color:var(--txt);line-height:1}
+.o-stat-lbl{font-size:.68rem;font-weight:600;text-transform:uppercase;color:var(--txt3);letter-spacing:.04em;margin-top:3px}
+
+/* Push notification permission banner */
+#pushPermBanner{display:none;background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(6,182,212,.08));border:1px solid rgba(59,130,246,.3);border-radius:10px;padding:14px 16px;margin-bottom:14px;align-items:center;gap:12px}
+#pushPermBanner.show{display:flex}
+.ppb-icon{font-size:1.4rem;flex-shrink:0}
+.ppb-body{flex:1}
+.ppb-title{font-size:.82rem;font-weight:700;color:var(--blue)}
+.ppb-sub{font-size:.72rem;color:var(--txt3);margin-top:2px}
+.ppb-btns{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap}
 
 /* ══════════════════════════════════
    NOTIF PANEL
@@ -617,58 +623,32 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
   HOME SECTION
 ════════════════════════════════════ -->
 <section class="sec act" id="sec-home">
-  <!-- ── HERO SLIDER ── -->
-  <div class="hero-slider" id="heroSlider">
-    <div class="hero-slider-track" id="heroTrack">
-      <!-- Slides injected by renderHeroSlider() -->
-      <div class="hero-slide">
-        <div class="hero-slide-ph">🎮</div>
-        <div class="hero-slide-overlay"></div>
-        <div class="hero-slide-content">
-          <div class="hero-slide-text">
-            <h2>DOOMINIKS STORE</h2>
-            <p>Game top up, akun & produk digital terpercaya</p>
-          </div>
-          <span class="hero-slide-badge">Promo Aktif!</span>
-        </div>
-      </div>
+  <!-- ── HERO SLIDESHOW ── -->
+  <div class="hero-slideshow" id="heroSlideshow">
+    <div class="slide-track" id="slideTrack">
+      <!-- Slides rendered by JS from catalog images -->
     </div>
-    <button class="hero-arrow left" onclick="slideHero(-1)"><i class="fas fa-chevron-left"></i></button>
-    <button class="hero-arrow right" onclick="slideHero(1)"><i class="fas fa-chevron-right"></i></button>
-    <div class="hero-dots" id="heroDots"></div>
-  </div>
-
-  <!-- ── STORE LOGO + NAME ── -->
-  <div class="store-title-bar">
-    <div class="store-title-inner">
-      <div class="store-logo-circle">D</div>
-      <div class="store-title-text">
-        <div class="store-title-name">DOOMINIKS<span>STORE</span></div>
-        <div class="store-title-sub">Game Top Up &bull; Akun Digital &bull; Joki</div>
-      </div>
-      <div class="store-title-discord">
-        <a id="heroDiscord" href="#" target="_blank"><i class="fab fa-discord"></i> Discord</a>
-      </div>
+    <!-- Brand overlay (always visible) -->
+    <div class="hero-brand">
+      <div class="hero-brand-logo">DOOMINIKS<span>STORE</span></div>
+      <div class="hero-brand-sub">Game Top Up &amp; Digital Store</div>
+      <div class="hero-brand-badge"><i class="fas fa-bolt"></i> Transaksi Cepat &amp; Aman</div>
     </div>
+    <!-- Arrows -->
+    <button class="slide-arrow left" onclick="slideMove(-1)" aria-label="Prev"><i class="fas fa-chevron-left"></i></button>
+    <button class="slide-arrow right" onclick="slideMove(1)" aria-label="Next"><i class="fas fa-chevron-right"></i></button>
+    <!-- Dots -->
+    <div class="slide-dots" id="slideDots"></div>
   </div>
+  <!-- hidden discord anchor for applyDiscordLinks compatibility -->
+  <a id="heroDiscord" href="#" target="_blank" style="display:none"></a>
 
-  <!-- ── GAME CATEGORY PILLS ── -->
-  <div class="home-cats-bar">
-    <div class="home-cats-inner" id="homeCatPills">
-      <div class="home-cat-pill act" data-cat="" onclick="setHomeCat('',this)">
-        <div class="home-cat-pill-icon">🔥</div>
-        <div class="home-cat-pill-label">Semua</div>
-      </div>
-      <!-- injected by renderHomeCatPills() -->
-    </div>
-  </div>
-
-  <!-- ── SEARCH + SORT (inside content area) ── -->
+  <!-- ── SEARCH BAR ── -->
   <div class="home-search-wrap">
     <div class="home-search-inner">
       <div class="home-search-box">
         <i class="fas fa-search"></i>
-        <input id="homeSearch" placeholder="Cari produk, game, topup..." oninput="filterHomeProds(this.value)">
+        <input id="homeSearch" placeholder="Cari game, top up, produk..." oninput="filterHomeProds(this.value)">
       </div>
       <select class="inp" style="width:130px;padding:9px 10px;font-size:.82rem" id="homeSort" onchange="filterHomeProds()">
         <option value="">Terbaru</option>
@@ -679,8 +659,8 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
     </div>
   </div>
 
-  <!-- keep hidden catalog strip for backward compat -->
-  <div class="catalog-strip" style="display:none">
+  <!-- Catalog Chips -->
+  <div class="catalog-strip">
     <div class="catalog-inner" id="homeCatalogStrip">
       <div class="cat-chip act" data-cat="" onclick="setCat('',this)">
         <div class="cat-chip-icon">🔥</div>
@@ -690,8 +670,10 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
   </div>
 
   <div class="ctn" style="padding-top:20px">
+
     <!-- Catalog Sections (dynamic) -->
     <div id="homeCatalogSections"></div>
+
     <!-- All Products Fallback -->
     <div id="homeAllProds">
       <div class="sh mb2 mt2">
@@ -700,9 +682,10 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
       </div>
       <div class="pgrid" id="homeProdsGrid"><div class="empty"><i class="fas fa-spinner fa-spin"></i></div></div>
     </div>
+
     <!-- Reviews -->
     <div class="mb4 mt4">
-      <div class="sh mb2"><span class="sh-title">⭐ Ulasan Terbaru</span></div>
+      <div class="sh mb2"><span class="sh-title">Ulasan Terbaru</span></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px" id="homeRevs"></div>
     </div>
   </div>
@@ -945,45 +928,33 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
         <label class="lbl">Metode Pembayaran</label>
         <div class="pay-methods" id="tuMethods">
           <div class="pm" data-m="bca" onclick="selTuMethod(this)">
-            <div class="pm-logo-wrap">
-              <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="BCA">
-              <div class="pm-logo-fallback" style="display:none">BCA</div>
-            </div>
+            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="BCA">
+            <div class="pm-logo-fallback" style="display:none">BCA</div>
             <div class="pm-label">BCA</div>
           </div>
           <div class="pm" data-m="bni" onclick="selTuMethod(this)">
-            <div class="pm-logo-wrap">
-              <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/id/5/55/BNI_logo.svg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="BNI">
-              <div class="pm-logo-fallback" style="display:none">BNI</div>
-            </div>
+            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/id/5/55/BNI_logo.svg" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="BNI">
+            <div class="pm-logo-fallback" style="display:none">BNI</div>
             <div class="pm-label">BNI</div>
           </div>
           <div class="pm" data-m="seabank" onclick="selTuMethod(this)">
-            <div class="pm-logo-wrap">
-              <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/SeaBank_Logo.svg/512px-SeaBank_Logo.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="SeaBank">
-              <div class="pm-logo-fallback" style="display:none">SeaBank</div>
-            </div>
+            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/SeaBank_Logo.svg/512px-SeaBank_Logo.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="SeaBank">
+            <div class="pm-logo-fallback" style="display:none">SeaBank</div>
             <div class="pm-label">SeaBank</div>
           </div>
           <div class="pm" data-m="gopay" onclick="selTuMethod(this)">
-            <div class="pm-logo-wrap">
-              <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Gopay_logo.svg/512px-Gopay_logo.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="GoPay">
-              <div class="pm-logo-fallback" style="display:none">GoPay</div>
-            </div>
+            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Gopay_logo.svg/512px-Gopay_logo.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="GoPay">
+            <div class="pm-logo-fallback" style="display:none">GoPay</div>
             <div class="pm-label">GoPay</div>
           </div>
           <div class="pm" data-m="dana" onclick="selTuMethod(this)">
-            <div class="pm-logo-wrap">
-              <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_dana_blue.svg/512px-Logo_dana_blue.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="DANA">
-              <div class="pm-logo-fallback" style="display:none">DANA</div>
-            </div>
+            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_dana_blue.svg/512px-Logo_dana_blue.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="DANA">
+            <div class="pm-logo-fallback" style="display:none">DANA</div>
             <div class="pm-label">DANA</div>
           </div>
           <div class="pm" data-m="qris" onclick="selTuMethod(this)">
-            <div class="pm-logo-wrap">
-              <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_QRIS.svg/512px-Logo_QRIS.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="QRIS">
-              <div class="pm-logo-fallback" style="display:none">QRIS</div>
-            </div>
+            <img class="pm-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_QRIS.svg/512px-Logo_QRIS.svg.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="QRIS">
+            <div class="pm-logo-fallback" style="display:none">QRIS</div>
             <div class="pm-label">QRIS</div>
           </div>
         </div>
@@ -999,39 +970,70 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 <section class="sec" id="sec-owner">
   <div class="ctn" style="padding-top:20px">
     <div class="fbetween mb3 fwrap gap2">
-      <div>
-        <div class="sec-hd" style="display:flex;align-items:center;gap:8px">
-          <span style="width:32px;height:32px;border-radius:8px;background:var(--pri);display:inline-flex;align-items:center;justify-content:center;font-size:.9rem">⚙</span>
-          Owner Panel
-        </div>
-      </div>
+      <div><div class="sec-hd">⚙ Owner Panel</div></div>
       <span class="badge bo"><i class="fas fa-crown"></i> OWNER</span>
     </div>
     <div class="otabs">
       <button class="otab act" onclick="otab(this,'dash')"><i class="fas fa-chart-bar"></i> Dashboard</button>
       <button class="otab" onclick="otab(this,'prods')"><i class="fas fa-box"></i> Produk</button>
       <button class="otab" onclick="otab(this,'ords')"><i class="fas fa-shopping-cart"></i> Orders</button>
-      <button class="otab" onclick="otab(this,'txs')"><i class="fas fa-money-bill-wave"></i> Transaksi</button>
+      <button class="otab" onclick="otab(this,'txs')"><i class="fas fa-wallet"></i> Transaksi</button>
       <button class="otab" onclick="otab(this,'users')"><i class="fas fa-users"></i> Users</button>
       <button class="otab" onclick="otab(this,'ochat')"><i class="fas fa-comments"></i> Chat</button>
       <button class="otab" onclick="otab(this,'catalog')"><i class="fas fa-tags"></i> Katalog</button>
       <button class="otab" onclick="otab(this,'discs')"><i class="fas fa-percent"></i> Diskon</button>
-      <button class="otab" onclick="otab(this,'komplain')"><i class="fas fa-exclamation-circle"></i> Komplain</button>
+      <button class="otab" onclick="otab(this,'komplain')"><i class="fas fa-clipboard-list"></i> Komplain</button>
       <button class="otab" onclick="otab(this,'settings')"><i class="fas fa-cog"></i> Settings</button>
     </div>
 
     <!-- DASHBOARD -->
     <div class="osec act" id="o-dash">
-      <div class="g3 mb3">
-        <div class="card card-p"><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Revenue</div><div style="font-size:1.6rem;font-weight:800;color:var(--pri)" id="oRev">Rp 0</div></div>
-        <div class="card card-p"><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Pending Orders</div><div style="font-size:1.6rem;font-weight:800" id="oPend">0</div></div>
-        <div class="card card-p"><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Total Users</div><div style="font-size:1.6rem;font-weight:800" id="oUc">0</div></div>
-        <div class="card card-p"><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Delivered</div><div style="font-size:1.6rem;font-weight:800;color:var(--green)" id="oDel">0</div></div>
-        <div class="card card-p"><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Pending Topup</div><div style="font-size:1.6rem;font-weight:800;color:var(--gold)" id="oPTx">0</div></div>
-        <div class="card card-p"><div style="font-size:.7rem;font-weight:600;text-transform:uppercase;color:var(--txt3);margin-bottom:6px">Total Produk</div><div style="font-size:1.6rem;font-weight:800" id="oPrc">0</div></div>
+      <!-- Push notification permission for owner -->
+      <div id="pushPermBanner">
+        <div class="ppb-icon">🔔</div>
+        <div class="ppb-body">
+          <div class="ppb-title">Aktifkan Notifikasi Browser</div>
+          <div class="ppb-sub">Dapatkan notifikasi langsung saat ada order atau chat masuk</div>
+        </div>
+        <div class="ppb-btns">
+          <button class="btn btn-sm btn-red" onclick="requestPushPermission()"><i class="fas fa-bell"></i> Aktifkan</button>
+          <button class="btn btn-sm" onclick="document.getElementById('pushPermBanner').style.display='none'">Nanti</button>
+        </div>
+      </div>
+      <div class="g3 mb3" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px">
+        <div class="o-stat-card" style="--stat-color:var(--pri);--stat-rgb:229,57,53">
+          <div class="o-stat-icon">💰</div>
+          <div class="o-stat-val" id="oRev">Rp 0</div>
+          <div class="o-stat-lbl">Total Revenue</div>
+        </div>
+        <div class="o-stat-card" style="--stat-color:#f59e0b;--stat-rgb:245,158,11">
+          <div class="o-stat-icon">⏳</div>
+          <div class="o-stat-val" id="oPend">0</div>
+          <div class="o-stat-lbl">Pending Orders</div>
+        </div>
+        <div class="o-stat-card" style="--stat-color:var(--blue);--stat-rgb:59,130,246">
+          <div class="o-stat-icon">👥</div>
+          <div class="o-stat-val" id="oUc">0</div>
+          <div class="o-stat-lbl">Total Users</div>
+        </div>
+        <div class="o-stat-card" style="--stat-color:var(--green);--stat-rgb:16,185,129">
+          <div class="o-stat-icon">✅</div>
+          <div class="o-stat-val" id="oDel">0</div>
+          <div class="o-stat-lbl">Delivered</div>
+        </div>
+        <div class="o-stat-card" style="--stat-color:var(--gold);--stat-rgb:245,158,11">
+          <div class="o-stat-icon">💳</div>
+          <div class="o-stat-val" id="oPTx">0</div>
+          <div class="o-stat-lbl">Pending Topup</div>
+        </div>
+        <div class="o-stat-card" style="--stat-color:var(--cyan);--stat-rgb:6,182,212">
+          <div class="o-stat-icon">📦</div>
+          <div class="o-stat-val" id="oPrc">0</div>
+          <div class="o-stat-lbl">Total Produk</div>
+        </div>
       </div>
       <div class="card card-p">
-        <div style="font-size:.82rem;font-weight:700;margin-bottom:12px">Aktivitas Terbaru</div>
+        <div style="font-size:.82rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px"><i class="fas fa-clock" style="color:var(--pri)"></i> Aktivitas Terbaru</div>
         <div id="oLog"><div class="empty"><i class="fas fa-spinner fa-spin"></i></div></div>
       </div>
     </div>
@@ -1184,9 +1186,12 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
           <div class="ig"><label class="lbl">DANA</label><input class="inp" id="sDANA" placeholder="08XXXXXXXXXX"></div>
           <div class="ig">
             <label class="lbl">QRIS — Upload Gambar QR</label>
-            <div class="uparea" onclick="document.getElementById('qrisFile').click()">
-              <i class="fas fa-qrcode" style="font-size:2rem;color:var(--txt3);margin-bottom:8px;display:block"></i>
-              <div style="font-size:.82rem;color:var(--txt2)">Klik upload gambar QRIS</div>
+            <div class="uparea" id="qrisUpArea" onclick="document.getElementById('qrisFile').click()">
+              <div id="qrisUpIconArea">
+                <i class="fas fa-qrcode" style="font-size:2rem;color:var(--txt3);margin-bottom:8px;display:block"></i>
+                <div style="font-size:.82rem;color:var(--txt2)">Klik upload gambar QRIS</div>
+              </div>
+              <div class="uparea-success-badge" id="qrisUpBadge" style="display:none"><i class="fas fa-check"></i> QRIS Siap</div>
               <img id="qrisPrev" style="max-width:100%;max-height:120px;margin:10px auto 0;display:none;border-radius:6px">
             </div>
             <input type="file" id="qrisFile" accept="image/*" style="display:none" onchange="prevQris(this)">
@@ -1256,9 +1261,13 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
     <div id="payTotalBox" class="mb3"></div>
     <div class="ig">
       <label class="lbl">Upload Bukti Pembayaran</label>
-      <div class="uparea" onclick="document.getElementById('proofFile').click()">
-        <i class="fas fa-cloud-upload-alt" style="font-size:1.8rem;color:var(--txt3);margin-bottom:6px;display:block"></i>
-        <div style="font-size:.82rem;color:var(--txt2)">Klik upload screenshot</div>
+      <div class="uparea" id="proofUpArea" onclick="document.getElementById('proofFile').click()">
+        <div id="proofUpIconArea">
+          <i class="fas fa-cloud-upload-alt" style="font-size:1.8rem;color:var(--txt3);margin-bottom:6px;display:block"></i>
+          <div style="font-size:.82rem;color:var(--txt2)" id="proofUpText">Klik upload screenshot bukti transfer</div>
+          <div style="font-size:.7rem;color:var(--txt3);margin-top:2px">Max 3MB</div>
+        </div>
+        <div class="uparea-success-badge" id="proofUpBadge" style="display:none"><i class="fas fa-check"></i> Bukti Terupload</div>
         <img id="proofPrev" class="uppreview">
       </div>
       <input type="file" id="proofFile" accept="image/*" style="display:none" onchange="prevProof(this)">
@@ -1275,9 +1284,13 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
     <div id="tuPayTotal" class="mb3"></div>
     <div class="ig">
       <label class="lbl">Upload Bukti Transfer</label>
-      <div class="uparea" onclick="document.getElementById('tuProofFile').click()">
-        <i class="fas fa-cloud-upload-alt" style="font-size:1.8rem;color:var(--txt3);margin-bottom:6px;display:block"></i>
-        <div style="font-size:.82rem;color:var(--txt2)">Klik upload screenshot</div>
+      <div class="uparea" id="tuProofUpArea" onclick="document.getElementById('tuProofFile').click()">
+        <div id="tuProofUpIconArea">
+          <i class="fas fa-cloud-upload-alt" style="font-size:1.8rem;color:var(--txt3);margin-bottom:6px;display:block"></i>
+          <div style="font-size:.82rem;color:var(--txt2)" id="tuProofUpText">Klik upload screenshot bukti transfer</div>
+          <div style="font-size:.7rem;color:var(--txt3);margin-top:2px">Max 3MB</div>
+        </div>
+        <div class="uparea-success-badge" id="tuProofUpBadge" style="display:none"><i class="fas fa-check"></i> Bukti Terupload</div>
         <img id="tuProofPrev" class="uppreview">
       </div>
       <input type="file" id="tuProofFile" accept="image/*" style="display:none" onchange="prevTuProof(this)">
@@ -1344,13 +1357,15 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
       <div>
         <div class="ig">
           <label class="lbl">Gambar Produk</label>
-          <div class="uparea" id="pImgDropZone" onclick="document.getElementById('pImgFile').click()" ondragover="event.preventDefault();this.style.borderColor='var(--pri)'" ondragleave="this.style.borderColor=''" ondrop="handleImgDrop(event,'prod')">
-            <i class="fas fa-cloud-upload-alt" style="font-size:2rem;color:var(--txt3);margin-bottom:6px;display:block"></i>
-            <div style="font-size:.82rem;color:var(--txt2)">Klik atau drag gambar ke sini</div>
-            <div style="font-size:.7rem;color:var(--txt3);margin-top:3px">JPG, PNG, WEBP — Max 2MB</div>
+          <div class="uparea" id="prodUpArea" onclick="document.getElementById('pImgFile').click()">
+            <div class="upload-icon-area" id="prodUpIconArea">
+              <i class="fas fa-image" style="font-size:2rem;color:var(--txt3);margin-bottom:6px;display:block"></i>
+              <div style="font-size:.82rem;color:var(--txt2)" id="prodUpText">Klik untuk upload gambar</div>
+              <div style="font-size:.7rem;color:var(--txt3);margin-top:3px">JPG, PNG, WebP — Max 2MB</div>
+            </div>
+            <div class="uparea-success-badge"><i class="fas fa-check"></i> Gambar Siap</div>
             <img id="pImgPrev" class="uppreview">
           </div>
-          <div id="pImgStatus" style="display:none;margin-top:6px;font-size:.75rem;padding:6px 10px;border-radius:6px;font-weight:600"></div>
           <input type="file" id="pImgFile" accept="image/*" style="display:none" onchange="prevProdImg(this)">
         </div>
         <div class="ig"><label class="lbl">Atau URL Gambar</label><input class="inp" id="pImgUrl" placeholder="https://..." oninput="onPImgUrl()"></div>
@@ -1371,9 +1386,12 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
     <div class="ig"><label class="lbl">Kunci Kategori <span style="font-size:.68rem;color:var(--txt3)">(diisi otomatis dari nama — harus cocok dengan produk)</span></label><input class="inp" id="cCat" placeholder="Diisi otomatis" readonly style="background:var(--bg4);color:var(--txt2);cursor:not-allowed"></div>
     <div class="ig">
       <label class="lbl">Ikon Katalog (Upload Gambar)</label>
-      <div class="uparea" onclick="document.getElementById('catImgFile').click()">
-        <i class="fas fa-image" style="font-size:1.6rem;color:var(--txt3);margin-bottom:5px;display:block"></i>
-        <div style="font-size:.82rem;color:var(--txt2)">Klik upload ikon</div>
+      <div class="uparea" id="catUpArea" onclick="document.getElementById('catImgFile').click()">
+        <div id="catUpIconArea">
+          <i class="fas fa-image" style="font-size:1.6rem;color:var(--txt3);margin-bottom:5px;display:block"></i>
+          <div style="font-size:.82rem;color:var(--txt2)" id="catUpText">Klik upload ikon</div>
+        </div>
+        <div class="uparea-success-badge" id="catUpBadge" style="display:none"><i class="fas fa-check"></i> Ikon Siap</div>
         <img id="catImgPrev" style="max-width:80px;max-height:80px;margin:8px auto 0;display:none;border-radius:6px">
       </div>
       <input type="file" id="catImgFile" accept="image/*" style="display:none" onchange="prevCatImg(this)">
@@ -1602,6 +1620,7 @@ async function initApp() {
   await loadAllProds();
   await loadCatalogs();
   renderCatalogStrip();
+  buildSlideshow(); // Build hero slideshow from catalog images
   updateNav();
   if (CU && !CU.isOwner) await refreshCU();
   // Real-time stock
@@ -1615,10 +1634,10 @@ async function initApp() {
   if (CU) loadNotifs();
   // Render home page with products
   renderHomePage();
-  renderHeroSlider();
-  renderHomeCatPills();
   loadHomeRevs();
   updateHomeStats();
+  // Check push permission for owner
+  if (CU?.isOwner) setTimeout(checkPushPermission, 1500);
 }
 
 async function loadSettings() {
@@ -1687,7 +1706,7 @@ function goSec(sec) {
   setBNavByKey(sec);
   // Lazy load
   const loaders = {
-    home: () => { renderHomePage(); renderHeroSlider(); renderHomeCatPills(); loadHomeRevs(); if(CU) loadActivityCounts(); },
+    home: () => { renderHomePage(); loadHomeRevs(); if(CU) loadActivityCounts(); },
     products: renderProds,
     reviews: loadRevs,
     orders: loadOrders,
@@ -1717,10 +1736,9 @@ function updateNav() {
     loadProfChatUnread();
     const bd = document.getElementById('bantDiscord');
     if (bd) bd.href = storeSet.discord || '#';
-    if (!CU.isOwner) {
-      initChatListener();
-      initPushForUser();
-    }
+    if (!CU.isOwner) initChatListener();
+    // Check push permission for owner
+    if (CU.isOwner) setTimeout(checkPushPermission, 800);
   }
 }
 
@@ -2071,10 +2089,8 @@ function buildPayMethods() {
     return !!paySet[id];
   });
   return active.map(id=>`<div class="pm" data-m="${id}" onclick="selBuyMethod('${id}',this)">
-    <div class="pm-logo-wrap">
-      <img class="pm-logo" src="${logos[id]||''}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${labels[id]}">
-      <div class="pm-logo-fallback" style="display:none">${labels[id]}</div>
-    </div>
+    <img class="pm-logo" src="${logos[id]||''}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${labels[id]}">
+    <div class="pm-logo-fallback" style="display:none">${labels[id]}</div>
     <div class="pm-label">${labels[id]}</div>
   </div>`).join('');
 }
@@ -2260,14 +2276,24 @@ async function buyBalance() {
 
 function prevProof(inp) {
   const f = inp.files[0]; if (!f) return;
-  if (f.size>3*1024*1024) { toast('Max 3MB','err'); return; }
+  if (f.size>3*1024*1024) { toast('Ukuran file max 3MB','err'); return; }
   const r = new FileReader();
-  r.onload = e => { proofB64=e.target.result; const i=document.getElementById('proofPrev'); i.src=e.target.result; i.style.display=''; };
+  r.onload = e => {
+    proofB64=e.target.result;
+    const i=document.getElementById('proofPrev'); i.src=e.target.result; i.style.display='';
+    const area=document.getElementById('proofUpArea');
+    if(area) area.classList.add('success');
+    const badge=document.getElementById('proofUpBadge');
+    if(badge) badge.style.display='flex';
+    const txt=document.getElementById('proofUpText');
+    if(txt) txt.textContent='Bukti pembayaran siap dikirim ✓';
+    toast('✅ Bukti bayar berhasil diupload!','ok');
+  };
   r.readAsDataURL(f);
 }
 
 async function submitProof() {
-  if (!proofB64) { toast('Upload payment proof first','err'); return; }
+  if (!proofB64) { toast('Upload bukti pembayaran terlebih dahulu','err'); return; }
   if (!payContext) return;
   try {
     if (payContext.type === 'product') {
@@ -2287,13 +2313,21 @@ async function submitProof() {
         'Total': `Rp ${payContext.finalPrice.toLocaleString()}`,
         'Metode': payContext.method,
         'Diskon': payContext.disc ? payContext.disc.id+' (-'+payContext.disc.pct+'%)' : 'Tidak ada',
-        'Status': 'pending — menunggu verifikasi'
+        'Status': '⏳ Pending — Menunggu Verifikasi Owner'
       }).catch(()=>{});
+      // Reset upload area state
+      const area = document.getElementById('proofUpArea');
+      if(area){area.classList.remove('success');}
+      const badge = document.getElementById('proofUpBadge');
+      if(badge) badge.style.display='none';
+      const txt = document.getElementById('proofUpText');
+      if(txt) txt.textContent='Klik upload screenshot bukti transfer';
+      proofB64 = '';
       closeM('mPay');
-      toast('Order berhasil! Menunggu verifikasi owner.','ok');
+      toast('✅ Order berhasil! Menunggu verifikasi. Diarahkan ke riwayat pesanan...','ok');
       addNotif('📦 Order Dikirim', `${payContext.prod.name} menunggu verifikasi`, '📦', ()=>{goSec('orders');});
-      // ✅ Redirect ke orders setelah pembayaran berhasil
-      setTimeout(()=>{ goSec('orders'); }, 400);
+      // Redirect to orders history
+      setTimeout(() => { goSec('orders'); setBNavByKey('orders'); }, 600);
     }
   } catch(e) { toast('Error: '+e.message,'err'); }
 }
@@ -2384,8 +2418,6 @@ async function submitRev() {
     if (idx>=0) { prods[idx].avgRating=Math.round(avg*10)/10; prods[idx].reviewCount=pr.length; }
     closeM('mRev'); toast('Review submitted! +20 XP earned ⭐','ok');
     await loadHomeRevs();
-    // Send webhook notif
-    sendWebhookReview({ productName: prodName, username: CU.username||CU.id, rating: selRating, text }).catch(()=>{});
     // Refresh level card if on profile
     if (document.getElementById('sec-profile').classList.contains('act')) renderLevelCard();
   } catch(e) { toast('Error: '+e.message,'err'); }
@@ -2494,6 +2526,12 @@ let chatIsOpen   = false; // apakah section chat sedang aktif
 // --- Inisialisasi listener global (dipanggil setelah login) ---
 function initChatListener() {
   if (!CU || CU.isOwner) return;
+  // Request notification permission for customers too
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission().then(p => { pushGranted = p === 'granted'; });
+  } else if (Notification.permission === 'granted') {
+    pushGranted = true;
+  }
   // Baca timestamp terakhir yang sudah dibaca dari localStorage
   chatLastTs = parseInt(localStorage.getItem('doomChatRead_'+CU.id)||'0');
   // Listen real-time pada seluruh percakapan user ini
@@ -2511,10 +2549,14 @@ function initChatListener() {
       if (latest.ts > lastShown) {
         showChatNotif(latest.text, latest.ts);
         localStorage.setItem('doomChatNotifTs_'+CU.id, latest.ts);
-        // Push notification ke device
-        showPushNotif('💬 Support DOOMINIKS', latest.text.slice(0,80), null, () => { goSec('chat'); setBNavByKey('chat'); });
         // Also add to bell notif
         addNotif('💬 Pesan Support', latest.text.slice(0,60)+'...', '💬', () => { goSec('chat'); setBNavByKey('chat'); });
+        // Browser push notification for customers
+        showBrowserNotif(
+          '💬 DOOMINIKS STORE — Pesan Baru',
+          'Support Team: ' + (latest.text||'').slice(0, 80),
+          ''
+        );
       }
     }
     // Jika chat sedang terbuka, render ulang & mark read
@@ -2523,34 +2565,6 @@ function initChatListener() {
       markAllRead();
     }
   });
-
-  // ── Listen real-time Firestore notif (order status updates dari owner) ──
-  listenUserFirestoreNotifs();
-}
-
-let firestoreNotifUnsub = null;
-function listenUserFirestoreNotifs() {
-  if (!CU || CU.isOwner) return;
-  if (firestoreNotifUnsub) { firestoreNotifUnsub(); firestoreNotifUnsub = null; }
-  const lastNotifTs = parseInt(localStorage.getItem('doomFSNotifTs_'+CU.id)||'0');
-  firestoreNotifUnsub = getDB().collection('user_notifs')
-    .where('userId','==', CU.id)
-    .where('ts', '>', lastNotifTs)
-    .onSnapshot(snap => {
-      snap.docChanges().forEach(change => {
-        if (change.type === 'added') {
-          const n = change.doc.data();
-          const title = n.title || '🔔 Notifikasi';
-          const body = n.body || '';
-          // Show popup notification on device
-          showPushNotif(title, body, null, n.action==='orders' ? ()=>goSec('orders') : null);
-          // Add to bell
-          addNotif(title, body, n.title?.split(' ')[0]||'🔔', n.action==='orders' ? ()=>goSec('orders') : null);
-          // Update localStorage timestamp
-          localStorage.setItem('doomFSNotifTs_'+CU.id, Date.now());
-        }
-      });
-    });
 }
 
 function updateUnreadUI() {
@@ -2737,14 +2751,24 @@ async function procTopup() {
 
 function prevTuProof(inp) {
   const f=inp.files[0]; if(!f) return;
-  if(f.size>3*1024*1024){toast('Max 3MB','err');return;}
+  if(f.size>3*1024*1024){toast('Ukuran file max 3MB','err');return;}
   const r=new FileReader();
-  r.onload=e=>{tuProofB64=e.target.result;const i=document.getElementById('tuProofPrev');i.src=e.target.result;i.style.display='';};
+  r.onload=e=>{
+    tuProofB64=e.target.result;
+    const i=document.getElementById('tuProofPrev'); i.src=e.target.result; i.style.display='';
+    const area=document.getElementById('tuProofUpArea');
+    if(area) area.classList.add('success');
+    const badge=document.getElementById('tuProofUpBadge');
+    if(badge) badge.style.display='flex';
+    const txt=document.getElementById('tuProofUpText');
+    if(txt) txt.textContent='Bukti transfer siap dikirim ✓';
+    toast('✅ Bukti transfer berhasil diupload!','ok');
+  };
   r.readAsDataURL(f);
 }
 
 async function submitTuProof() {
-  if (!tuProofB64) { toast('Upload payment proof','err'); return; }
+  if (!tuProofB64) { toast('Upload bukti transfer terlebih dahulu','err'); return; }
   const type    = document.getElementById('tuType').value;
   const amt     = parseInt(document.getElementById('tuAmt').value);
   const coinRate= storeSet.coinRate||1000;
@@ -2752,17 +2776,26 @@ async function submitTuProof() {
   try {
     const txId='TX-'+Date.now();
     await dbSet('transactions',txId,{id:txId,userId:CU.id,username:CU.username||CU.id,type:'topup-'+type,amount:amt,coins,method:tuMethod,proof:tuProofB64,status:'pending',createdAt:Date.now()});
-    // 🔔 WEBHOOK: topup request masuk
+    // 🔔 WEBHOOK: topup request masuk (distinct embed)
     sendWebhook('topup', {
       'TX ID': txId,
       'User': CU.username||CU.id,
-      'Tipe': type==='coins'?'Topup Coins':'Topup Balance',
+      'Tipe': type==='coins'?'💰 Topup Coins':'💳 Topup Balance IDR',
       'Jumlah': `Rp ${amt.toLocaleString()}`,
-      'Coins': coins ? `🪙 ${coins.toLocaleString()}` : '-',
-      'Metode': tuMethod,
-      'Status': 'pending — menunggu verifikasi'
+      'Coins': coins ? `🪙 ${coins.toLocaleString()} Coins` : '-',
+      'Metode': (tuMethod||'').toUpperCase(),
+      'Status': '⏳ Pending — Menunggu Verifikasi Owner'
     }).catch(()=>{});
-    closeM('mTuPay'); toast('Topup request submitted! Waiting for verification.','ok');
+    // Reset upload state
+    const area = document.getElementById('tuProofUpArea');
+    if(area) area.classList.remove('success');
+    const badge = document.getElementById('tuProofUpBadge');
+    if(badge) badge.style.display='none';
+    const txt = document.getElementById('tuProofUpText');
+    if(txt) txt.textContent='Klik upload screenshot bukti transfer';
+    tuProofB64='';
+    closeM('mTuPay');
+    toast('✅ Topup berhasil dikirim! Menunggu verifikasi owner.','ok');
     addNotif('💰 Topup Dikirim', `Rp ${amt.toLocaleString()} menunggu verifikasi owner`, '💰');
   } catch(e) { toast('Error: '+e.message,'err'); }
 }
@@ -2883,6 +2916,13 @@ function openAddProd() {
   document.getElementById('pFeat').value='0';
   document.getElementById('pImgPrev').style.display='none'; prodImgB64='';
   document.getElementById('pImgFile').value='';
+  // Reset upload area
+  const area=document.getElementById('prodUpArea');
+  if(area){area.classList.remove('success');}
+  const badge=area?.querySelector('.uparea-success-badge');
+  if(badge) badge.style.display='none';
+  const txt=document.getElementById('prodUpText');
+  if(txt) txt.textContent='Klik untuk upload gambar';
   populatePCatDropdown('');
   openM('mProd');
 }
@@ -2910,62 +2950,24 @@ async function oEditProd(id) {
 
 function prevProdImg(inp) {
   const f=inp.files[0]; if(!f) return;
-  if(f.size>2*1024*1024){toast('Max 2MB image','err');return;}
+  if(f.size>2*1024*1024){toast('Ukuran gambar max 2MB','err');return;}
   const r=new FileReader();
   r.onload=e=>{
     prodImgB64=e.target.result;
-    const i=document.getElementById('pImgPrev');
-    i.src=e.target.result; i.style.display='';
+    const i=document.getElementById('pImgPrev'); i.src=e.target.result; i.style.display='';
     document.getElementById('pImgUrl').value='';
-    // ✅ Tampilkan notifikasi berhasil upload
-    const statusEl = document.getElementById('pImgStatus');
-    if (statusEl) {
-      statusEl.style.display = '';
-      statusEl.style.background = 'rgba(16,185,129,.12)';
-      statusEl.style.color = 'var(--green)';
-      statusEl.style.border = '1px solid rgba(16,185,129,.3)';
-      statusEl.innerHTML = `✅ Gambar berhasil diupload! <span style="color:var(--txt3);font-weight:400">${f.name} (${(f.size/1024).toFixed(0)} KB)</span>`;
-    }
-    // Update drop zone appearance
-    const dz = document.getElementById('pImgDropZone');
-    if (dz) dz.style.borderColor = 'var(--green)';
+    // Success state
+    const area=document.getElementById('prodUpArea');
+    if(area){area.classList.add('success');}
+    const badge=area?.querySelector('.uparea-success-badge');
+    if(badge) badge.style.display='flex';
+    const upTxt=document.getElementById('prodUpText');
+    if(upTxt) upTxt.textContent='Gambar berhasil dipilih — '+f.name.slice(0,22)+(f.name.length>22?'...':'');
     toast('✅ Gambar produk berhasil diupload!','ok');
   };
   r.readAsDataURL(f);
 }
-function onPImgUrl(){
-  prodImgB64='';
-  document.getElementById('pImgPrev').style.display='none';
-  const statusEl = document.getElementById('pImgStatus');
-  if (statusEl) statusEl.style.display = 'none';
-  const dz = document.getElementById('pImgDropZone');
-  if (dz) dz.style.borderColor = '';
-}
-
-function handleImgDrop(e, type) {
-  e.preventDefault();
-  const dz = e.currentTarget; if(dz) dz.style.borderColor='';
-  const f = e.dataTransfer?.files?.[0];
-  if (!f || !f.type.startsWith('image/')) { toast('Upload file gambar (JPG/PNG/WEBP)','err'); return; }
-  if (type === 'prod') {
-    if (f.size > 2*1024*1024) { toast('Max 2MB image','err'); return; }
-    const r = new FileReader();
-    r.onload = ev => {
-      prodImgB64 = ev.target.result;
-      const i = document.getElementById('pImgPrev'); i.src = ev.target.result; i.style.display = '';
-      document.getElementById('pImgUrl').value = '';
-      const statusEl = document.getElementById('pImgStatus');
-      if (statusEl) {
-        statusEl.style.display=''; statusEl.style.background='rgba(16,185,129,.12)';
-        statusEl.style.color='var(--green)'; statusEl.style.border='1px solid rgba(16,185,129,.3)';
-        statusEl.innerHTML=`✅ Gambar berhasil diupload via drag! <span style="color:var(--txt3);font-weight:400">${f.name} (${(f.size/1024).toFixed(0)} KB)</span>`;
-      }
-      if(dz) dz.style.borderColor='var(--green)';
-      toast('✅ Gambar produk berhasil diupload!','ok');
-    };
-    r.readAsDataURL(f);
-  }
-}
+function onPImgUrl(){prodImgB64='';document.getElementById('pImgPrev').style.display='none';}
 
 function prevQris(inp) {
   const f=inp.files[0]; if(!f) return;
@@ -2976,7 +2978,12 @@ function prevQris(inp) {
     const p=document.getElementById('qrisPrev');
     if(p){p.src=e.target.result;p.style.display='block';}
     const s=document.getElementById('qrisStatus');
-    if(s){s.textContent='✓ QRIS siap disimpan';s.style.color='var(--green)';}
+    if(s){s.textContent='';} // clear old status
+    const area=document.getElementById('qrisUpArea');
+    if(area){area.classList.add('success');}
+    const badge=document.getElementById('qrisUpBadge');
+    if(badge) badge.style.display='flex';
+    toast('✅ Gambar QRIS berhasil diupload! Jangan lupa simpan.','ok');
   };
   r.readAsDataURL(f);
 }
@@ -3196,18 +3203,6 @@ async function oUpdOrdStatus(ordId,status) {
       'Status Baru': statusLabels[status]||status,
       'Total': ord?.currency==='coin'?`🪙 ${ord?.amount}`:`Rp ${(ord?.amount||0).toLocaleString()}`,
     }).catch(()=>{});
-    // 🔔 Simpan notif ke Firestore agar customer bisa baca real-time
-    try {
-      const statusIcons2 = {pending:'⏳',processing:'⚙️',delivered:'✅',cancelled:'❌'};
-      const statusMsg = {pending:'Menunggu Pembayaran',processing:'Sedang Diproses',delivered:'Sudah Dikirim! Cek pesananmu',cancelled:'Pesanan Dibatalkan'};
-      await dbSet('user_notifs', `${ord?.userId}_${Date.now()}`, {
-        userId: ord?.userId||'',
-        title: `${statusIcons2[status]||'📦'} Status Pesanan Update`,
-        body: `${ord?.productName||''} — ${statusMsg[status]||status}`,
-        ts: Date.now(), read: false,
-        action: 'orders'
-      });
-    } catch(e){}
     setTimeout(loadOOrders,300);
   }catch(e){toast('Error: '+e.message,'err');}
 }
@@ -3322,7 +3317,28 @@ async function giftBadge() {
 
 // Owner Chat
 function oLoadChats() {
+  let prevChatSnapshot = null;
   rtListen('chats',chats=>{
+    // Check for new messages to show push
+    if (prevChatSnapshot && chats && CU?.isOwner) {
+      Object.keys(chats).forEach(uid => {
+        const prevMsgs = prevChatSnapshot[uid] ? Object.keys(prevChatSnapshot[uid]).length : 0;
+        const currMsgs = chats[uid] ? Object.keys(chats[uid]).length : 0;
+        if (currMsgs > prevMsgs) {
+          const allMsgs = Object.values(chats[uid]).sort((a,b)=>b.ts-a.ts);
+          const newest = allMsgs[0];
+          if (newest && newest.sender !== 'owner') {
+            showBrowserNotif(
+              `💬 Chat dari ${uid}`,
+              newest.text?.slice(0, 80) || 'Pesan baru',
+              ''
+            );
+          }
+        }
+      });
+    }
+    prevChatSnapshot = chats ? JSON.parse(JSON.stringify(chats)) : null;
+
     const el=document.getElementById('oChatList');
     if(!chats){el.innerHTML='<div class="empty" style="padding:20px"><p>No chats yet</p></div>';return;}
     const uids=Object.keys(chats);
@@ -3490,38 +3506,34 @@ async function sendWebhook(eventType, payload) {
 }
 
 function buildDiscordEmbed(eventType, payload, storeName, now) {
-  const colors = { order:0xe53935, chat:0x00d4ff, status:0x00ff88, topup:0xffd700, review:0xa855f7 };
-  const icons  = { order:'🛒', chat:'💬', status:'📦', topup:'💳', review:'⭐' };
+  const colors = { order:0xff0033, chat:0x00d4ff, status:0x00ff88, topup:0xffd700 };
+  const icons  = { order:'🛒', chat:'💬', status:'📦', topup:'💳' };
   const titles = {
-    order:  `🛒 Order Baru Masuk — ${storeName}`,
-    chat:   `💬 Pesan Chat Baru — ${storeName}`,
-    status: `📦 Status Order Diupdate — ${storeName}`,
-    topup:  `💳 Top Up Request Masuk — ${storeName}`,
-    review: `⭐ Review Baru — ${storeName}`,
+    order:  `${icons.order} Order Baru Masuk!`,
+    chat:   `${icons.chat} Pesan Chat Baru`,
+    status: `${icons.status} Status Order Diupdate`,
+    topup:  `${icons.topup} Topup Request Masuk`,
   };
-  // Topup gets a distinctive gold color and different footer
-  const isTopup = eventType === 'topup';
   const fields = Object.entries(payload).map(([k,v])=>({ name:k, value:String(v).slice(0,1024)||'—', inline:true }));
   return {
     username: storeName,
-    avatar_url: 'https://i.imgur.com/AfFp7pu.png',
     embeds: [{
-      title: titles[eventType] || `🔔 Notifikasi — ${storeName}`,
-      color: colors[eventType] || 0xe53935,
+      title: titles[eventType] || '🔔 Notifikasi',
+      color: colors[eventType] || 0xff0033,
       fields,
-      footer: {
-        text: isTopup
-          ? `💳 TOPUP REQUEST • ${storeName} • ${now}`
-          : `${storeName} • ${now}`
-      },
-      timestamp: new Date().toISOString(),
-      thumbnail: isTopup ? { url: 'https://i.imgur.com/lfVzNl6.png' } : undefined,
+      footer: { text: `${storeName} • ${now}` },
+      timestamp: new Date().toISOString()
     }]
   };
 }
 
 async function sendDiscordWebhook(url, eventType, payload, storeName, now) {
-  const body = buildDiscordEmbed(eventType, payload, storeName, now);
+  let body;
+  if (eventType === 'topup') {
+    body = buildTopupDiscordEmbed(payload, storeName, now);
+  } else {
+    body = buildDiscordEmbed(eventType, payload, storeName, now);
+  }
   await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
 }
 
@@ -3745,6 +3757,8 @@ function renderCatalogStrip() {
     html += `<div class="cat-chip ${activeCat===catKey?'act':''}" data-cat="${esc(catKey)}" onclick="setCat('${esc(catKey)}',this)">${icon}<span>${esc(c.name)}</span></div>`;
   });
   strip.innerHTML = html;
+  // Rebuild slideshow with latest catalog images
+  buildSlideshow();
 }
 
 function setCat(cat, el) {
@@ -3952,6 +3966,10 @@ function openAddCatalog() {
   const prev = document.getElementById('catImgPrev');
   if (prev) prev.style.display = 'none';
   catImgB64 = '';
+  const area=document.getElementById('catUpArea');
+  if(area) area.classList.remove('success');
+  const badge=document.getElementById('catUpBadge');
+  if(badge) badge.style.display='none';
   openM('mCatalog');
 }
 
@@ -4013,7 +4031,16 @@ function prevCatImg(inp) {
   const f = inp.files[0]; if (!f) return;
   if (f.size > 2*1024*1024) { toast('Max 2MB','err'); return; }
   const r = new FileReader();
-  r.onload = e => { catImgB64=e.target.result; const p=document.getElementById('catImgPrev'); if(p){p.src=e.target.result;p.style.display='block';} };
+  r.onload = e => {
+    catImgB64=e.target.result;
+    const p=document.getElementById('catImgPrev');
+    if(p){p.src=e.target.result;p.style.display='block';}
+    const area=document.getElementById('catUpArea');
+    if(area) area.classList.add('success');
+    const badge=document.getElementById('catUpBadge');
+    if(badge) badge.style.display='flex';
+    toast('✅ Ikon katalog berhasil diupload!','ok');
+  };
   r.readAsDataURL(f);
 }
 
@@ -4143,167 +4170,177 @@ async function renderLevelCard() {
 }
 
 // ================================================================
-// HERO SLIDER
+// HERO SLIDESHOW SYSTEM
 // ================================================================
-let heroSlideIdx = 0;
-let heroSlideTimer = null;
+let slideIndex = 0;
+let slideTimer = null;
+const SLIDE_INTERVAL = 4000;
 
-function renderHeroSlider() {
-  const track = document.getElementById('heroTrack');
-  const dotsEl = document.getElementById('heroDots');
-  if (!track) return;
+// Default game-themed slides for when no catalog images are available
+const DEFAULT_SLIDES = [
+  { bg: 'linear-gradient(135deg,#1a0a0a,#3d0000,#0d0d0d)', emoji: '🎮', label: 'Game Top Up' },
+  { bg: 'linear-gradient(135deg,#0a0a1a,#001a3d,#0d0d0d)', emoji: '⚡', label: 'Instant Delivery' },
+  { bg: 'linear-gradient(135deg,#0a1a0a,#003d10,#0d0d0d)', emoji: '🏆', label: 'Trusted Store' },
+  { bg: 'linear-gradient(135deg,#1a1a0a,#3d3d00,#0d0d0d)', emoji: '💎', label: 'Premium Items' },
+];
 
-  // Build slides from: catalog images + product images (featured first)
-  const slides = [];
+function buildSlideshow() {
+  const track = document.getElementById('slideTrack');
+  const dots  = document.getElementById('slideDots');
+  if (!track || !dots) return;
 
-  // Add featured products as slides
-  const featured = prods.filter(p => p.featured && (p.imgB64 || p.imgUrl)).slice(0, 6);
-  featured.forEach(p => {
-    slides.push({ img: p.imgB64 || p.imgUrl, title: p.name, sub: p.cat || 'Game Digital', badge: `Rp ${discPrice(p).toLocaleString()}`, id: p.id });
-  });
-
-  // Add catalog images as slides if fewer than 3 product slides
-  if (slides.length < 3) {
-    catalogs.forEach(c => {
-      if (c.imgB64) slides.push({ img: c.imgB64, title: c.name, sub: 'Tersedia sekarang', badge: '🎮 Game' });
-    });
+  // Collect images: catalog images first, then defaults to fill up to 4
+  const catImgs = catalogs.filter(c => c.imgB64).map(c => ({ imgB64: c.imgB64, label: c.name }));
+  let slides = [...catImgs];
+  if (slides.length < 2) {
+    DEFAULT_SLIDES.forEach(d => slides.push(d));
   }
-
-  // Default slide if nothing
-  if (!slides.length) {
-    slides.push({ img: null, title: 'DOOMINIKS STORE', sub: 'Game top up, akun & produk digital terpercaya', badge: 'Promo Aktif!' });
-  }
+  slides = slides.slice(0, 6); // max 6 slides
 
   track.innerHTML = slides.map((s, i) => {
-    const imgHtml = s.img
-      ? `<img src="${s.img}" alt="${esc(s.title||'')}" style="width:100%;height:100%;object-fit:cover">`
-      : `<div class="hero-slide-ph">🎮</div>`;
-    return `<div class="hero-slide" onclick="${s.id?`openProd('${s.id}')`:''}">
-      ${imgHtml}
-      <div class="hero-slide-overlay"></div>
-      <div class="hero-slide-content">
-        <div class="hero-slide-text">
-          <h2>${esc(s.title||'')}</h2>
-          <p>${esc(s.sub||'')}</p>
-        </div>
-        ${s.badge?`<span class="hero-slide-badge">${esc(s.badge)}</span>`:''}
-      </div>
-    </div>`;
+    if (s.imgB64) {
+      return `<div class="slide-item">
+        <img src="${s.imgB64}" alt="${esc(s.label||'')}">
+        <div class="slide-overlay"></div>
+      </div>`;
+    } else {
+      return `<div class="slide-item">
+        <div class="slide-item-bg" style="background:${s.bg}"><span>${s.emoji}</span></div>
+        <div class="slide-overlay"></div>
+      </div>`;
+    }
   }).join('');
 
-  if (dotsEl) {
-    dotsEl.innerHTML = slides.map((_, i) => `<button class="hero-dot ${i===0?'act':''}" onclick="goToSlide(${i})"></button>`).join('');
+  dots.innerHTML = slides.map((_, i) =>
+    `<button class="slide-dot ${i===0?'act':''}" onclick="slideTo(${i})"></button>`
+  ).join('');
+
+  slideIndex = 0;
+  slideTo(0);
+  startSlideTimer(slides.length);
+}
+
+function slideTo(idx) {
+  const track = document.getElementById('slideTrack');
+  if (!track) return;
+  const count = track.children.length;
+  if (!count) return;
+  slideIndex = ((idx % count) + count) % count;
+  track.style.transform = `translateX(-${slideIndex * 100}%)`;
+  document.querySelectorAll('.slide-dot').forEach((d, i) => d.classList.toggle('act', i === slideIndex));
+}
+
+function slideMove(dir) {
+  stopSlideTimer();
+  slideTo(slideIndex + dir);
+  startSlideTimer(document.getElementById('slideTrack')?.children?.length || 4);
+}
+
+function startSlideTimer(count) {
+  stopSlideTimer();
+  if (count <= 1) return;
+  slideTimer = setInterval(() => slideTo(slideIndex + 1), SLIDE_INTERVAL);
+}
+
+function stopSlideTimer() {
+  if (slideTimer) { clearInterval(slideTimer); slideTimer = null; }
+}
+
+// ================================================================
+// WEB PUSH / BROWSER NOTIFICATION SYSTEM
+// ================================================================
+let pushGranted = false;
+
+function checkPushPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'granted') {
+    pushGranted = true;
+    return;
   }
-
-  heroSlideIdx = 0;
-  clearInterval(heroSlideTimer);
-  if (slides.length > 1) heroSlideTimer = setInterval(() => slideHero(1), 4500);
+  if (Notification.permission === 'default') {
+    // Show banner in owner dashboard
+    const banner = document.getElementById('pushPermBanner');
+    if (banner) banner.classList.add('show');
+  }
 }
 
-function slideHero(dir) {
-  const track = document.getElementById('heroTrack');
-  if (!track) return;
-  const total = track.children.length;
-  if (total <= 1) return;
-  heroSlideIdx = (heroSlideIdx + dir + total) % total;
-  track.style.transform = `translateX(-${heroSlideIdx * 100}%)`;
-  document.querySelectorAll('.hero-dot').forEach((d, i) => d.classList.toggle('act', i === heroSlideIdx));
-}
-
-function goToSlide(idx) {
-  const track = document.getElementById('heroTrack');
-  if (!track) return;
-  heroSlideIdx = idx;
-  track.style.transform = `translateX(-${idx * 100}%)`;
-  document.querySelectorAll('.hero-dot').forEach((d, i) => d.classList.toggle('act', i === idx));
-}
-
-// ================================================================
-// HOME CATEGORY PILLS
-// ================================================================
-function renderHomeCatPills() {
-  const el = document.getElementById('homeCatPills');
-  if (!el) return;
-  let html = `<div class="home-cat-pill act" data-cat="" onclick="setHomeCat('',this)">
-    <div class="home-cat-pill-icon">🔥</div>
-    <div class="home-cat-pill-label">Semua</div>
-  </div>`;
-  catalogs.forEach(c => {
-    const catKey = c.cat || c.name;
-    const iconHtml = c.imgB64
-      ? `<img src="${c.imgB64}" alt="${esc(c.name)}">`
-      : (c.emoji || '🎮');
-    html += `<div class="home-cat-pill" data-cat="${esc(catKey)}" onclick="setHomeCat('${esc(catKey)}',this)">
-      <div class="home-cat-pill-icon">${c.imgB64?`<img src="${c.imgB64}" alt="${esc(c.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:6px">`:(c.emoji||'🎮')}</div>
-      <div class="home-cat-pill-label">${esc(c.name)}</div>
-    </div>`;
-  });
-  el.innerHTML = html;
-}
-
-function setHomeCat(cat, el) {
-  activeCat = cat;
-  // Update pill active state
-  document.querySelectorAll('.home-cat-pill').forEach(c => c.classList.remove('act'));
-  if (el) el.classList.add('act');
-  // Also sync old hidden catalog chips
-  document.querySelectorAll('.cat-chip').forEach(c => c.classList.toggle('act', c.dataset.cat === cat));
-  renderHomePage();
-}
-
-// ================================================================
-// PUSH NOTIFICATION (Web Push untuk customer)
-// ================================================================
 async function requestPushPermission() {
-  if (!('Notification' in window)) return false;
-  if (Notification.permission === 'granted') return true;
-  if (Notification.permission === 'denied') return false;
-  const result = await Notification.requestPermission();
-  return result === 'granted';
+  if (!('Notification' in window)) { toast('Browser tidak mendukung notifikasi','err'); return; }
+  const perm = await Notification.requestPermission();
+  pushGranted = perm === 'granted';
+  const banner = document.getElementById('pushPermBanner');
+  if (banner) banner.style.display = 'none';
+  if (pushGranted) {
+    toast('✅ Notifikasi browser diaktifkan!','ok');
+    showBrowserNotif('🔔 DOOMINIKS STORE', 'Notifikasi order & chat akan muncul di sini', '');
+  } else {
+    toast('Notifikasi browser ditolak','inf');
+  }
 }
 
-function showPushNotif(title, body, icon, onClick) {
-  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+function showBrowserNotif(title, body, icon) {
+  if (!pushGranted || Notification.permission !== 'granted') return;
   try {
     const n = new Notification(title, {
       body,
-      icon: icon || '/favicon.ico',
-      badge: '/favicon.ico',
+      icon: icon || 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1024px-Amazon_logo.svg.png',
+      badge: '',
       tag: 'doominiks-' + Date.now(),
       requireInteraction: false,
     });
-    if (onClick) n.onclick = () => { window.focus(); onClick(); n.close(); };
+    n.onclick = () => { window.focus(); n.close(); };
     setTimeout(() => n.close(), 6000);
-  } catch(e) {}
+  } catch(e) { console.warn('Browser notif failed:', e); }
 }
 
-// Request permission saat user login
-async function initPushForUser() {
-  if (!CU || CU.isOwner) return;
-  const granted = await requestPushPermission();
-  if (granted) {
-    // Show a welcome push notif
-    setTimeout(() => {
-      showPushNotif('DOOMINIKS STORE 🎮', `Selamat datang, ${CU.username}! Notifikasi aktif.`, null, () => goSec('home'));
-    }, 1500);
+// ================================================================
+// END NEW SYSTEMS
+// ================================================================
+
+// ================================================================
+// TOPUP — DISTINCT DISCORD WEBHOOK EMBED
+// ================================================================
+function buildTopupDiscordEmbed(payload, storeName, now) {
+  const fields = Object.entries(payload).map(([k,v])=>({ name:k, value:String(v).slice(0,1024)||'—', inline:true }));
+  return {
+    username: storeName + ' — Kasir',
+    avatar_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_QRIS.svg/512px-Logo_QRIS.svg.png',
+    embeds: [{
+      title: '💳 TOP UP REQUEST MASUK!',
+      description: '> Ada permintaan top up baru yang menunggu verifikasi Anda.',
+      color: 0xFFD700, // Gold
+      fields,
+      thumbnail: { url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_QRIS.svg/512px-Logo_QRIS.svg.png' },
+      footer: { text: `${storeName} — Top Up System • ${now}` },
+      timestamp: new Date().toISOString()
+    }]
+  };
+}
+
+// Override sendDiscordWebhook to use distinct embed for topup
+const _origSendDiscordWebhook = sendDiscordWebhook;
+async function sendDiscordWebhookEnhanced(url, eventType, payload, storeName, now) {
+  let body;
+  if (eventType === 'topup') {
+    body = buildTopupDiscordEmbed(payload, storeName, now);
+  } else {
+    body = buildDiscordEmbed(eventType, payload, storeName, now);
+  }
+  await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+}
+
+// Also send browser push to owner for orders/topup
+async function sendWebhookWithPush(eventType, payload) {
+  await sendWebhook(eventType, payload);
+  // Owner browser push notification
+  if (CU?.isOwner && pushGranted) {
+    const icons = { order:'🛒 Order Baru!', chat:'💬 Pesan Chat', status:'📦 Status Update', topup:'💳 Top Up Request' };
+    const title = icons[eventType] || '🔔 Notifikasi Baru';
+    const desc = Object.entries(payload).slice(0,2).map(([k,v])=>`${k}: ${v}`).join(' | ');
+    showBrowserNotif('DOOMINIKS STORE — ' + title, desc, '');
   }
 }
 
-// ================================================================
-// SEND WEBHOOK — tambah event review
-// ================================================================
-async function sendWebhookReview(r) {
-  sendWebhook('review', {
-    'Produk': r.productName||'',
-    'Customer': r.username||'',
-    'Rating': `${'⭐'.repeat(r.rating||5)} (${r.rating}/5)`,
-    'Ulasan': (r.text||'').slice(0,300),
-  }).catch(()=>{});
-}
-
-// ================================================================
-// TOPUP method for QRIS proc
-// ================================================================
 
 </script>
 </body>
