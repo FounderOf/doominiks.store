@@ -28,6 +28,64 @@
   window.firebaseReady = true;
   document.dispatchEvent(new Event('firebaseReady'));
 </script>
+<script>
+// ================================================================
+// AUTO-REFRESH — Real-time listener untuk update produk & toko
+// ================================================================
+// Dipanggil setelah app init — listen ke node 'products' dan 'settings/store'
+// agar customer otomatis dapat data terbaru tanpa perlu reload halaman
+let _autoRefreshUnsub = null;
+let _autoRefreshStoreUnsub = null;
+let _lastProdHash = '';
+
+function startAutoRefresh() {
+  // ── 1. Produk: listen real-time ──
+  if (_autoRefreshUnsub) { try { _autoRefreshUnsub(); } catch(e){} }
+  _autoRefreshUnsub = window._rdb.ref('_placeholder_').on ? null : null; // placeholder
+  // Use Firestore onSnapshot for products
+  try {
+    _autoRefreshUnsub = window._db.collection('products').onSnapshot(snap => {
+      const newProds = snap.docs.map(d => ({id:d.id,...d.data()}));
+      // Only update if data actually changed (avoid render loops)
+      const newHash = newProds.map(p=>p.id+(p.stock||0)+(p.price||0)+(p.name||'')+(p.badge||'')).join('|');
+      if (newHash !== _lastProdHash) {
+        _lastProdHash = newHash;
+        const wasEmpty = !prods.length;
+        prods = newProds;
+        // Refresh UI for non-owner users (owner manages products, no need to auto-refresh their panel)
+        if (!CU?.isOwner) {
+          renderHomePage();
+          renderProds();
+          renderFavs();
+        }
+        // Show toast only after initial load (not on first fetch)
+        if (!wasEmpty) {
+          const sec = document.querySelector('.sec.act');
+          const secId = sec?.id || '';
+          if (secId === 'sec-home' || secId === 'sec-products') {
+            toast('🔄 Produk diperbarui!', 'inf');
+          }
+        }
+      }
+    }, err => { console.warn('AutoRefresh products error:', err); });
+  } catch(e) { console.warn('AutoRefresh init error:', e); }
+
+  // ── 2. Store settings: listen for store announcement / discount changes ──
+  if (_autoRefreshStoreUnsub) { try { _autoRefreshStoreUnsub(); } catch(e){} }
+  try {
+    _autoRefreshStoreUnsub = window._db.collection('settings').doc('store').onSnapshot(snap => {
+      if (snap.exists) {
+        const data = snap.data();
+        const prev = JSON.stringify(storeSet);
+        storeSet = {...storeSet, ...data};
+        if (JSON.stringify(storeSet) !== prev) {
+          applyDiscordLinks();
+        }
+      }
+    }, err => { console.warn('AutoRefresh store error:', err); });
+  } catch(e) {}
+}
+</script>
 <style>
 :root{
   --pri:#e53935;--pri2:#c62828;--pri-g:rgba(229,57,53,.18);
@@ -1121,7 +1179,7 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
           <option value="cancelled">Cancelled</option>
         </select>
       </div>
-      <div class="tscroll"><table class="dtable"><thead><tr><th>Order ID</th><th>Customer</th><th>Produk</th><th>Amount</th><th>Metode</th><th>Status</th><th>Proof</th><th>Aksi</th></tr></thead><tbody id="oOrdTb"></tbody></table></div>
+      <div class="tscroll"><table class="dtable"><thead><tr><th>Order ID</th><th>Customer</th><th>Produk</th><th>Amount</th><th>Metode</th><th>Catatan</th><th>Status</th><th>Proof</th><th>Aksi</th></tr></thead><tbody id="oOrdTb"></tbody></table></div>
     </div>
 
     <!-- TRANSACTIONS -->
@@ -1466,6 +1524,7 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
         </div>
         <div class="ig"><label class="lbl">Atau URL Gambar</label><input class="inp" id="pImgUrl" placeholder="https://..." oninput="onPImgUrl()"></div>
         <div class="ig"><label class="lbl">Diskon % (0 = tidak ada)</label><input class="inp" type="number" id="pDisc" placeholder="0" min="0" max="100"></div>
+        <div class="ig"><label class="lbl">Badge Produk <span style="color:var(--txt3);font-weight:400">(opsional, contoh: 5 hari, Terlaris, Garansi)</span></label><input class="inp" id="pBadge" placeholder="Contoh: 5 hari, Instant, Bonus"></div>
         <div class="ig"><label class="lbl">Featured (tampil di Home)</label><select class="inp" id="pFeat"><option value="0">Tidak</option><option value="1">Ya</option></select></div>
       </div>
     </div>
@@ -1747,6 +1806,8 @@ async function initApp() {
   loadHomeRevs();
   updateHomeStats();
   if (CU?.isOwner) setTimeout(checkPushPermission, 1500);
+  // ── Auto-refresh: real-time listener agar customer selalu dapat data terbaru ──
+  setTimeout(startAutoRefresh, 800);
 }
 
 async function loadSettings() {
@@ -2150,16 +2211,22 @@ function previewEditAvatar(inp) {
 }
 function uploadProfilePhoto(inp) {
   // Direct upload from profile page avatar click
+  if (!CU) { toast('Login dulu untuk mengganti foto profil','err'); inp.value=''; return; }
   const f = inp.files[0]; if (!f) return;
-  if (f.size > 2*1024*1024) { toast('Max 2MB untuk foto profil','err'); return; }
+  if (f.size > 2*1024*1024) { toast('Max 2MB untuk foto profil','err'); inp.value=''; return; }
   const r = new FileReader();
   r.onload = async e => {
     const avatarUrl = e.target.result;
-    await dbUpd('users', CU.id, { avatarUrl });
+    if (!CU.isOwner) {
+      try { await dbUpd('users', CU.id, { avatarUrl }); } catch(err) { console.warn('Avatar save error:', err); }
+    }
     CU.avatarUrl = avatarUrl; saveCU();
     const profAv = document.getElementById('profAv');
-    profAv.innerHTML = `<img src="${avatarUrl}"><div class="prof-av-overlay"><i class="fas fa-camera" style="font-size:.9rem"></i><span>Ganti</span></div>`;
+    if (profAv) profAv.innerHTML = `<img src="${avatarUrl}"><div class="prof-av-overlay"><i class="fas fa-camera" style="font-size:.9rem"></i><span>Ganti</span></div>`;
+    const navAv = document.getElementById('navAv');
+    if (navAv) navAv.innerHTML = `<img src="${avatarUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
     toast('✅ Foto profil berhasil diupdate!','ok');
+    inp.value = '';
   };
   r.readAsDataURL(f);
 }
@@ -2192,8 +2259,9 @@ function pCard(p, extraClass='') {
   const img = p.imgB64 ? `<img src="${p.imgB64}" alt="${esc(p.name)}" style="width:100%;height:100%;object-fit:cover">` : p.imgUrl ? `<img src="${p.imgUrl}" alt="${esc(p.name)}" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:cover">` : `<div class="pcard-img-ph"><i class="fas fa-box"></i></div>`;
   const stockTxt = p.stock<=0 ? '❌ Stok Habis' : p.stock<=3 ? `⚠ Sisa ${p.stock}` : `✓ ${p.stock} tersedia`;
   const favd = isFav(p.id);
+  const prodBadgeHtml = p.badge ? `<div style="position:absolute;bottom:7px;left:7px;background:rgba(229,57,53,.92);color:#fff;font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.02em;backdrop-filter:blur(4px)">${esc(p.badge)}</div>` : '';
   return `<div class="pcard ${extraClass}" onclick="openProd('${p.id}')">
-    <div class="pcard-img" style="position:relative">${img}${p.discountPct?`<div class="pcard-disc">-${p.discountPct}%</div>`:''}${p.stock<=0?'<div class="pcard-oos">OUT OF STOCK</div>':''}
+    <div class="pcard-img" style="position:relative">${img}${p.discountPct?`<div class="pcard-disc">-${p.discountPct}%</div>`:''}${p.stock<=0?'<div class="pcard-oos">OUT OF STOCK</div>':''}${prodBadgeHtml}
       <button onclick="event.stopPropagation();toggleFav('${p.id}',event)" class="pcard-fav" title="${favd?'Hapus dari Favorit':'Tambah ke Favorit'}">${favd?'❤️':'🤍'}</button>
     </div>
     <div class="pcard-body">
@@ -3131,7 +3199,7 @@ async function oLoadProds() {
 function openAddProd() {
   document.getElementById('mProdTitle').textContent='Add Product';
   document.getElementById('eProdId').value='';
-  ['pName','pDesc','pDeliv','pImgUrl'].forEach(id=>document.getElementById(id).value='');
+  ['pName','pDesc','pDeliv','pImgUrl','pBadge'].forEach(id=>document.getElementById(id).value='');
   ['pPrice','pBalPrice','pCoinP','pStock','pDisc'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('pFeat').value='0';
   document.getElementById('pImgPrev').style.display='none'; prodImgB64='';
@@ -3163,6 +3231,7 @@ async function oEditProd(id) {
   document.getElementById('pImgUrl').value=p.imgUrl||'';
   document.getElementById('pDisc').value=p.discountPct||'';
   document.getElementById('pFeat').value=p.featured?'1':'0';
+  const pBadgeEl=document.getElementById('pBadge'); if(pBadgeEl) pBadgeEl.value=p.badge||'';
   if(p.imgB64){document.getElementById('pImgPrev').src=p.imgB64;document.getElementById('pImgPrev').style.display='';prodImgB64=p.imgB64;}
   else{document.getElementById('pImgPrev').style.display='none';prodImgB64='';}
   openM('mProd');
@@ -3332,6 +3401,7 @@ async function saveProd() {
     delivery:document.getElementById('pDeliv').value.trim(),
     imgUrl,
     discountPct:parseInt(document.getElementById('pDisc').value)||0,
+    badge:(document.getElementById('pBadge')?.value||'').trim(),
     featured:document.getElementById('pFeat').value==='1',
     avgRating:0, reviewCount:0
   };
@@ -3376,11 +3446,12 @@ async function loadOOrders() {
     let list=ords.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
     if(f) list=list.filter(o=>o.status===f);
     tb.innerHTML=list.length?list.map(o=>`<tr>
-      <td class="fmono txs">${esc(o.id)}</td>
+      <td class="fmono txs">${esc(o.id)}<br><span style="color:var(--txt3);font-size:.65rem">${fmtDate(o.createdAt)}</span></td>
       <td>${esc(o.username||o.userId)}</td>
       <td>${esc(o.productName||'')}</td>
       <td>${o.currency==='coin'?`🪙 ${o.amount}`:o.currency==='balance'?`💰 Rp ${(o.amount||0).toLocaleString()}(Bal)`:`Rp ${(o.amount||0).toLocaleString()}`}</td>
       <td>${esc(o.method||'')}</td>
+      <td style="max-width:160px;white-space:normal">${o.note?`<div style="background:rgba(245,158,11,.1);border-left:2px solid #f59e0b;padding:4px 7px;border-radius:4px;font-size:.75rem;color:#fbbf24;line-height:1.4">📝 ${esc(o.note)}</div>`:'<span style="color:var(--txt3);font-size:.72rem">—</span>'}</td>
       <td><span class="sta ${staCls(o.status)}">${o.status}</span></td>
       <td>${o.proof?`<button class="btn btn-xs" onclick="viewProofAdmin('${o.id}')">View</button>`:'—'}</td>
       <td>
@@ -3391,8 +3462,8 @@ async function loadOOrders() {
           <option value="cancelled"  ${o.status==='cancelled' ?'selected':''}>Cancelled</option>
         </select>
       </td>
-    </tr>`).join(''):'<tr><td colspan="8" class="tm" style="text-align:center">No orders</td></tr>';
-  }catch(e){tb.innerHTML='<tr><td colspan="8" class="tr">Error loading</td></tr>';}
+    </tr>`).join(''):'<tr><td colspan="9" class="tm" style="text-align:center">No orders</td></tr>';
+  }catch(e){tb.innerHTML='<tr><td colspan="9" class="tr">Error loading</td></tr>';}
 }
 
 async function viewProofAdmin(ordId) {
@@ -3535,13 +3606,13 @@ async function giftBadge() {
   }catch(e){toast('Error: '+e.message,'err');}
 }
 
-// Owner Chat — global state (fix: prevent duplicate listeners)
+// Owner Chat — global state
 let _oChatUnsubAll = null;
 let _oChatPrevSnap = null;
 
 function oLoadChats() {
-  // If already listening, don't register another listener
-  if (_oChatUnsubAll) return;
+  // Always unsubscribe previous listener and re-register to get fresh data
+  if (_oChatUnsubAll) { try { _oChatUnsubAll(); } catch(e){} _oChatUnsubAll = null; }
 
   _oChatUnsubAll = rtListen('chats', chats => {
     // Detect new messages → browser push notification for owner
@@ -4179,6 +4250,7 @@ function renderHomePage() {
         const origPrice = p.discountPct ? `<span class="nominal-card-orig">Rp ${(p.price||0).toLocaleString()}</span><span class="nominal-card-disc">-${p.discountPct}%</span>` : '';
         const coinBadge = p.coinPrice ? `<span>🪙 ${p.coinPrice}</span>` : '';
         const stockBadge = p.stock <= 0 ? `<span style="color:#ef4444">❌ Habis</span>` : p.stock <= 3 ? `<span style="color:#f59e0b">⚠ Sisa ${p.stock}</span>` : '';
+        const prodBadge = p.badge ? `<div style="margin-top:5px"><span style="background:rgba(229,57,53,.15);color:var(--pri);font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:4px;border:1px solid rgba(229,57,53,.3)">${esc(p.badge)}</span></div>` : '';
         
         return `<div class="nominal-card ${cardClass}" onclick="openProd('${p.id}')">
           <div class="nominal-card-amount">${esc(p.name)}</div>
@@ -4187,6 +4259,7 @@ function renderHomePage() {
             ${origPrice}
           </div>
           <div class="nominal-card-badge">${coinBadge}${stockBadge}</div>
+          ${prodBadge}
         </div>`;
       }).join('');
 
@@ -4689,4 +4762,4 @@ async function sendWebhookWithPush(eventType, payload) {
 
 </script>
 </body>
- </html>
+  </html>
