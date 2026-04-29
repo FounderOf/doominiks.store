@@ -1501,6 +1501,7 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
       <div>
         <div class="ig"><label class="lbl">Nama Produk *</label><input class="inp" id="pName" placeholder="e.g. Mobile Legends 100 Diamonds"></div>
         <div class="ig"><label class="lbl">Deskripsi *</label><textarea class="inp" id="pDesc" placeholder="Deskripsi produk..."></textarea></div>
+        <div class="ig"><label class="lbl">Panduan Aktivasi <span style="color:var(--txt3);font-weight:400;font-size:.72rem">(opsional)</span></label><textarea class="inp" id="pPanduan" rows="3" placeholder="Cara order, cara aktivasi, cara set harga gamepass..."></textarea></div>
         <div class="ig"><label class="lbl">Harga IDR *</label><input class="inp" type="number" id="pPrice" placeholder="50000" min="0"></div>
         <div class="ig"><label class="lbl">Harga Balance IDR (0 = tidak dijual)</label><input class="inp" type="number" id="pBalPrice" placeholder="0" min="0"></div>
         <div class="ig"><label class="lbl">Harga Coins (0 = tidak dijual)</label><input class="inp" type="number" id="pCoinP" placeholder="0" min="0"></div>
@@ -1606,6 +1607,28 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
     <div class="ig"><label class="lbl">Nama Tampilan</label><input class="inp" id="epName" placeholder="Nama kamu"></div>
     <div class="ig"><label class="lbl">Password Baru (kosong = tidak berubah)</label><input class="inp" type="password" id="epPwd" placeholder="Password baru"></div>
     <button class="btn btn-red w100" onclick="saveProfile()">Simpan</button>
+  </div>
+</div>
+
+<!-- PRODUCT DESCRIPTION MODAL (bottom-sheet style) -->
+<div class="moverlay" id="mProdDesc" style="align-items:flex-end;padding:0">
+  <div class="modal" style="max-width:100%;width:100%;border-radius:18px 18px 0 0;max-height:85vh;overflow-y:auto;padding:0">
+    <!-- Handle bar -->
+    <div style="display:flex;justify-content:center;padding:10px 0 0">
+      <div style="width:40px;height:4px;border-radius:2px;background:var(--border2)"></div>
+    </div>
+    <!-- Header -->
+    <div class="mhead" style="padding:14px 20px 10px">
+      <div class="mtitle" id="mProdDescTitle">Deskripsi Produk</div>
+      <button class="mclose" onclick="closeM('mProdDesc')">✕</button>
+    </div>
+    <!-- Tabs -->
+    <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:0" id="mDescTabs">
+      <button id="mDescTabDesc" onclick="switchDescTab('desc')" style="flex:1;padding:10px 0;font-family:var(--f);font-size:.82rem;font-weight:600;border:none;border-bottom:2px solid var(--pri);color:var(--pri);background:none;cursor:pointer;transition:all .2s">📄 Deskripsi</button>
+      <button id="mDescTabPanduan" onclick="switchDescTab('panduan')" style="flex:1;padding:10px 0;font-family:var(--f);font-size:.82rem;font-weight:600;border:none;border-bottom:2px solid transparent;color:var(--txt3);background:none;cursor:pointer;transition:all .2s;display:none">📖 Panduan Aktivasi</button>
+    </div>
+    <!-- Content -->
+    <div id="mDescContent" style="padding:20px;font-size:.92rem;line-height:1.9;color:var(--txt);white-space:pre-wrap;word-break:break-word;min-height:120px"></div>
   </div>
 </div>
 
@@ -2316,7 +2339,11 @@ function openProd(id) {
       <div style="font-size:.7rem;color:var(--txt3);margin-top:6px">${esc(p.cat||'')}</div>
     </div>
     <div>
-      <div style="font-size:.82rem;color:var(--txt2);margin-bottom:10px;line-height:1.6">${esc((p.desc||'').slice(0,150))}</div>
+      ${p.desc ? `<div style="font-size:.78rem;color:var(--txt2);margin-bottom:8px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${esc(p.desc)}</div>
+      <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+        <span onclick="openDescModal('${p.id}','desc')" style="font-size:.78rem;color:var(--cyan);cursor:pointer;font-weight:600;display:flex;align-items:center;gap:4px"><i class="fas fa-file-alt" style="font-size:.7rem"></i> Lihat Deskripsi Produk</span>
+        ${p.delivery ? `<span style="color:var(--txt3)">|</span><span onclick="openDescModal('${p.id}','panduan')" style="font-size:.78rem;color:var(--cyan);cursor:pointer;font-weight:600;display:flex;align-items:center;gap:4px"><i class="fas fa-book" style="font-size:.7rem"></i> Panduan Aktivasi</span>` : ''}
+      </div>` : ''}
       <div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;margin-bottom:8px">
         <span style="font-size:1.3rem;font-weight:700;color:var(--pri)">Rp ${dp.toLocaleString()}</span>
         ${p.discountPct?`<span style="font-size:.78rem;color:var(--txt3);text-decoration:line-through">Rp ${(p.price||0).toLocaleString()}</span>`:''}
@@ -3216,7 +3243,7 @@ async function oLoadProds() {
 function openAddProd() {
   document.getElementById('mProdTitle').textContent='Add Product';
   document.getElementById('eProdId').value='';
-  ['pName','pDesc','pDeliv','pImgUrl','pBadge'].forEach(id=>document.getElementById(id).value='');
+  ['pName','pDesc','pPanduan','pDeliv','pImgUrl','pBadge'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
   ['pPrice','pBalPrice','pCoinP','pStock','pDisc'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('pFeat').value='0';
   document.getElementById('pImgPrev').style.display='none'; prodImgB64='';
@@ -3239,6 +3266,7 @@ async function oEditProd(id) {
   document.getElementById('eProdId').value=id;
   document.getElementById('pName').value=p.name||'';
   document.getElementById('pDesc').value=p.desc||'';
+  const pPanduanEl=document.getElementById('pPanduan'); if(pPanduanEl) pPanduanEl.value=p.panduan||'';
   document.getElementById('pPrice').value=p.price||'';
   document.getElementById('pBalPrice').value=p.balancePrice||'';
   document.getElementById('pCoinP').value=p.coinPrice||'';
@@ -3410,6 +3438,7 @@ async function saveProd() {
   const data={
     id,name,
     desc:document.getElementById('pDesc').value.trim(),
+    panduan:(document.getElementById('pPanduan')?.value||'').trim(),
     price,
     coinPrice:parseInt(document.getElementById('pCoinP').value)||0,
     balancePrice:parseInt(document.getElementById('pBalPrice').value)||0,
@@ -4136,6 +4165,48 @@ function showNotePopup(el) {
   document.getElementById('mNoteContent').textContent = txt;
   document.getElementById('mNoteProduct').textContent = prod ? '📦 ' + prod.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'") : '';
   openM('mNotePopup');
+}
+
+// ================================================================
+// PRODUCT DESCRIPTION MODAL
+// ================================================================
+let _descProdId = null;
+let _descTab = 'desc';
+
+function openDescModal(prodId, tab) {
+  _descProdId = prodId;
+  const p = prods.find(x => x.id === prodId);
+  if (!p) return;
+  // Show/hide panduan tab based on whether delivery info exists
+  const hasPanduan = !!(p.delivery || p.panduan);
+  document.getElementById('mDescTabPanduan').style.display = hasPanduan ? '' : 'none';
+  switchDescTab(tab || 'desc');
+  openM('mProdDesc');
+}
+
+function switchDescTab(tab) {
+  _descTab = tab;
+  const p = _descProdId ? prods.find(x => x.id === _descProdId) : null;
+  const contentEl = document.getElementById('mDescContent');
+  const titleEl = document.getElementById('mProdDescTitle');
+  const tabDesc = document.getElementById('mDescTabDesc');
+  const tabPanduan = document.getElementById('mDescTabPanduan');
+
+  if (tab === 'desc') {
+    titleEl.textContent = 'Deskripsi Produk';
+    tabDesc.style.borderBottomColor = 'var(--pri)';
+    tabDesc.style.color = 'var(--pri)';
+    tabPanduan.style.borderBottomColor = 'transparent';
+    tabPanduan.style.color = 'var(--txt3)';
+    contentEl.textContent = p ? (p.desc || 'Tidak ada deskripsi.') : '';
+  } else {
+    titleEl.textContent = 'Panduan Aktivasi';
+    tabPanduan.style.borderBottomColor = 'var(--pri)';
+    tabPanduan.style.color = 'var(--pri)';
+    tabDesc.style.borderBottomColor = 'transparent';
+    tabDesc.style.color = 'var(--txt3)';
+    contentEl.textContent = p ? (p.panduan || p.delivery || 'Tidak ada panduan.') : '';
+  }
 }
 
 // ================================================================
