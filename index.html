@@ -1609,6 +1609,23 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
   </div>
 </div>
 
+<!-- NOTE POPUP MODAL (Owner Orders) -->
+<div class="moverlay" id="mNotePopup">
+  <div class="modal" style="max-width:380px">
+    <div class="mhead">
+      <div>
+        <div class="mtitle">📝 Catatan Customer</div>
+        <div id="mNoteProduct" style="font-size:.72rem;color:var(--txt3);margin-top:2px"></div>
+      </div>
+      <button class="mclose" onclick="closeM('mNotePopup')">✕</button>
+    </div>
+    <div id="mNoteContent" style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:14px 16px;font-size:.9rem;color:var(--txt);line-height:1.7;word-break:break-word;white-space:pre-wrap;min-height:60px"></div>
+    <div style="margin-top:14px;display:flex;justify-content:flex-end">
+      <button class="btn btn-sm" onclick="closeM('mNotePopup')">Tutup</button>
+    </div>
+  </div>
+</div>
+
 <!-- VIEW PROOF -->
 <div class="moverlay" id="mViewProof">
   <div class="modal modal-lg">
@@ -2266,7 +2283,7 @@ function pCard(p, extraClass='') {
     </div>
     <div class="pcard-body">
       <div class="pcard-name">${esc(p.name||'')}</div>
-      <div class="pcard-cat">${esc((p.desc||'').slice(0,85))}${(p.desc||'').length>85?'...':''}</div>
+      <div class="pcard-cat">${p.cat?`<span style="color:var(--txt3);font-size:.68rem"><i class="fas fa-tag" style="margin-right:3px;font-size:.6rem"></i>${esc(p.cat)}</span>`:''}</div>
       <div style="display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;margin-bottom:4px">
         <span class="pcard-price">Rp ${dp.toLocaleString()}</span>
         ${p.discountPct?`<span class="pcard-price-orig">Rp ${(p.price||0).toLocaleString()}</span>`:''}
@@ -3451,7 +3468,7 @@ async function loadOOrders() {
       <td>${esc(o.productName||'')}</td>
       <td>${o.currency==='coin'?`🪙 ${o.amount}`:o.currency==='balance'?`💰 Rp ${(o.amount||0).toLocaleString()}(Bal)`:`Rp ${(o.amount||0).toLocaleString()}`}</td>
       <td>${esc(o.method||'')}</td>
-      <td style="max-width:160px;white-space:normal">${o.note?`<div style="background:rgba(245,158,11,.1);border-left:2px solid #f59e0b;padding:4px 7px;border-radius:4px;font-size:.75rem;color:#fbbf24;line-height:1.4">📝 ${esc(o.note)}</div>`:'<span style="color:var(--txt3);font-size:.72rem">—</span>'}</td>
+      <td style="max-width:120px;white-space:normal">${o.note?`<div onclick="showNotePopup(this)" data-note="${esc(o.note)}" data-prod="${esc(o.productName||'')}" style="background:rgba(245,158,11,.12);border-left:2px solid #f59e0b;padding:4px 7px;border-radius:4px;font-size:.72rem;color:#fbbf24;line-height:1.4;cursor:pointer;max-height:42px;overflow:hidden" title="Klik untuk lihat lengkap">📝 ${esc(o.note.slice(0,30))}${o.note.length>30?'…':''}</div>`:'<span style="color:var(--txt3);font-size:.72rem">—</span>'}</td>
       <td><span class="sta ${staCls(o.status)}">${o.status}</span></td>
       <td>${o.proof?`<button class="btn btn-xs" onclick="viewProofAdmin('${o.id}')">View</button>`:'—'}</td>
       <td>
@@ -3563,10 +3580,19 @@ async function oLoadUsers() {
         <td><div class="frow gap1">
           <button class="btn btn-xs" onclick="openGiftBadge('${esc(u.id||u.username)}','${esc(u.username||u.id)}')">🏅 Badge</button>
           <button class="btn btn-xs btn-success" onclick="addUserBal('${esc(u.id||u.username)}')">+ Bal</button>
+          <button class="btn btn-xs" style="border-color:var(--cyan);color:var(--cyan)" onclick="ownerChatUser('${esc(u.id||u.username)}')">💬 Chat</button>
         </div></td>
       </tr>`;
     }).join(''):'<tr><td colspan="7" class="tm" style="text-align:center">No users</td></tr>';
   }catch(e){tb.innerHTML='<tr><td colspan="7" class="tr">Error</td></tr>';}
+}
+
+// Owner initiate chat to user from Users panel
+function ownerChatUser(uid) {
+  // Switch to chat tab and select that user
+  const chatTab = document.querySelector('.otab[onclick*="ochat"]');
+  otab(chatTab, 'ochat');
+  setTimeout(() => oSelChat(uid), 500);
 }
 
 async function addUserBal(uid) {
@@ -4098,6 +4124,19 @@ async function oDelRev(id,prodId) {
 function openM(id){document.getElementById(id).classList.add('open')}
 function closeM(id){document.getElementById(id).classList.remove('open')}
 document.querySelectorAll('.moverlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+
+// ================================================================
+// NOTE POPUP — Owner Orders
+// ================================================================
+function showNotePopup(el) {
+  const note = el.getAttribute('data-note') || '';
+  const prod = el.getAttribute('data-prod') || '';
+  // Unescape HTML entities back to plain text
+  const txt = note.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+  document.getElementById('mNoteContent').textContent = txt;
+  document.getElementById('mNoteProduct').textContent = prod ? '📦 ' + prod.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'") : '';
+  openM('mNotePopup');
+}
 
 // ================================================================
 // TOAST
@@ -4762,4 +4801,4 @@ async function sendWebhookWithPush(eventType, payload) {
 
 </script>
 </body>
-  </html>
+ </html>
