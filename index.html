@@ -66,7 +66,7 @@ nav{position:fixed;top:0;left:0;right:0;height:58px;background:rgba(13,13,13,.98
 .nav-icon-btn:hover{border-color:var(--pri);color:var(--pri)}
 .nav-icon-btn .dot{position:absolute;top:2px;right:2px;width:8px;height:8px;border-radius:50%;background:var(--pri);border:2px solid var(--bg);display:none}
 .nav-icon-btn .num{position:absolute;top:-3px;right:-3px;background:var(--pri);color:#fff;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:.58rem;font-weight:700}
-.nav-avatar{width:32px;height:32px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0;border:2px solid var(--pri2)}
+.nav-avatar{width:32px;height:32px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0;border:2px solid var(--pri2);overflow:hidden}
 .btn-login{background:var(--pri);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-family:var(--f);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn-login:hover{background:var(--pri2)}
 .discord-btn{background:#5865f2;color:#fff;border:none;border-radius:6px;padding:7px 12px;font-family:var(--f);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;white-space:nowrap}
@@ -266,7 +266,11 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
    PROFILE / ACCOUNT
 ══════════════════════════════════ */
 .prof-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.prof-av{width:60px;height:60px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff;flex-shrink:0}
+.prof-av{width:60px;height:60px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;cursor:pointer;position:relative}
+.prof-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.prof-av-overlay{position:absolute;inset:0;background:rgba(0,0,0,.45);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;font-size:.65rem;color:#fff;font-weight:600;text-align:center;line-height:1.3;flex-direction:column;gap:2px}
+.prof-av:hover .prof-av-overlay{opacity:1}
+.ravatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .prof-balance-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .prof-bal-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r3);padding:14px;text-align:center}
 .prof-bal-val{font-size:1.1rem;font-weight:700;color:var(--pri);margin-bottom:2px}
@@ -778,7 +782,10 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
   <div class="ctn-sm" style="padding-top:20px">
     <!-- Profile Header -->
     <div class="prof-card mb3">
-      <div class="prof-av" id="profAv" style="border:3px solid var(--level-color,var(--pri));transition:border-color .4s">U</div>
+      <div class="prof-av" id="profAv" style="border:3px solid var(--level-color,var(--pri));transition:border-color .4s" onclick="document.getElementById('profAvatarFile').click()" title="Ganti foto profil">
+        <div class="prof-av-overlay"><i class="fas fa-camera" style="font-size:.9rem"></i><span>Ganti</span></div>
+      </div>
+      <input type="file" id="profAvatarFile" accept="image/*" style="display:none" onchange="uploadProfilePhoto(this)">
       <div style="flex:1">
         <div style="font-size:1rem;font-weight:700" id="profName">Username</div>
         <div id="profBadges" style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap"></div>
@@ -1461,6 +1468,14 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 <div class="moverlay" id="mEditProf">
   <div class="modal">
     <div class="mhead"><div class="mtitle">Edit Profil</div><button class="mclose" onclick="closeM('mEditProf')">✕</button></div>
+    <!-- Photo upload in modal -->
+    <div style="display:flex;justify-content:center;margin-bottom:18px">
+      <div style="position:relative;cursor:pointer" onclick="document.getElementById('editAvatarFile').click()">
+        <div id="editProfAv" style="width:80px;height:80px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:#fff;overflow:hidden;border:3px solid var(--border2)"></div>
+        <div style="position:absolute;bottom:2px;right:2px;width:24px;height:24px;border-radius:50%;background:var(--pri);display:flex;align-items:center;justify-content:center;border:2px solid var(--bg2)"><i class="fas fa-camera" style="font-size:.6rem;color:#fff"></i></div>
+      </div>
+    </div>
+    <input type="file" id="editAvatarFile" accept="image/*" style="display:none" onchange="previewEditAvatar(this)">
     <div class="ig"><label class="lbl">Nama Tampilan</label><input class="inp" id="epName" placeholder="Nama kamu"></div>
     <div class="ig"><label class="lbl">Password Baru (kosong = tidak berubah)</label><input class="inp" type="password" id="epPwd" placeholder="Password baru"></div>
     <button class="btn btn-red w100" onclick="saveProfile()">Simpan</button>
@@ -1756,7 +1771,13 @@ function updateNav() {
   const nLoginEl = document.getElementById('nLogin');
   if(nLoginEl) nLoginEl.style.display = li ? 'none' : '';
   if (li) {
-    document.getElementById('navAv').textContent = (CU.username||CU.id||'U')[0].toUpperCase();
+    const navAv = document.getElementById('navAv');
+    if (CU.avatarUrl) {
+      navAv.innerHTML = `<img src="${CU.avatarUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+      navAv.style.padding = '0';
+    } else {
+      navAv.textContent = (CU.username||CU.id||'U')[0].toUpperCase();
+    }
     loadActivityCounts();
     loadNotifs();
     loadProfChatUnread();
@@ -2022,12 +2043,58 @@ async function saveProfile() {
   const upd  = {};
   if (name) upd.displayName = name;
   if (pw) { if (pw.length<6) { toast('Password min 6 chars','err'); return; } upd.password = btoa(unescape(encodeURIComponent(pw))); }
+  // Save pending avatar
+  if (window._pendingAvatarB64) { upd.avatarUrl = window._pendingAvatarB64; window._pendingAvatarB64 = null; }
   if (!Object.keys(upd).length) { toast('Nothing to update','inf'); return; }
   await dbUpd('users', CU.id, upd);
   CU = {...CU, ...upd}; saveCU(); updateNav();
   closeM('mEditProf'); toast('Profile updated!','ok');
+  loadProfile();
 }
-function openEditProfile() { document.getElementById('epName').value=CU.displayName||CU.username||''; document.getElementById('epPwd').value=''; openM('mEditProf'); }
+function openEditProfile() {
+  document.getElementById('epName').value=CU.displayName||CU.username||'';
+  document.getElementById('epPwd').value='';
+  window._pendingAvatarB64 = null;
+  // Show current avatar in modal
+  const editAv = document.getElementById('editProfAv');
+  const displayName = CU.displayName||CU.username||CU.id;
+  if (CU.avatarUrl) {
+    editAv.innerHTML = `<img src="${CU.avatarUrl}" style="width:100%;height:100%;object-fit:cover">`;
+  } else {
+    editAv.textContent = displayName[0].toUpperCase();
+  }
+  openM('mEditProf');
+}
+function previewEditAvatar(inp) {
+  const f = inp.files[0]; if (!f) return;
+  if (f.size > 2*1024*1024) { toast('Max 2MB untuk foto profil','err'); return; }
+  const r = new FileReader();
+  r.onload = e => {
+    window._pendingAvatarB64 = e.target.result;
+    const editAv = document.getElementById('editProfAv');
+    editAv.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover">`;
+    // Also update main profile avatar live
+    const profAv = document.getElementById('profAv');
+    if (profAv) profAv.innerHTML = `<img src="${e.target.result}"><div class="prof-av-overlay"><i class="fas fa-camera" style="font-size:.9rem"></i><span>Ganti</span></div>`;
+    toast('✅ Foto profil siap disimpan!','ok');
+  };
+  r.readAsDataURL(f);
+}
+function uploadProfilePhoto(inp) {
+  // Direct upload from profile page avatar click
+  const f = inp.files[0]; if (!f) return;
+  if (f.size > 2*1024*1024) { toast('Max 2MB untuk foto profil','err'); return; }
+  const r = new FileReader();
+  r.onload = async e => {
+    const avatarUrl = e.target.result;
+    await dbUpd('users', CU.id, { avatarUrl });
+    CU.avatarUrl = avatarUrl; saveCU();
+    const profAv = document.getElementById('profAv');
+    profAv.innerHTML = `<img src="${avatarUrl}"><div class="prof-av-overlay"><i class="fas fa-camera" style="font-size:.9rem"></i><span>Ganti</span></div>`;
+    toast('✅ Foto profil berhasil diupdate!','ok');
+  };
+  r.readAsDataURL(f);
+}
 
 // ================================================================
 // PRODUCTS
@@ -2421,9 +2488,12 @@ async function loadHomeRevs() {
 function revCard(r) {
   const badgeCls = {warrior:'bw',elite:'be',master:'bm',grandmaster:'bg2c',mythical:'bmy',owner:'bo'}[r.badge]||'';
   const badgeHtml = r.badge&&badgeCls ? `<span class="badge ${badgeCls}" style="margin-left:5px">${badgeLbl(r.badge)}</span>` : '';
+  const avatarHtml = r.avatarUrl
+    ? `<div class="ravatar" style="overflow:hidden"><img src="${r.avatarUrl}" alt="${esc(r.username||'U')}" style="width:100%;height:100%;object-fit:cover;border-radius:50%"></div>`
+    : `<div class="ravatar">${(r.username||'U')[0].toUpperCase()}</div>`;
   return `<div class="rcard">
     <div class="rhead">
-      <div class="ravatar">${(r.username||'U')[0].toUpperCase()}</div>
+      ${avatarHtml}
       <div>
         <div class="rname">${esc(r.username||'Anonymous')}${badgeHtml}</div>
         <div class="stars">${stars(r.rating||5)}</div>
@@ -2460,7 +2530,7 @@ async function submitRev() {
   const prodName = document.getElementById('revProdName').value;
   try {
     const revId = 'REV-'+Date.now();
-    await dbSet('reviews', revId, { id:revId, orderId:ordId, productId:prodId, productName:prodName, userId:CU.id, username:CU.username||CU.id, badge:CU.badge||'', rating:selRating, text, createdAt:Date.now() });
+    await dbSet('reviews', revId, { id:revId, orderId:ordId, productId:prodId, productName:prodName, userId:CU.id, username:CU.username||CU.id, badge:CU.badge||'', avatarUrl:CU.avatarUrl||'', rating:selRating, text, createdAt:Date.now() });
     // Update product rating
     const allR = await dbGetAll('reviews');
     const pr = allR.filter(r=>r.productId===prodId);
@@ -2544,7 +2614,12 @@ async function loadProfile() {
   if (!CU) return;
   await refreshCU();
   const displayName = CU.displayName||CU.username||CU.id;
-  document.getElementById('profAv').textContent = displayName[0].toUpperCase();
+  const profAv = document.getElementById('profAv');
+  if (CU.avatarUrl) {
+    profAv.innerHTML = `<img src="${CU.avatarUrl}" alt="${esc(displayName)}"><div class="prof-av-overlay"><i class="fas fa-camera" style="font-size:.9rem"></i><span>Ganti</span></div>`;
+  } else {
+    profAv.innerHTML = `<span>${displayName[0].toUpperCase()}</span><div class="prof-av-overlay"><i class="fas fa-camera" style="font-size:.9rem"></i><span>Ganti</span></div>`;
+  }
   document.getElementById('profName').textContent = displayName;
   document.getElementById('profEmail').textContent = CU.email||'';
   document.getElementById('profBal').textContent = `Rp ${(CU.balance||0).toLocaleString()}`;
@@ -3645,7 +3720,7 @@ async function oLoadSettings() {
   document.getElementById('sBCA').value=paySet.bca||'';
   document.getElementById('sBNI').value=paySet.bni||'';
   document.getElementById('sGopay').value=paySet.gopay||'';
-  document.getElementById('sOVO').value=paySet.ovo||'';
+  // OVO field removed from UI
   document.getElementById('sDANA').value=paySet.dana||'';
   const seabankEl=document.getElementById('sSeabank');if(seabankEl)seabankEl.value=paySet.seabank||'';
   if(paySet.qrisImg){const p=document.getElementById('qrisPrev');if(p){p.src=paySet.qrisImg;p.style.display='block';}}
@@ -3746,7 +3821,7 @@ async function savePaySet() {
     qrisImg: qrisB64 || paySet.qrisImg || ''
   };
   await dbSet('settings','payments',p);
-  paySet=p; toast('Payment settings saved!','ok');
+  paySet=p; toast('Payment settings saved! ✅','ok');
 }
 
 async function oLoadRevsMgmt() {
@@ -4453,4 +4528,4 @@ async function sendWebhookWithPush(eventType, payload) {
 
 </script>
 </body>
-  </html>
+</html>
