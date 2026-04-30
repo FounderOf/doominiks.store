@@ -725,20 +725,34 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 .cart-clear-btn{width:100%;background:none;border:1px solid var(--border2);color:var(--txt3);border-radius:7px;padding:7px;font-family:var(--f);font-size:.78rem;font-weight:600;cursor:pointer;margin-top:7px;transition:all .2s}
 .cart-clear-btn:hover{border-color:#ef4444;color:#ef4444}
 
-/* Add-to-cart button on product card */
+/* Add-to-cart button on product card — 2 button layout */
 .pcard-cart-row{display:flex;align-items:center;gap:5px;margin-top:8px}
-.pcard-atc-btn{flex:1;background:var(--pri);color:#fff;border:none;border-radius:6px;padding:6px 10px;font-family:var(--f);font-size:.75rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px}
-.pcard-atc-btn:hover{background:var(--pri2)}
-.pcard-atc-btn:disabled{background:var(--bg5);color:var(--txt3);cursor:not-allowed}
-.pcard-qty-wrap{display:none;align-items:center;gap:4px;flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:3px 5px;justify-content:space-between}
-.pcard-qty-wrap.show{display:flex}
-.pcard-qty-btn{width:22px;height:22px;border-radius:4px;background:var(--bg4);border:1px solid var(--border2);color:var(--txt);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;font-weight:700;transition:all .15s;flex-shrink:0}
-.pcard-qty-btn:hover{border-color:var(--pri);color:var(--pri)}
-.pcard-qty-num{font-size:.8rem;font-weight:700;color:var(--txt);min-width:18px;text-align:center}
+
+/* Cart icon button (square) */
+.pcard-cart-icon-btn{width:32px;height:32px;border-radius:6px;background:var(--bg4);border:1px solid var(--border2);color:var(--txt2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;transition:all .2s;flex-shrink:0;position:relative}
+.pcard-cart-icon-btn:hover{border-color:var(--pri);color:var(--pri);background:var(--pri-g)}
+
+/* Small qty badge on cart icon */
+.pcard-cart-qty-badge{position:absolute;top:-5px;right:-5px;background:var(--pri);color:#fff;min-width:14px;height:14px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:700;padding:0 3px;border:1.5px solid var(--bg2)}
+
+/* Beli Sekarang button */
+.pcard-buy-btn{flex:1;background:var(--pri);color:#fff;border:none;border-radius:6px;padding:6px 8px;font-family:var(--f);font-size:.73rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap}
+.pcard-buy-btn:hover{background:var(--pri2)}
+.pcard-buy-btn:disabled{background:var(--bg5);color:var(--txt3);cursor:not-allowed}
 
 /* Cart badge on bottom nav */
 .bni-cart-badge{position:absolute;top:3px;right:6px;background:var(--pri);color:#fff;width:14px;height:14px;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:.5rem;font-weight:700}
 .bni-cart-badge.show{display:flex}
+
+/* ── Modal Quantity Selector ── */
+.modal-qty-row{display:flex;align-items:center;justify-content:space-between;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;margin-bottom:12px}
+.modal-qty-label{font-size:.78rem;color:var(--txt2);font-weight:600}
+.modal-qty-ctrl{display:flex;align-items:center;gap:8px}
+.modal-qty-btn{width:28px;height:28px;border-radius:6px;background:var(--bg4);border:1px solid var(--border2);color:var(--txt);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;font-weight:700;transition:all .15s;line-height:1}
+.modal-qty-btn:hover{border-color:var(--pri);color:var(--pri);background:var(--pri-g)}
+.modal-qty-num{font-size:1rem;font-weight:800;color:var(--txt);min-width:28px;text-align:center}
+.modal-atc-btn{width:100%;background:var(--bg3);color:var(--txt);border:1px solid var(--border2);border-radius:7px;padding:9px;font-family:var(--f);font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:8px}
+.modal-atc-btn:hover{border-color:var(--pri);color:var(--pri);background:var(--pri-g)}
 </style>
 </head>
 <body>
@@ -1457,6 +1471,19 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
   <div class="modal modal-lg">
     <div class="mhead"><div class="mtitle" id="mBuyTitle">Produk</div><button class="mclose" onclick="closeM('mBuy')">✕</button></div>
     <div id="mBuyBody" style="display:grid;grid-template-columns:160px 1fr;gap:16px;margin-bottom:16px"></div>
+    <!-- QUANTITY SELECTOR -->
+    <div class="modal-qty-row" id="buyQtyRow">
+      <span class="modal-qty-label"><i class="fas fa-layer-group" style="color:var(--pri);margin-right:5px"></i>Jumlah</span>
+      <div class="modal-qty-ctrl">
+        <button class="modal-qty-btn" onclick="changeBuyQty(-1)">−</button>
+        <span class="modal-qty-num" id="buyQtyNum">1</span>
+        <button class="modal-qty-btn" onclick="changeBuyQty(1)">+</button>
+      </div>
+    </div>
+    <!-- ADD TO CART FROM MODAL -->
+    <button class="modal-atc-btn" id="modalAtcBtn" onclick="addToCartFromModal()">
+      <i class="fas fa-shopping-cart"></i> Tambah ke Keranjang
+    </button>
     <div class="ig" id="buyMethodsWrap">
       <label class="lbl">Metode Pembayaran (untuk IDR)</label>
       <div class="pay-methods" id="buyMethods"></div>
@@ -2391,14 +2418,11 @@ function pCard(p, extraClass='') {
   const prodBadgeHtml = p.badge ? `<div style="position:absolute;bottom:7px;left:7px;background:rgba(229,57,53,.92);color:#fff;font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.02em;backdrop-filter:blur(4px)">${esc(p.badge)}</div>` : '';
   const cartQty = getCartQty(p.id);
   const isOos = p.stock <= 0;
-  const atcBtn = isOos
-    ? `<button class="pcard-atc-btn" disabled><i class="fas fa-times"></i> Habis</button>`
-    : `<button class="pcard-atc-btn" id="atc-btn-${p.id}" onclick="event.stopPropagation();addToCart('${p.id}')" style="${cartQty>0?'display:none':''}"><i class="fas fa-cart-plus"></i> Keranjang</button>
-       <div class="pcard-qty-wrap ${cartQty>0?'show':''}" id="atc-qty-${p.id}">
-         <button class="pcard-qty-btn" onclick="event.stopPropagation();changeCardQty('${p.id}',-1)">−</button>
-         <span class="pcard-qty-num" id="atc-num-${p.id}">${cartQty}</span>
-         <button class="pcard-qty-btn" onclick="event.stopPropagation();changeCardQty('${p.id}',1)">+</button>
-       </div>`;
+  const cartQtyBadge = cartQty > 0 ? `<span class="pcard-cart-qty-badge">${cartQty}</span>` : '';
+  const btns = isOos
+    ? `<button class="pcard-buy-btn" disabled style="opacity:.4;cursor:not-allowed;flex:1"><i class="fas fa-times"></i> Habis</button>`
+    : `<button class="pcard-cart-icon-btn" id="atc-icn-${p.id}" onclick="event.stopPropagation();addToCart('${p.id}')" title="Tambah ke Keranjang" style="position:relative"><i class="fas fa-shopping-cart"></i>${cartQtyBadge}</button>
+       <button class="pcard-buy-btn" onclick="event.stopPropagation();openProd('${p.id}')"><i class="fas fa-bolt"></i> Beli Sekarang</button>`;
   return `<div class="pcard ${extraClass}" onclick="openProd('${p.id}')">
     <div class="pcard-img" style="position:relative">${img}${p.discountPct?`<div class="pcard-disc">-${p.discountPct}%</div>`:''}${p.stock<=0?'<div class="pcard-oos">OUT OF STOCK</div>':''}${prodBadgeHtml}
       <button onclick="event.stopPropagation();toggleFav('${p.id}',event)" class="pcard-fav" title="${favd?'Hapus dari Favorit':'Tambah ke Favorit'}">${favd?'❤️':'🤍'}</button>
@@ -2416,7 +2440,7 @@ function pCard(p, extraClass='') {
         <span class="pcard-stock ${stockCls}">${stockTxt}</span>
         <span class="pcard-rating">${stars(p.avgRating||0)} <span style="color:var(--txt3)">(${p.reviewCount||0})</span></span>
       </div>
-      <div class="pcard-cart-row">${atcBtn}</div>
+      <div class="pcard-cart-row">${btns}</div>
     </div>
   </div>`;
 }
@@ -2430,6 +2454,14 @@ function openProd(id) {
   const p = prods.find(x=>x.id===id);
   if (!p) return;
   buyProd = p; buyMode = 'idr'; buyMethod = null; appliedDisc = null;
+  window._buyQty = 1; // reset qty
+  const qtyEl = document.getElementById('buyQtyNum');
+  if (qtyEl) qtyEl.textContent = '1';
+  // Show/hide cart button for guests/owners
+  const atcBtn = document.getElementById('modalAtcBtn');
+  if (atcBtn) atcBtn.style.display = (CU && !CU.isOwner && p.stock > 0) ? '' : 'none';
+  const qtyRow = document.getElementById('buyQtyRow');
+  if (qtyRow) qtyRow.style.display = p.stock > 0 ? '' : 'none';
   document.getElementById('mBuyTitle').textContent = p.name||'Product';
   const dp = discPrice(p);
   const img = p.imgB64 ? `<img src="${p.imgB64}" style="width:100%;height:165px;object-fit:cover;border-radius:6px">` : p.imgUrl ? `<img src="${p.imgUrl}" style="width:100%;height:165px;object-fit:cover;border-radius:6px" onerror="this.style.display='none'">` : `<div style="width:100%;height:165px;background:var(--bg5);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:3rem;color:var(--txt3)"><i class="fas fa-box"></i></div>`;
@@ -2568,37 +2600,40 @@ function calcFinalPrice() {
 function updateBuyTotal() {
   const el = document.getElementById('buyTotal');
   if (!buyProd) return;
-  if (buyMode === 'coin') { el.textContent = `🪙 ${buyProd.coinPrice||0} Coins`; }
+  const qty = window._buyQty || 1;
+  if (buyMode === 'coin') { el.textContent = `🪙 ${(buyProd.coinPrice||0) * qty} Coins`; }
   else if (buyMode === 'balance') {
     const bp = buyProd.balancePrice || 0;
-    el.textContent = bp ? `💰 Rp ${bp.toLocaleString()} (Balance)` : '❌ Tidak tersedia';
+    el.textContent = bp ? `💰 Rp ${(bp * qty).toLocaleString()} (Balance)` : '❌ Tidak tersedia';
   }
-  else { el.textContent = `Rp ${calcFinalPrice().toLocaleString()}`; }
+  else { el.textContent = `Rp ${(calcFinalPrice() * qty).toLocaleString()}`; }
 }
 
 async function doBuy() {
   if (!CU) { closeM('mBuy'); openM('mAuth'); return; }
   if (!buyProd) return;
+  const qty = window._buyQty || 1;
   if ((buyProd.stock||0) <= 0) { toast('Out of stock!','err'); return; }
+  if ((buyProd.stock||0) < qty) { toast(`Stok tidak cukup. Sisa: ${buyProd.stock}`,'err'); return; }
   if (buyMode === 'idr' && !buyMethod) { toast('Pilih metode pembayaran','err'); return; }
   const buyNote = (document.getElementById('buyNote')||{}).value?.trim()||'';
   if (buyMode === 'coin') {
-    const cp = buyProd.coinPrice||0;
-    if (!cp) { toast('This product cannot be bought with coins','err'); return; }
+    const cp = (buyProd.coinPrice||0) * qty;
+    if (!buyProd.coinPrice) { toast('This product cannot be bought with coins','err'); return; }
     if ((CU.coins||0) < cp) { toast(`Need ${cp} coins. You have ${CU.coins||0}. Top up first!`,'err'); return; }
     await buyCoin();
     return;
   }
   if (buyMode === 'balance') {
-    const bp = buyProd.balancePrice||0;
-    if (!bp) { toast('Produk ini tidak tersedia untuk pembelian dengan Balance IDR','err'); return; }
+    const bp = (buyProd.balancePrice||0) * qty;
+    if (!buyProd.balancePrice) { toast('Produk ini tidak tersedia untuk pembelian dengan Balance IDR','err'); return; }
     if ((CU.balance||0) < bp) { toast(`Saldo tidak cukup. Butuh Rp ${bp.toLocaleString()}, saldo kamu Rp ${(CU.balance||0).toLocaleString()}. Top up dulu!`,'err'); return; }
     await buyBalance();
     return;
   }
   // IDR flow → show payment modal
-  const finalPrice = calcFinalPrice();
-  payContext = { type:'product', prod:buyProd, method:buyMethod, finalPrice, disc:appliedDisc, note:buyNote };
+  const finalPrice = calcFinalPrice() * qty;
+  payContext = { type:'product', prod:buyProd, method:buyMethod, finalPrice, disc:appliedDisc, note:buyNote, qty };
   const mName = {bca:'BCA Transfer',bni:'BNI Transfer',gopay:'GoPay',ovo:'OVO',dana:'DANA',qris:'QRIS'};
   let instrHtml = '';
   if (buyMethod === 'qris') {
@@ -2622,59 +2657,63 @@ async function doBuy() {
 
 async function buyCoin() {
   try {
-    const cp = buyProd.coinPrice;
+    const qty = window._buyQty || 1;
+    const cp = (buyProd.coinPrice||0) * qty;
     const ordId = 'ORD-'+Date.now();
     // Deduct coins
     await dbUpd('users', CU.id, { coins: (CU.coins||0)-cp });
     CU.coins = (CU.coins||0)-cp; saveCU(); updateNav();
     // Reduce stock
-    const ns = Math.max(0,(buyProd.stock||0)-1);
+    const ns = Math.max(0,(buyProd.stock||0)-qty);
     await rtSet('stocks/'+buyProd.id, ns); buyProd.stock=ns;
     // Create order
     const buyNoteC = (document.getElementById('buyNote')||{}).value?.trim()||'';
-    await dbSet('orders', ordId, { id:ordId, userId:CU.id, username:CU.username||CU.id, productId:buyProd.id, productName:buyProd.name, amount:cp, currency:'coin', method:'coins', delivery:buyProd.delivery||'', status:'delivered', note:buyNoteC, createdAt:Date.now() });
+    await dbSet('orders', ordId, { id:ordId, userId:CU.id, username:CU.username||CU.id, productId:buyProd.id, productName:buyProd.name, qty, amount:cp, currency:'coin', method:'coins', delivery:buyProd.delivery||'', status:'delivered', note:buyNoteC, createdAt:Date.now() });
     // 🔔 WEBHOOK: order coin (langsung delivered)
     sendWebhook('order', {
       'Order ID': ordId,
       'Produk': buyProd.name||'',
       'Customer': CU.username||CU.id,
+      'Jumlah': qty,
       'Total': `🪙 ${cp} Coins`,
       'Metode': 'Coins',
       'Status': '✅ Delivered (Coin Purchase)'
     }).catch(()=>{});
     closeM('mBuy');
     toast('Purchase successful! Check your Orders.','ok');
-    addNotif('✅ Pembelian Berhasil', `${buyProd.name} — 🪙 ${cp} Coins`, '✅', ()=>{goSec('orders');});
+    addNotif('✅ Pembelian Berhasil', `${buyProd.name} ×${qty} — 🪙 ${cp} Coins`, '✅', ()=>{goSec('orders');});
     goSec('orders');
   } catch(e) { toast('Purchase failed: '+e.message,'err'); }
 }
 
 async function buyBalance() {
   try {
-    const bp = buyProd.balancePrice;
+    const qty = window._buyQty || 1;
+    const bp = (buyProd.balancePrice||0) * qty;
     const ordId = 'ORD-'+Date.now();
     // Deduct balance
     const newBal = (CU.balance||0) - bp;
     await dbUpd('users', CU.id, { balance: newBal });
     CU.balance = newBal; saveCU(); updateNav();
     // Reduce stock
-    const ns = Math.max(0,(buyProd.stock||0)-1);
+    const ns = Math.max(0,(buyProd.stock||0)-qty);
     await rtSet('stocks/'+buyProd.id, ns); buyProd.stock=ns;
     // Create order
     const buyNoteB = (document.getElementById('buyNote')||{}).value?.trim()||'';
-    await dbSet('orders', ordId, { id:ordId, userId:CU.id, username:CU.username||CU.id, productId:buyProd.id, productName:buyProd.name, amount:bp, currency:'balance', method:'Balance IDR', delivery:buyProd.delivery||'', status:'delivered', note:buyNoteB, createdAt:Date.now() });
+    await dbSet('orders', ordId, { id:ordId, userId:CU.id, username:CU.username||CU.id, productId:buyProd.id, productName:buyProd.name, qty, amount:bp, currency:'balance', method:'Balance IDR', delivery:buyProd.delivery||'', status:'delivered', note:buyNoteB, createdAt:Date.now() });
     // 🔔 WEBHOOK
     sendWebhook('order', {
       'Order ID': ordId,
       'Produk': buyProd.name||'',
       'Customer': CU.username||CU.id,
+      'Jumlah': qty,
       'Total': `Rp ${bp.toLocaleString()} (Balance IDR)`,
       'Metode': 'Balance IDR',
       'Status': '✅ Delivered (Balance Purchase)'
     }).catch(()=>{});
     closeM('mBuy');
     toast('Pembelian berhasil! Cek Orders kamu.','ok');
-    addNotif('✅ Pembelian Berhasil', `${buyProd.name} — Rp ${bp.toLocaleString()} Balance`, '✅', ()=>{goSec('orders');});
+    addNotif('✅ Pembelian Berhasil', `${buyProd.name} ×${qty} — Rp ${bp.toLocaleString()} Balance`, '✅', ()=>{goSec('orders');});
     goSec('orders');
   } catch(e) { toast('Pembelian gagal: '+e.message,'err'); }
 }
@@ -2703,7 +2742,8 @@ async function submitProof() {
   try {
     if (payContext.type === 'product') {
       const ordId = 'ORD-'+Date.now();
-      const ns = Math.max(0,(payContext.prod.stock||0)-1);
+      const qty = payContext.qty || 1;
+      const ns = Math.max(0,(payContext.prod.stock||0)-qty);
       await rtSet('stocks/'+payContext.prod.id, ns); payContext.prod.stock=ns;
       await dbSet('orders', ordId, { id:ordId, userId:CU.id, username:CU.username||CU.id, productId:payContext.prod.id, productName:payContext.prod.name, amount:payContext.finalPrice, currency:'idr', method:payContext.method, proof:proofB64, delivery:payContext.prod.delivery||'', status:'pending', discountCode:payContext.disc?.id||'', note:payContext.note||'', createdAt:Date.now() });
       if (payContext.disc) {
@@ -5025,6 +5065,30 @@ function addToCart(prodId) {
   toast(`🛒 ${p.name} ditambahkan ke keranjang`, 'ok');
 }
 
+function changeBuyQty(delta) {
+  if (!window._buyQty) window._buyQty = 1;
+  const newQty = Math.max(1, (window._buyQty || 1) + delta);
+  window._buyQty = newQty;
+  const el = document.getElementById('buyQtyNum');
+  if (el) el.textContent = newQty;
+  updateBuyTotal();
+}
+
+function addToCartFromModal() {
+  if (!CU) { closeM('mBuy'); openM('mAuth'); return; }
+  if (!buyProd) return;
+  if (buyProd.stock <= 0) { toast('Stok habis!', 'err'); return; }
+  const qty = window._buyQty || 1;
+  const cart = loadCart();
+  const curQty = cart[buyProd.id]?.qty || 0;
+  cart[buyProd.id] = { qty: curQty + qty };
+  saveCartData(cart);
+  updateCartUI();
+  syncCardQtyUI(buyProd.id, curQty + qty);
+  toast(`🛒 ${qty}x ${buyProd.name} ditambahkan ke keranjang`, 'ok');
+  closeM('mBuy');
+}
+
 function changeCardQty(prodId, delta) {
   if (!CU) { openM('mAuth'); return; }
   const p = prods.find(x => x.id === prodId);
@@ -5048,13 +5112,21 @@ function changeCardQty(prodId, delta) {
 }
 
 function syncCardQtyUI(prodId, qty) {
-  // Update all pcard qty controls on the page for this product
-  const btnEl  = document.getElementById('atc-btn-' + prodId);
-  const qtyEl  = document.getElementById('atc-qty-' + prodId);
-  const numEl  = document.getElementById('atc-num-' + prodId);
-  if (btnEl)  btnEl.style.display  = qty > 0 ? 'none' : '';
-  if (qtyEl)  { qtyEl.classList.toggle('show', qty > 0); }
-  if (numEl)  numEl.textContent = qty;
+  // Update cart icon badge on the pcard
+  const iconBtn = document.getElementById('atc-icn-' + prodId);
+  if (iconBtn) {
+    let badge = iconBtn.querySelector('.pcard-cart-qty-badge');
+    if (qty > 0) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'pcard-cart-qty-badge';
+        iconBtn.appendChild(badge);
+      }
+      badge.textContent = qty;
+    } else {
+      if (badge) badge.remove();
+    }
+  }
 }
 
 function updateCartUI() {
@@ -5223,4 +5295,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 </body>
-  </html>
+ </html>
