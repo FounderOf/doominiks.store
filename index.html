@@ -681,8 +681,28 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 .cat-manage-icon-ph{width:32px;height:32px;border-radius:6px;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
 
 /* ══════════════════════════════════
-   CART SYSTEM
+   CATALOG TYPE TABS (Home)
 ══════════════════════════════════ */
+.type-tab-strip{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0 10px;margin-bottom:2px}
+.type-tab-strip::-webkit-scrollbar{display:none}
+.type-tab{display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border2);background:var(--bg3);color:var(--txt2);font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .18s;flex-shrink:0}
+.type-tab:hover{border-color:var(--pri);color:var(--pri);background:var(--pri-g)}
+.type-tab.act{background:var(--pri);color:#fff;border-color:var(--pri);box-shadow:0 2px 10px rgba(229,57,53,.35)}
+.type-tab-emoji{font-size:.85rem}
+.type-tab-count{background:rgba(255,255,255,.2);color:inherit;font-size:.62rem;font-weight:700;padding:1px 5px;border-radius:8px;margin-left:2px}
+.type-tab.act .type-tab-count{background:rgba(255,255,255,.25)}
+
+/* Type management in catalog modal */
+.type-mgmt-list{display:flex;flex-direction:column;gap:5px;max-height:160px;overflow-y:auto;margin-bottom:8px}
+.type-mgmt-item{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:7px 10px}
+.type-mgmt-item .type-emoji{font-size:.95rem;min-width:20px;text-align:center}
+.type-mgmt-item .type-name{flex:1;font-size:.8rem;font-weight:600;color:var(--txt)}
+.type-mgmt-item .type-del{background:none;border:none;color:var(--txt3);cursor:pointer;font-size:.78rem;padding:2px 5px;border-radius:4px;transition:color .15s}
+.type-mgmt-item .type-del:hover{color:#ef4444}
+.type-add-row{display:flex;gap:6px;align-items:center}
+.type-add-emoji{width:50px;text-align:center}
+.type-add-btn{flex-shrink:0;padding:7px 14px;font-size:.78rem}
+
 /* Cart icon badge in nav */
 #navCart{display:none}
 .cart-count{position:absolute;top:-3px;right:-3px;background:var(--pri);color:#fff;min-width:16px;height:16px;border-radius:8px;display:none;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;padding:0 3px}
@@ -1617,7 +1637,8 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
         <div class="ig"><label class="lbl">Harga Balance IDR (0 = tidak dijual)</label><input class="inp" type="number" id="pBalPrice" placeholder="0" min="0"></div>
         <div class="ig"><label class="lbl">Harga Coins (0 = tidak dijual)</label><input class="inp" type="number" id="pCoinP" placeholder="0" min="0"></div>
         <div class="ig"><label class="lbl">Stok *</label><input class="inp" type="number" id="pStock" placeholder="10" min="0"></div>
-        <div class="ig"><label class="lbl">Kategori / Katalog</label><select class="inp" id="pCat"><option value="">— Tanpa Katalog —</option></select></div>
+        <div class="ig"><label class="lbl">Kategori / Katalog</label><select class="inp" id="pCat" onchange="onPCatChange()"><option value="">— Tanpa Katalog —</option></select></div>
+        <div class="ig" id="pCatTypeWrap" style="display:none"><label class="lbl"><i class="fas fa-layer-group" style="color:var(--pri);margin-right:4px"></i>Tipe / Jenis <span style="font-size:.68rem;color:var(--txt3);font-weight:400">(dari tipe katalog yang dipilih)</span></label><select class="inp" id="pCatType"><option value="">— Tanpa Tipe —</option></select></div>
         <div class="ig"><label class="lbl">Isi Kiriman (setelah pembayaran)</label><textarea class="inp" id="pDeliv" placeholder="Username: xxx | Password: xxx"></textarea></div>
       </div>
       <div>
@@ -1666,7 +1687,26 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
     <div class="ig"><label class="lbl">Atau Emoji sebagai Ikon</label><input class="inp" id="cEmoji" placeholder="e.g. 🎮 🔥 ⚔️"></div>
     <div class="ig"><label class="lbl">Tampilkan di Home?</label><select class="inp" id="cVisible"><option value="1">Ya</option><option value="0">Tidak</option></select></div>
     <div class="ig"><label class="lbl">Urutan (lebih kecil = lebih depan)</label><input class="inp" type="number" id="cOrder" placeholder="0" min="0"></div>
-    <button class="btn btn-red w100" onclick="saveCatalog()">💾 Simpan Katalog</button>
+
+    <!-- TYPES / JENIS PRODUK SECTION -->
+    <div class="ig" style="margin-top:6px">
+      <label class="lbl" style="display:flex;align-items:center;gap:6px">
+        <i class="fas fa-layer-group" style="color:var(--pri)"></i> Tipe / Jenis Produk
+        <span style="font-size:.67rem;color:var(--txt3);font-weight:400">(opsional — contoh: Via Login, Robux Card, dll)</span>
+      </label>
+      <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:12px">
+        <div class="type-mgmt-list" id="cTypeList">
+          <div style="font-size:.75rem;color:var(--txt3);text-align:center;padding:8px">Belum ada tipe — tambahkan di bawah</div>
+        </div>
+        <div class="type-add-row">
+          <input class="inp type-add-emoji" id="cTypeEmoji" placeholder="🎮" maxlength="4" style="width:52px;text-align:center;font-size:1rem">
+          <input class="inp" id="cTypeName" placeholder="Nama tipe, e.g. Via Login" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();addCatalogType()}">
+          <button class="btn btn-sm btn-red type-add-btn" onclick="addCatalogType()"><i class="fas fa-plus"></i> Tambah</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-red w100 mt2" onclick="saveCatalog()">💾 Simpan Katalog</button>
   </div>
 </div>
 
@@ -3396,6 +3436,11 @@ function openAddProd() {
   const txt=document.getElementById('prodUpText');
   if(txt) txt.textContent='Klik untuk upload gambar';
   populatePCatDropdown('');
+  // Reset catType
+  const ctWrap = document.getElementById('pCatTypeWrap');
+  if (ctWrap) ctWrap.style.display = 'none';
+  const ctSel = document.getElementById('pCatType');
+  if (ctSel) ctSel.innerHTML = '<option value="">— Tanpa Tipe —</option>';
   openM('mProd');
 }
 
@@ -3412,6 +3457,8 @@ async function oEditProd(id) {
   document.getElementById('pCoinP').value=p.coinPrice||'';
   document.getElementById('pStock').value=stk!==null?stk:(p.stock||0);
   populatePCatDropdown(p.cat||'');
+  // Populate catType after category is set
+  populateCatTypeDropdown(p.cat||'', p.catType||'');
   document.getElementById('pDeliv').value=p.delivery||'';
   document.getElementById('pImgUrl').value=p.imgUrl||'';
   document.getElementById('pDisc').value=p.discountPct||'';
@@ -3584,6 +3631,7 @@ async function saveProd() {
     balancePrice:parseInt(document.getElementById('pBalPrice').value)||0,
     stock,
     cat:document.getElementById('pCat').value.trim(),
+    catType:(document.getElementById('pCatType')?.value||'').trim(),
     delivery:document.getElementById('pDeliv').value.trim(),
     imgUrl,
     discountPct:parseInt(document.getElementById('pDisc').value)||0,
@@ -4434,9 +4482,14 @@ function setCat(cat, el) {
   renderHomePage();
 }
 
-// ================================================================
-// HOME PAGE RENDERER
-// ================================================================
+// Track active type per catalog: { [catId]: typeName }
+let _activeTypePerCat = {};
+
+function setActiveType(catId, typeName) {
+  _activeTypePerCat[catId] = typeName;
+  renderHomePage();
+}
+
 function renderHomePage() {
   const search = (document.getElementById('homeSearch')||{}).value?.toLowerCase()||'';
   const sort = (document.getElementById('homeSort')||{}).value||'';
@@ -4449,10 +4502,10 @@ function renderHomePage() {
   else list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 
   const sectEl = document.getElementById('homeCatalogSections');
-  const allEl = document.getElementById('homeAllProds');
+  const allEl  = document.getElementById('homeAllProds');
   if (!sectEl || !allEl) return;
 
-  // If filtering or searching, just show flat grid
+  // Filtering/searching → flat grid
   if (activeCat || search) {
     sectEl.innerHTML = '';
     allEl.style.display = '';
@@ -4461,11 +4514,11 @@ function renderHomePage() {
     return;
   }
 
-  // Show catalog sections if catalogs exist
-  if (catalogs.length > 0 && !search && !activeCat) {
+  if (catalogs.length > 0) {
     allEl.style.display = 'none';
     let html = '';
-    // Featured products at top
+
+    // Featured row at top
     const featured = list.filter(p=>p.featured||p.feat).slice(0,8);
     if (featured.length > 0) {
       html = `<div class="mb4">
@@ -4476,32 +4529,73 @@ function renderHomePage() {
 
     catalogs.forEach(cat => {
       const catKey = cat.cat || cat.name;
-      const catProds = list.filter(p => (p.cat||'') === catKey).slice(0, 20);
-      if (!catProds.length) return;
+      const allCatProds = list.filter(p => (p.cat||'') === catKey);
+      if (!allCatProds.length) return;
 
-      // Sort to find popular/cheapest
-      const sortedByPrice = [...catProds].sort((a,b)=>(a.price||0)-(b.price||0));
+      const types = Array.isArray(cat.types) ? cat.types : [];
+      const hasTypes = types.length > 0;
+
+      // Determine active type for this catalog
+      let activeType = _activeTypePerCat[cat.id] || '';
+      // Auto-select first type if none chosen and types exist
+      if (hasTypes && !activeType) {
+        activeType = types[0].name;
+        _activeTypePerCat[cat.id] = activeType;
+      }
+
+      // Filter products by active type (if types exist)
+      let displayProds;
+      if (hasTypes && activeType) {
+        displayProds = allCatProds.filter(p => (p.catType||'') === activeType);
+        // If the active type has no products, show all for fallback
+        if (!displayProds.length) displayProds = allCatProds;
+      } else {
+        displayProds = allCatProds;
+      }
+
+      const sortedByPrice = [...displayProds].sort((a,b)=>(a.price||0)-(b.price||0));
       const cheapestId = sortedByPrice[0]?.id;
-      const popularId = catProds.sort((a,b)=>(b.reviewCount||0)-(a.reviewCount||0))[0]?.id;
-      const catProdsSorted = list.filter(p => (p.cat||'') === catKey).slice(0, 20);
+      const popularId  = [...displayProds].sort((a,b)=>(b.reviewCount||0)-(a.reviewCount||0))[0]?.id;
 
-      const iconHtml = cat.imgB64 
+      const iconHtml = cat.imgB64
         ? `<img src="${cat.imgB64}" alt="${esc(cat.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`
         : `<span style="font-size:1.3rem">${cat.emoji||'🎮'}</span>`;
 
-      // Build nominal cards for each product variant
-      const nominalCards = catProdsSorted.map((p,i) => {
+      // ── Type tab strip ──
+      let typeTabsHtml = '';
+      if (hasTypes) {
+        const tabItems = types.map(t => {
+          const cnt = allCatProds.filter(p => (p.catType||'') === t.name).length;
+          const isAct = t.name === activeType;
+          return `<div class="type-tab ${isAct?'act':''}" onclick="setActiveType('${esc(cat.id)}','${esc(t.name)}')">
+            <span class="type-tab-emoji">${esc(t.emoji||'🎮')}</span>
+            ${esc(t.name)}
+            ${cnt>0?`<span class="type-tab-count">${cnt}</span>`:''}
+          </div>`;
+        }).join('');
+        // Also add "Semua" tab
+        const allAct = !activeType || !types.find(t=>t.name===activeType);
+        typeTabsHtml = `<div class="type-tab-strip">
+          <div class="type-tab ${allAct?'act':''}" onclick="setActiveType('${esc(cat.id)}','')">
+            <span class="type-tab-emoji">🔥</span> Semua
+            <span class="type-tab-count">${allCatProds.length}</span>
+          </div>
+          ${tabItems}
+        </div>`;
+      }
+
+      // ── Nominal cards ──
+      const nominalCards = displayProds.slice(0,20).map(p => {
         const dp = discPrice(p);
         let cardClass = '';
         if (p.id === popularId && p.id !== cheapestId) cardClass = 'popular';
         else if (p.id === cheapestId) cardClass = 'cheapest';
         else if (p.discountPct) cardClass = 'bonus';
-        
         const origPrice = p.discountPct ? `<span class="nominal-card-orig">Rp ${(p.price||0).toLocaleString()}</span><span class="nominal-card-disc">-${p.discountPct}%</span>` : '';
         const coinBadge = p.coinPrice ? `<span>🪙 ${p.coinPrice}</span>` : '';
         const stockBadge = p.stock <= 0 ? `<span style="color:#ef4444">❌ Habis</span>` : p.stock <= 3 ? `<span style="color:#f59e0b">⚠ Sisa ${p.stock}</span>` : '';
-        const prodBadge = p.badge ? `<div style="margin-top:5px"><span style="background:rgba(229,57,53,.15);color:var(--pri);font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:4px;border:1px solid rgba(229,57,53,.3)">${esc(p.badge)}</span></div>` : '';
-        
+        const prodBadge  = p.badge ? `<div style="margin-top:5px"><span style="background:rgba(229,57,53,.15);color:var(--pri);font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:4px;border:1px solid rgba(229,57,53,.3)">${esc(p.badge)}</span></div>` : '';
+        const typeBadge  = (hasTypes && p.catType) ? `<div style="margin-top:3px"><span style="background:rgba(6,182,212,.12);color:var(--cyan);font-size:.58rem;font-weight:700;padding:1px 6px;border-radius:4px;border:1px solid rgba(6,182,212,.25)">${esc(p.catType)}</span></div>` : '';
         return `<div class="nominal-card ${cardClass}" onclick="openProd('${p.id}')">
           <div class="nominal-card-amount">${esc(p.name)}</div>
           <div style="display:flex;align-items:baseline;gap:3px;flex-wrap:wrap">
@@ -4509,13 +4603,13 @@ function renderHomePage() {
             ${origPrice}
           </div>
           <div class="nominal-card-badge">${coinBadge}${stockBadge}</div>
-          ${prodBadge}
+          ${prodBadge}${typeBadge}
         </div>`;
       }).join('');
 
-      // Representative product info (first product with image)
-      const repProd = catProdsSorted.find(p=>p.imgB64||p.imgUrl) || catProdsSorted[0];
-      const repImg = repProd?.imgB64 ? `<img src="${repProd.imgB64}" alt="${esc(repProd.name)}" style="width:54px;height:54px;border-radius:8px;object-fit:cover">`
+      // ── Rep image ──
+      const repProd = displayProds.find(p=>p.imgB64||p.imgUrl) || displayProds[0];
+      const repImg  = repProd?.imgB64 ? `<img src="${repProd.imgB64}" alt="${esc(repProd.name)}" style="width:54px;height:54px;border-radius:8px;object-fit:cover">`
         : repProd?.imgUrl ? `<img src="${repProd.imgUrl}" alt="${esc(repProd.name)}" onerror="this.style.display='none'" style="width:54px;height:54px;border-radius:8px;object-fit:cover">`
         : `<div class="prod-picker-img"><i class="fas fa-box" style="font-size:1.4rem"></i></div>`;
 
@@ -4524,18 +4618,20 @@ function renderHomePage() {
           <div class="cat-section-icon">${iconHtml}</div>
           <div>
             <div class="cat-section-name">${esc(cat.name)}</div>
+            ${hasTypes && activeType ? `<div style="font-size:.68rem;color:var(--txt3);margin-top:1px">${esc(activeType)}</div>` : ''}
           </div>
           <span class="sh-more" style="margin-left:auto" onclick="setCat('${esc(catKey)}',null)">Lihat Semua <i class="fas fa-chevron-right"></i></span>
         </div>
+        ${typeTabsHtml}
         <div class="prod-picker-wrap">
           <div class="prod-picker-top">
             ${repImg}
             <div class="prod-picker-info">
-              <div class="prod-picker-title">${esc(cat.name)}</div>
+              <div class="prod-picker-title">${esc(cat.name)}${hasTypes && activeType ? ` — ${esc(activeType)}` : ''}</div>
               <div class="prod-picker-meta">
                 <span><i class="fas fa-bolt" style="color:var(--pri)"></i> Pengiriman Instan</span>
                 <span><i class="fas fa-shield-alt" style="color:var(--green)"></i> Aman & Terpercaya</span>
-                <span><i class="fas fa-tag" style="color:var(--gold)"></i> ${catProdsSorted.length} Pilihan</span>
+                <span><i class="fas fa-tag" style="color:var(--gold)"></i> ${displayProds.length} Pilihan</span>
               </div>
               <div class="prod-picker-tags">
                 <div class="prod-picker-tag"><i class="fas fa-trophy" style="color:var(--gold)"></i> Penjual Terbaik</div>
@@ -4548,7 +4644,7 @@ function renderHomePage() {
             <div class="nominal-section-title">
               <i class="fas fa-layer-group" style="color:var(--pri)"></i> Pilih Nominal
             </div>
-            <div class="nominal-grid">${nominalCards}</div>
+            <div class="nominal-grid">${nominalCards || '<div style="font-size:.78rem;color:var(--txt3);text-align:center;padding:16px">Belum ada produk untuk tipe ini</div>'}</div>
           </div>
         </div>
       </div>`;
@@ -4560,7 +4656,7 @@ function renderHomePage() {
       document.getElementById('homeProdsGrid').innerHTML = list.map(p=>pCard(p)).join('') || '<div class="empty"><i class="fas fa-box-open"></i><p>Belum ada produk</p></div>';
     }
   } else {
-    // No catalogs - show flat grid
+    // No catalogs — flat grid fallback
     sectEl.innerHTML = '';
     allEl.style.display = '';
     const grid = document.getElementById('homeProdsGrid');
@@ -4610,6 +4706,7 @@ async function oLoadCatalog() {
           <div style="font-size:.72rem;color:var(--txt3)">
             Key: <span class="fmono" style="color:var(--cyan)">${esc(catKey)}</span> &bull;
             <span style="color:${prodCount>0?'var(--green)':'#ef4444'}">${prodCount} produk</span> &bull;
+            <span style="color:var(--pri)">${(c.types||[]).length} tipe</span> &bull;
             Urutan: ${c.order||0} &bull;
             ${c.visible===false?'<span style="color:#ef4444">Tersembunyi</span>':'<span style="color:var(--green)">Tampil</span>'}
           </div>
@@ -4621,6 +4718,49 @@ async function oLoadCatalog() {
       </div>`;
     }).join('');
   } catch(e) { el.innerHTML = '<div class="empty"><p>Error memuat katalog</p></div>'; }
+}
+
+// Temp storage for catalog types being edited
+let _editingCatTypes = [];
+
+function renderCTypeList() {
+  const el = document.getElementById('cTypeList');
+  if (!el) return;
+  if (!_editingCatTypes.length) {
+    el.innerHTML = '<div style="font-size:.75rem;color:var(--txt3);text-align:center;padding:8px">Belum ada tipe — tambahkan di bawah</div>';
+    return;
+  }
+  el.innerHTML = _editingCatTypes.map((t,i) => `
+    <div class="type-mgmt-item">
+      <span class="type-emoji">${esc(t.emoji||'🎮')}</span>
+      <span class="type-name">${esc(t.name)}</span>
+      <button class="type-del" onclick="removeCatalogType(${i})" title="Hapus"><i class="fas fa-times"></i></button>
+    </div>
+  `).join('');
+}
+
+function addCatalogType() {
+  const nameEl = document.getElementById('cTypeName');
+  const emojiEl = document.getElementById('cTypeEmoji');
+  const name = nameEl.value.trim();
+  if (!name) { toast('Nama tipe wajib diisi','err'); return; }
+  const emoji = emojiEl.value.trim() || '🎮';
+  // Prevent duplicate names
+  if (_editingCatTypes.some(t => t.name.toLowerCase() === name.toLowerCase())) {
+    toast('Tipe dengan nama ini sudah ada','err'); return;
+  }
+  _editingCatTypes.push({ id: 'TYPE-'+Date.now(), name, emoji });
+  nameEl.value = '';
+  emojiEl.value = '';
+  renderCTypeList();
+  toast(`✅ Tipe "${name}" ditambahkan`, 'ok');
+}
+
+function removeCatalogType(idx) {
+  const t = _editingCatTypes[idx];
+  if (!confirm(`Hapus tipe "${t?.name}"?`)) return;
+  _editingCatTypes.splice(idx, 1);
+  renderCTypeList();
 }
 
 function openAddCatalog() {
@@ -4638,6 +4778,8 @@ function openAddCatalog() {
   if(area) area.classList.remove('success');
   const badge=document.getElementById('catUpBadge');
   if(badge) badge.style.display='none';
+  _editingCatTypes = [];
+  renderCTypeList();
   openM('mCatalog');
 }
 
@@ -4647,7 +4789,6 @@ async function oEditCatalog(id) {
   document.getElementById('mCatalogTitle').textContent = 'Edit Katalog';
   document.getElementById('eCatalogId').value = id;
   document.getElementById('cName').value = c.name||'';
-  // cCat always mirrors name — if legacy data has different value, show it but sync on save
   document.getElementById('cCat').value = c.cat||c.name||'';
   document.getElementById('cEmoji').value = c.emoji||'';
   document.getElementById('cVisible').value = c.visible===false ? '0' : '1';
@@ -4655,6 +4796,9 @@ async function oEditCatalog(id) {
   catImgB64 = c.imgB64||'';
   const prev = document.getElementById('catImgPrev');
   if (prev) { if (catImgB64) { prev.src = catImgB64; prev.style.display = 'block'; } else { prev.style.display = 'none'; } }
+  // Load types
+  _editingCatTypes = Array.isArray(c.types) ? JSON.parse(JSON.stringify(c.types)) : [];
+  renderCTypeList();
   openM('mCatalog');
 }
 
@@ -4662,7 +4806,6 @@ async function saveCatalog() {
   const name = document.getElementById('cName').value.trim();
   if (!name) { toast('Nama katalog wajib diisi','err'); return; }
   const id = document.getElementById('eCatalogId').value || 'CAT-'+Date.now();
-  // IMPORTANT: cat key always equals name so products always match
   const catKey = name;
   const data = {
     id, name,
@@ -4670,6 +4813,7 @@ async function saveCatalog() {
     emoji: document.getElementById('cEmoji').value.trim(),
     visible: document.getElementById('cVisible').value === '1',
     order: parseInt(document.getElementById('cOrder').value)||0,
+    types: _editingCatTypes,
   };
   if (catImgB64) data.imgB64 = catImgB64;
   try {
@@ -4682,6 +4826,34 @@ async function saveCatalog() {
     renderHomePage();
     oLoadCatalog();
   } catch(e) { toast('Error: '+e.message,'err'); }
+}
+
+// Called when pCat changes in product form
+function onPCatChange() {
+  const catVal = document.getElementById('pCat').value;
+  populateCatTypeDropdown(catVal, '');
+}
+
+// Populate the catType dropdown in product form based on selected category
+function populateCatTypeDropdown(catVal, currentType) {
+  const wrap = document.getElementById('pCatTypeWrap');
+  const sel  = document.getElementById('pCatType');
+  if (!wrap || !sel) return;
+  if (!catVal) {
+    wrap.style.display = 'none';
+    sel.innerHTML = '<option value="">— Tanpa Tipe —</option>';
+    return;
+  }
+  const cat = catalogs.find(c => (c.cat||c.name) === catVal);
+  const types = cat?.types || [];
+  if (!types.length) {
+    wrap.style.display = 'none';
+    sel.innerHTML = '<option value="">— Tanpa Tipe —</option>';
+    return;
+  }
+  wrap.style.display = '';
+  sel.innerHTML = '<option value="">— Tanpa Tipe —</option>' +
+    types.map(t => `<option value="${esc(t.name)}" ${currentType===t.name?'selected':''}>${esc(t.emoji||'🎮')} ${esc(t.name)}</option>`).join('');
 }
 
 async function oDelCatalog(id) {
