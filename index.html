@@ -3,9 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
 <title>DOOMINIKS STORE</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>html,body{background:#0a0a0b;color:#f1f1f1}</style>
+<!-- Fonts: non-blocking load to avoid render delay -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media='all'">
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</noscript>
 <!-- Firebase compat (non-module) — fixes scope issue -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -2517,7 +2526,7 @@ function openProd(id) {
       ${p.desc ? `<div style="font-size:.78rem;color:var(--txt2);margin-bottom:8px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${esc(p.desc)}</div>
       <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
         <span onclick="openDescModal('${p.id}','desc')" style="font-size:.78rem;color:var(--cyan);cursor:pointer;font-weight:600;display:flex;align-items:center;gap:4px"><i class="fas fa-file-alt" style="font-size:.7rem"></i> Lihat Deskripsi Produk</span>
-        ${p.delivery ? `<span style="color:var(--txt3)">|</span><span onclick="openDescModal('${p.id}','panduan')" style="font-size:.78rem;color:var(--cyan);cursor:pointer;font-weight:600;display:flex;align-items:center;gap:4px"><i class="fas fa-book" style="font-size:.7rem"></i> Panduan Aktivasi</span>` : ''}
+        ${p.panduan ? `<span style="color:var(--txt3)">|</span><span onclick="openDescModal('${p.id}','panduan')" style="font-size:.78rem;color:var(--cyan);cursor:pointer;font-weight:600;display:flex;align-items:center;gap:4px"><i class="fas fa-book" style="font-size:.7rem"></i> Panduan Aktivasi</span>` : ''}
       </div>` : ''}
       <div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;margin-bottom:8px">
         <span style="font-size:1.3rem;font-weight:700;color:var(--pri)">Rp ${dp.toLocaleString()}</span>
@@ -4368,8 +4377,8 @@ function openDescModal(prodId, tab) {
   _descProdId = prodId;
   const p = prods.find(x => x.id === prodId);
   if (!p) return;
-  // Show/hide panduan tab based on whether delivery info exists
-  const hasPanduan = !!(p.delivery || p.panduan);
+  // Show panduan tab ONLY if product has panduan field (NOT delivery — isi kiriman is private)
+  const hasPanduan = !!(p.panduan);
   document.getElementById('mDescTabPanduan').style.display = hasPanduan ? '' : 'none';
   switchDescTab(tab || 'desc');
   openM('mProdDesc');
@@ -4396,7 +4405,7 @@ function switchDescTab(tab) {
     tabPanduan.style.color = 'var(--pri)';
     tabDesc.style.borderBottomColor = 'transparent';
     tabDesc.style.color = 'var(--txt3)';
-    contentEl.textContent = p ? (p.panduan || p.delivery || 'Tidak ada panduan.') : '';
+    contentEl.textContent = p ? (p.panduan || 'Tidak ada panduan aktivasi.') : '';
   }
 }
 
