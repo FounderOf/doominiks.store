@@ -681,18 +681,17 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 .cat-manage-icon-ph{width:32px;height:32px;border-radius:6px;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
 
 /* ══════════════════════════════════
-   CATALOG TYPE TABS (Home)
+   TYPE SUB-STRIP (inside catalog bar)
 ══════════════════════════════════ */
-.type-tab-strip{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0 10px;margin-bottom:2px}
-.type-tab-strip::-webkit-scrollbar{display:none}
-.type-tab{display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border2);background:var(--bg3);color:var(--txt2);font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .18s;flex-shrink:0}
-.type-tab:hover{border-color:var(--pri);color:var(--pri);background:var(--pri-g)}
-.type-tab.act{background:var(--pri);color:#fff;border-color:var(--pri);box-shadow:0 2px 10px rgba(229,57,53,.35)}
-.type-tab-emoji{font-size:.85rem}
-.type-tab-count{background:rgba(255,255,255,.2);color:inherit;font-size:.62rem;font-weight:700;padding:1px 5px;border-radius:8px;margin-left:2px}
-.type-tab.act .type-tab-count{background:rgba(255,255,255,.25)}
+.type-sub-strip{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 0}
+.type-sub-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.type-sub-inner::-webkit-scrollbar{display:none}
+.type-chip{display:flex;align-items:center;gap:5px;padding:5px 13px;border-radius:16px;border:1.5px solid var(--border2);background:var(--bg3);color:var(--txt2);font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .18s;flex-shrink:0}
+.type-chip:hover{border-color:var(--pri);color:var(--pri);background:rgba(229,57,53,.08)}
+.type-chip.act{background:var(--pri);color:#fff;border-color:var(--pri);box-shadow:0 2px 8px rgba(229,57,53,.3)}
+.type-chip-count{font-size:.62rem;font-weight:700;padding:1px 5px;border-radius:8px;background:rgba(255,255,255,.15);margin-left:1px}
 
-/* Type management in catalog modal */
+/* Type management in catalog modal (owner panel) */
 .type-mgmt-list{display:flex;flex-direction:column;gap:5px;max-height:160px;overflow-y:auto;margin-bottom:8px}
 .type-mgmt-item{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:7px 10px}
 .type-mgmt-item .type-emoji{font-size:.95rem;min-width:20px;text-align:center}
@@ -904,6 +903,10 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
         <span>Semua</span>
       </div>
     </div>
+  </div>
+  <!-- Type sub-strip (appears when a catalog with types is selected) -->
+  <div class="type-sub-strip" id="homeTypeStrip" style="display:none">
+    <div class="type-sub-inner" id="homeTypeStripInner"></div>
   </div>
 
   <div class="ctn" style="padding-top:20px">
@@ -4427,7 +4430,8 @@ function badgeCls2(b){return{warrior:'bw',elite:'be',master:'bm',grandmaster:'bg
 // CATALOG SYSTEM
 // ================================================================
 let catalogs = [];
-let activeCat = '';
+let activeCat  = '';
+let activeType = '';  // active type within the selected catalog
 let catImgB64 = '';
 
 // Auto-fill cCat from catalog name so they always match
@@ -4471,33 +4475,51 @@ function renderCatalogStrip() {
     html += `<div class="cat-chip ${activeCat===catKey?'act':''}" data-cat="${esc(catKey)}" onclick="setCat('${esc(catKey)}',this)">${icon}<span>${esc(c.name)}</span></div>`;
   });
   strip.innerHTML = html;
-  // Rebuild slideshow with latest catalog images
+  renderTypeSubStrip();
   buildSlideshow();
 }
 
+function renderTypeSubStrip() {
+  const bar   = document.getElementById('homeTypeStrip');
+  const inner = document.getElementById('homeTypeStripInner');
+  if (!bar || !inner) return;
+  const cat   = catalogs.find(c => (c.cat||c.name) === activeCat);
+  const types = cat?.types || [];
+  if (!activeCat || !types.length) { bar.style.display = 'none'; return; }
+  bar.style.display = '';
+  const allCnt = prods.filter(p => (p.cat||'') === activeCat).length;
+  let html = `<div class="type-chip ${!activeType?'act':''}" onclick="setActiveType('')">🔥 Semua<span class="type-chip-count">${allCnt}</span></div>`;
+  types.forEach(t => {
+    const cnt = prods.filter(p => (p.cat||'') === activeCat && (p.catType||'') === t.name).length;
+    html += `<div class="type-chip ${activeType===t.name?'act':''}" onclick="setActiveType('${esc(t.name)}')">${esc(t.emoji||'🎮')} ${esc(t.name)}${cnt>0?`<span class="type-chip-count">${cnt}</span>`:''}</div>`;
+  });
+  inner.innerHTML = html;
+}
+
 function setCat(cat, el) {
-  activeCat = cat;
+  activeCat  = cat;
+  activeType = '';
   document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('act'));
   if (el) el.classList.add('act');
+  renderTypeSubStrip();
   renderHomePage();
 }
 
-// Track active type per catalog: { [catId]: typeName }
-let _activeTypePerCat = {};
-
-function setActiveType(catId, typeName) {
-  _activeTypePerCat[catId] = typeName;
+function setActiveType(typeName) {
+  activeType = typeName;
+  renderTypeSubStrip();
   renderHomePage();
 }
 
 function renderHomePage() {
   const search = (document.getElementById('homeSearch')||{}).value?.toLowerCase()||'';
-  const sort = (document.getElementById('homeSort')||{}).value||'';
+  const sort   = (document.getElementById('homeSort')||{}).value||'';
   let list = [...prods];
-  if (search) list = list.filter(p => (p.name||'').toLowerCase().includes(search)||(p.desc||'').toLowerCase().includes(search)||(p.cat||'').toLowerCase().includes(search));
-  if (activeCat) list = list.filter(p => (p.cat||'') === activeCat);
-  if (sort==='pa') list.sort((a,b)=>(a.price||0)-(b.price||0));
-  else if (sort==='pd') list.sort((a,b)=>(b.price||0)-(a.price||0));
+  if (search)     list = list.filter(p => (p.name||'').toLowerCase().includes(search)||(p.desc||'').toLowerCase().includes(search)||(p.cat||'').toLowerCase().includes(search));
+  if (activeCat)  list = list.filter(p => (p.cat||'') === activeCat);
+  if (activeType) list = list.filter(p => (p.catType||'') === activeType);
+  if (sort==='pa')  list.sort((a,b)=>(a.price||0)-(b.price||0));
+  else if (sort==='pd')  list.sort((a,b)=>(b.price||0)-(a.price||0));
   else if (sort==='rat') list.sort((a,b)=>(b.avgRating||0)-(a.avgRating||0));
   else list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 
@@ -4505,8 +4527,8 @@ function renderHomePage() {
   const allEl  = document.getElementById('homeAllProds');
   if (!sectEl || !allEl) return;
 
-  // Filtering/searching → flat grid
-  if (activeCat || search) {
+  // When a category or type is selected, show flat product grid
+  if (activeCat || activeType || search) {
     sectEl.innerHTML = '';
     allEl.style.display = '';
     const grid = document.getElementById('homeProdsGrid');
@@ -4528,110 +4550,61 @@ function renderHomePage() {
     }
 
     catalogs.forEach(cat => {
-      const catKey = cat.cat || cat.name;
-      const allCatProds = list.filter(p => (p.cat||'') === catKey);
-      if (!allCatProds.length) return;
+      const catKey   = cat.cat || cat.name;
+      const catProds = list.filter(p => (p.cat||'') === catKey).slice(0,20);
+      if (!catProds.length) return;
 
-      const types = Array.isArray(cat.types) ? cat.types : [];
-      const hasTypes = types.length > 0;
-
-      // Determine active type for this catalog
-      let activeType = _activeTypePerCat[cat.id] || '';
-      // Auto-select first type if none chosen and types exist
-      if (hasTypes && !activeType) {
-        activeType = types[0].name;
-        _activeTypePerCat[cat.id] = activeType;
-      }
-
-      // Filter products by active type (if types exist)
-      let displayProds;
-      if (hasTypes && activeType) {
-        displayProds = allCatProds.filter(p => (p.catType||'') === activeType);
-        // If the active type has no products, show all for fallback
-        if (!displayProds.length) displayProds = allCatProds;
-      } else {
-        displayProds = allCatProds;
-      }
-
-      const sortedByPrice = [...displayProds].sort((a,b)=>(a.price||0)-(b.price||0));
-      const cheapestId = sortedByPrice[0]?.id;
-      const popularId  = [...displayProds].sort((a,b)=>(b.reviewCount||0)-(a.reviewCount||0))[0]?.id;
+      const sortedByPrice = [...catProds].sort((a,b)=>(a.price||0)-(b.price||0));
+      const cheapestId    = sortedByPrice[0]?.id;
+      const popularId     = [...catProds].sort((a,b)=>(b.reviewCount||0)-(a.reviewCount||0))[0]?.id;
 
       const iconHtml = cat.imgB64
         ? `<img src="${cat.imgB64}" alt="${esc(cat.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`
         : `<span style="font-size:1.3rem">${cat.emoji||'🎮'}</span>`;
 
-      // ── Type tab strip ──
-      let typeTabsHtml = '';
-      if (hasTypes) {
-        const tabItems = types.map(t => {
-          const cnt = allCatProds.filter(p => (p.catType||'') === t.name).length;
-          const isAct = t.name === activeType;
-          return `<div class="type-tab ${isAct?'act':''}" onclick="setActiveType('${esc(cat.id)}','${esc(t.name)}')">
-            <span class="type-tab-emoji">${esc(t.emoji||'🎮')}</span>
-            ${esc(t.name)}
-            ${cnt>0?`<span class="type-tab-count">${cnt}</span>`:''}
-          </div>`;
-        }).join('');
-        // Also add "Semua" tab
-        const allAct = !activeType || !types.find(t=>t.name===activeType);
-        typeTabsHtml = `<div class="type-tab-strip">
-          <div class="type-tab ${allAct?'act':''}" onclick="setActiveType('${esc(cat.id)}','')">
-            <span class="type-tab-emoji">🔥</span> Semua
-            <span class="type-tab-count">${allCatProds.length}</span>
-          </div>
-          ${tabItems}
-        </div>`;
-      }
-
-      // ── Nominal cards ──
-      const nominalCards = displayProds.slice(0,20).map(p => {
+      const nominalCards = catProds.map(p => {
         const dp = discPrice(p);
-        let cardClass = '';
-        if (p.id === popularId && p.id !== cheapestId) cardClass = 'popular';
-        else if (p.id === cheapestId) cardClass = 'cheapest';
-        else if (p.discountPct) cardClass = 'bonus';
-        const origPrice = p.discountPct ? `<span class="nominal-card-orig">Rp ${(p.price||0).toLocaleString()}</span><span class="nominal-card-disc">-${p.discountPct}%</span>` : '';
-        const coinBadge = p.coinPrice ? `<span>🪙 ${p.coinPrice}</span>` : '';
-        const stockBadge = p.stock <= 0 ? `<span style="color:#ef4444">❌ Habis</span>` : p.stock <= 3 ? `<span style="color:#f59e0b">⚠ Sisa ${p.stock}</span>` : '';
+        let cls = '';
+        if (p.id===popularId && p.id!==cheapestId) cls='popular';
+        else if (p.id===cheapestId) cls='cheapest';
+        else if (p.discountPct) cls='bonus';
+        const origPrice  = p.discountPct ? `<span class="nominal-card-orig">Rp ${(p.price||0).toLocaleString()}</span><span class="nominal-card-disc">-${p.discountPct}%</span>` : '';
+        const coinBadge  = p.coinPrice ? `<span>🪙 ${p.coinPrice}</span>` : '';
+        const stockBadge = p.stock<=0 ? `<span style="color:#ef4444">❌ Habis</span>` : p.stock<=3 ? `<span style="color:#f59e0b">⚠ Sisa ${p.stock}</span>` : '';
         const prodBadge  = p.badge ? `<div style="margin-top:5px"><span style="background:rgba(229,57,53,.15);color:var(--pri);font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:4px;border:1px solid rgba(229,57,53,.3)">${esc(p.badge)}</span></div>` : '';
-        const typeBadge  = (hasTypes && p.catType) ? `<div style="margin-top:3px"><span style="background:rgba(6,182,212,.12);color:var(--cyan);font-size:.58rem;font-weight:700;padding:1px 6px;border-radius:4px;border:1px solid rgba(6,182,212,.25)">${esc(p.catType)}</span></div>` : '';
-        return `<div class="nominal-card ${cardClass}" onclick="openProd('${p.id}')">
+        const typeBadge  = p.catType ? `<div style="margin-top:3px"><span style="background:rgba(6,182,212,.12);color:var(--cyan);font-size:.58rem;font-weight:700;padding:1px 6px;border-radius:4px;border:1px solid rgba(6,182,212,.25)">${esc(p.catType)}</span></div>` : '';
+        return `<div class="nominal-card ${cls}" onclick="openProd('${p.id}')">
           <div class="nominal-card-amount">${esc(p.name)}</div>
           <div style="display:flex;align-items:baseline;gap:3px;flex-wrap:wrap">
-            <span class="nominal-card-price">Rp ${dp.toLocaleString()}</span>
-            ${origPrice}
+            <span class="nominal-card-price">Rp ${dp.toLocaleString()}</span>${origPrice}
           </div>
           <div class="nominal-card-badge">${coinBadge}${stockBadge}</div>
           ${prodBadge}${typeBadge}
         </div>`;
       }).join('');
 
-      // ── Rep image ──
-      const repProd = displayProds.find(p=>p.imgB64||p.imgUrl) || displayProds[0];
-      const repImg  = repProd?.imgB64 ? `<img src="${repProd.imgB64}" alt="${esc(repProd.name)}" style="width:54px;height:54px;border-radius:8px;object-fit:cover">`
-        : repProd?.imgUrl ? `<img src="${repProd.imgUrl}" alt="${esc(repProd.name)}" onerror="this.style.display='none'" style="width:54px;height:54px;border-radius:8px;object-fit:cover">`
-        : `<div class="prod-picker-img"><i class="fas fa-box" style="font-size:1.4rem"></i></div>`;
+      const repProd = catProds.find(p=>p.imgB64||p.imgUrl) || catProds[0];
+      const repImg  = repProd?.imgB64
+        ? `<img src="${repProd.imgB64}" alt="${esc(repProd.name)}" style="width:54px;height:54px;border-radius:8px;object-fit:cover">`
+        : repProd?.imgUrl
+          ? `<img src="${repProd.imgUrl}" alt="${esc(repProd.name)}" onerror="this.style.display='none'" style="width:54px;height:54px;border-radius:8px;object-fit:cover">`
+          : `<div class="prod-picker-img"><i class="fas fa-box" style="font-size:1.4rem"></i></div>`;
 
       html += `<div class="cat-section mb4">
         <div class="cat-section-hdr">
           <div class="cat-section-icon">${iconHtml}</div>
-          <div>
-            <div class="cat-section-name">${esc(cat.name)}</div>
-            ${hasTypes && activeType ? `<div style="font-size:.68rem;color:var(--txt3);margin-top:1px">${esc(activeType)}</div>` : ''}
-          </div>
-          <span class="sh-more" style="margin-left:auto" onclick="setCat('${esc(catKey)}',null)">Lihat Semua <i class="fas fa-chevron-right"></i></span>
+          <div><div class="cat-section-name">${esc(cat.name)}</div></div>
+          <span class="sh-more" style="margin-left:auto" onclick="setCat('${esc(catKey)}',document.querySelector('[data-cat=\\'${esc(catKey)}\\']'))">Lihat Semua <i class="fas fa-chevron-right"></i></span>
         </div>
-        ${typeTabsHtml}
         <div class="prod-picker-wrap">
           <div class="prod-picker-top">
             ${repImg}
             <div class="prod-picker-info">
-              <div class="prod-picker-title">${esc(cat.name)}${hasTypes && activeType ? ` — ${esc(activeType)}` : ''}</div>
+              <div class="prod-picker-title">${esc(cat.name)}</div>
               <div class="prod-picker-meta">
                 <span><i class="fas fa-bolt" style="color:var(--pri)"></i> Pengiriman Instan</span>
-                <span><i class="fas fa-shield-alt" style="color:var(--green)"></i> Aman & Terpercaya</span>
-                <span><i class="fas fa-tag" style="color:var(--gold)"></i> ${displayProds.length} Pilihan</span>
+                <span><i class="fas fa-shield-alt" style="color:var(--green)"></i> Aman &amp; Terpercaya</span>
+                <span><i class="fas fa-tag" style="color:var(--gold)"></i> ${catProds.length} Pilihan</span>
               </div>
               <div class="prod-picker-tags">
                 <div class="prod-picker-tag"><i class="fas fa-trophy" style="color:var(--gold)"></i> Penjual Terbaik</div>
@@ -4641,10 +4614,8 @@ function renderHomePage() {
             </div>
           </div>
           <div class="nominal-section">
-            <div class="nominal-section-title">
-              <i class="fas fa-layer-group" style="color:var(--pri)"></i> Pilih Nominal
-            </div>
-            <div class="nominal-grid">${nominalCards || '<div style="font-size:.78rem;color:var(--txt3);text-align:center;padding:16px">Belum ada produk untuk tipe ini</div>'}</div>
+            <div class="nominal-section-title"><i class="fas fa-layer-group" style="color:var(--pri)"></i> Pilih Nominal</div>
+            <div class="nominal-grid">${nominalCards}</div>
           </div>
         </div>
       </div>`;
@@ -4656,7 +4627,6 @@ function renderHomePage() {
       document.getElementById('homeProdsGrid').innerHTML = list.map(p=>pCard(p)).join('') || '<div class="empty"><i class="fas fa-box-open"></i><p>Belum ada produk</p></div>';
     }
   } else {
-    // No catalogs — flat grid fallback
     sectEl.innerHTML = '';
     allEl.style.display = '';
     const grid = document.getElementById('homeProdsGrid');
