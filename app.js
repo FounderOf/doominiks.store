@@ -211,6 +211,9 @@ async function loadAllProds() {
   } catch(e) {
     prods = [];
     console.error('[loadAllProds] Error:', e);
+    // Show Firebase rules error hint
+    const grid = document.getElementById('homeProdsGrid');
+    if (grid) grid.innerHTML = '<div class="empty"><i class="fas fa-exclamation-triangle" style="color:#f59e0b"></i><p style="margin-top:8px">Gagal memuat produk</p><p class="txs" style="color:var(--txt3);margin-top:4px">Cek Firebase Rules & koneksi</p></div>';
   }
 }
 
