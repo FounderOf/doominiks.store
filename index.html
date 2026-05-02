@@ -2044,8 +2044,20 @@ async function dbGet(col, id) {
   return s.exists ? { id: s.id, ...s.data() } : null;
 }
 async function dbGetAll(col) {
-  const s = await getDB().collection(col).get();
-  return s.docs.map(d => ({ id: d.id, ...d.data() }));
+  try {
+    const s = await getDB().collection(col).get();
+    return s.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) {
+    // If permission denied, try signing in anon and retry once
+    if (e.code === 'permission-denied' || e.message?.includes('permission')) {
+      try {
+        if (!window._auth.currentUser) await window._auth.signInAnonymously();
+        const s = await getDB().collection(col).get();
+        return s.docs.map(d => ({ id: d.id, ...d.data() }));
+      } catch(e2) { console.warn('dbGetAll', col, e2.message); return []; }
+    }
+    return [];
+  }
 }
 async function dbAdd(col, data) {
   data.createdAt = Date.now();
@@ -2094,26 +2106,39 @@ if (window.firebaseReady) {
 async function initApp() {
   // Restore session
   try { const s = localStorage.getItem('doomCU'); if (s) CU = JSON.parse(s); } catch(e) {}
-  // Firebase is ready (guaranteed by init trigger)
-  await loadSettings();
-  // ── Restore Firebase Auth session ──
-  if (CU?.isOwner) {
-    const fbEmail = ownerCred.ownerFBEmail;
-    const fbPwd   = ownerCred.ownerFBPwd;
-    if (fbEmail && fbPwd && !_auth.currentUser) {
-      try { await _auth.signInWithEmailAndPassword(fbEmail, fbPwd); } catch(e) { console.warn('FB Auth restore failed:',e.message); }
+
+  // ── Sign in to Firebase Auth FIRST before any Firestore reads ──
+  try {
+    if (!window._auth.currentUser) {
+      if (CU?.isOwner && ownerCred?.ownerFBEmail && ownerCred?.ownerFBPwd) {
+        await window._auth.signInWithEmailAndPassword(ownerCred.ownerFBEmail, ownerCred.ownerFBPwd);
+      } else {
+        // Anonymous sign-in covers all guests AND regular users
+        await window._auth.signInAnonymously();
+      }
     }
-  } else if (CU && !_auth.currentUser) {
-    // Regular user: sign in anonymously so Firestore + RTDB rules allow writes
-    try { await _auth.signInAnonymously(); } catch(e) { console.warn('Anon auth failed:',e.message); }
+  } catch(e) { console.warn('Firebase Auth init:', e.message); }
+
+  // Now safe to read Firestore
+  await loadSettings();
+
+  // Re-auth owner with correct credentials if settings now loaded
+  if (CU?.isOwner && ownerCred?.ownerFBEmail && ownerCred?.ownerFBPwd) {
+    try {
+      const cur = window._auth.currentUser;
+      if (!cur || cur.isAnonymous) {
+        await window._auth.signInWithEmailAndPassword(ownerCred.ownerFBEmail, ownerCred.ownerFBPwd);
+      }
+    } catch(e) { console.warn('Owner auth:', e.message); }
   }
-  // If owner was already logged in, restart presence ping
+
+  // Owner presence ping
   if (CU?.isOwner) {
     const pingOwner = () => rtSet('presence/owner', { lastSeen: Date.now() }).catch(()=>{});
     pingOwner();
     if (window._ownerPresenceInterval) clearInterval(window._ownerPresenceInterval);
     window._ownerPresenceInterval = setInterval(pingOwner, 60000);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) pingOwner(); }, { once: false });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) pingOwner(); });
   }
   await loadAllProds();
   await loadCatalogs();
@@ -2133,8 +2158,14 @@ async function initApp() {
   loadHomeRevs();
   updateHomeStats();
   if (CU?.isOwner) setTimeout(checkPushPermission, 1500);
-  // ── Auto-refresh: real-time listener agar customer selalu dapat data terbaru ──
   setTimeout(startAutoRefresh, 800);
+  // Safety net: if grid still empty after 3s (e.g. Firestore slow), try once more
+  setTimeout(() => {
+    const grid = document.getElementById('homeCatGrid');
+    if (grid && !grid.innerHTML.trim()) {
+      loadCatalogs().then(() => { renderCatalogStrip(); renderHomePage(); });
+    }
+  }, 3000);
 }
 
 async function loadSettings() {
@@ -5888,4 +5919,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 </body>
- </html>
+ </html>a
