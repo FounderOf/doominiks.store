@@ -265,44 +265,14 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
 .home-search-box input::placeholder{color:var(--txt3)}
 .home-search-box i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--txt3)}
 
-/* Catalog strip — Chips Category (Itemku style: icon besar + label bawah, scroll horizontal) */
-.catalog-strip{padding:16px 0 12px;background:var(--bg);border-bottom:1px solid var(--border)}
-.catalog-inner{max-width:1180px;margin:0 auto;padding:0 12px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;align-items:flex-start}
+/* Catalog strip */
+.catalog-strip{padding:14px 0;background:var(--bg);border-bottom:1px solid var(--border)}
+.catalog-inner{max-width:1180px;margin:0 auto;padding:0 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
 .catalog-inner::-webkit-scrollbar{display:none}
-
-/* cat-chip diubah jadi icon+label vertikal (chips category Itemku style) */
-.cat-chip{
-  display:flex;flex-direction:column;align-items:center;gap:5px;
-  padding:6px 4px 8px;
-  min-width:64px;max-width:72px;
-  cursor:pointer;transition:all .18s;border-radius:10px;
-  border:none;background:transparent;
-  flex-shrink:0;
-}
-.cat-chip:hover .cat-chip-icon-box{border-color:var(--pri);background:rgba(229,57,53,.08)}
-.cat-chip.act .cat-chip-icon-box{border-color:var(--pri);box-shadow:0 0 0 2px rgba(229,57,53,.25);background:rgba(229,57,53,.08)}
-.cat-chip.act .cat-chip-label{color:var(--pri);font-weight:700}
-
-/* Icon box besar */
-.cat-chip-icon-box{
-  width:52px;height:52px;border-radius:12px;
-  background:var(--bg3);border:2px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.5rem;overflow:hidden;transition:all .18s;
-}
-@media(max-width:600px){.cat-chip-icon-box{width:46px;height:46px;border-radius:10px;font-size:1.3rem}}
-.cat-chip-icon-box img{width:100%;height:100%;object-fit:cover}
-
-/* Label di bawah icon */
-.cat-chip-label{font-size:.6rem;font-weight:600;color:var(--txt2);text-align:center;line-height:1.25;max-width:64px;white-space:normal;word-break:break-word}
-
-/* Override lama — .cat-chip-icon (emoji fallback di dalam icon-box) */
-.cat-chip .cat-chip-icon{
-  width:auto;height:auto;border-radius:0;background:transparent;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.5rem;border:none;
-}
-@media(max-width:600px){.cat-chip .cat-chip-icon{font-size:1.3rem}}
+.cat-chip{display:flex;align-items:center;gap:7px;padding:7px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0;font-size:.8rem;font-weight:600;color:var(--txt2)}
+.cat-chip img{width:22px;height:22px;border-radius:4px;object-fit:cover}
+.cat-chip .cat-chip-icon{width:22px;height:22px;border-radius:4px;background:var(--bg5);display:flex;align-items:center;justify-content:center;font-size:.75rem}
+.cat-chip:hover,.cat-chip.act{background:rgba(229,57,53,.12);border-color:var(--pri);color:var(--pri)}
 
 /* Section heading with "see all" */
 .sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -938,8 +908,8 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
   <div class="catalog-strip">
     <div class="catalog-inner" id="homeCatalogStrip">
       <div class="cat-chip act" data-cat="" onclick="setCat('',this)">
-        <div class="cat-chip-icon-box"><div class="cat-chip-icon">🔥</div></div>
-        <div class="cat-chip-label">Semua</div>
+        <div class="cat-chip-icon">🔥</div>
+        <span>Semua</span>
       </div>
     </div>
   </div>
@@ -1715,14 +1685,26 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
     <div class="ig"><label class="lbl">Nama Katalog *</label><input class="inp" id="cName" placeholder="e.g. Mobile Legends, Free Fire, Joki" oninput="autoCatKey()"></div>
     <div class="ig"><label class="lbl">Kunci Kategori <span style="font-size:.68rem;color:var(--txt3)">(diisi otomatis dari nama — harus cocok dengan produk)</span></label><input class="inp" id="cCat" placeholder="Diisi otomatis" readonly style="background:var(--bg4);color:var(--txt2);cursor:not-allowed"></div>
     <div class="ig">
-      <label class="lbl">Ikon Katalog (Upload Gambar)</label>
-      <div class="uparea" id="catUpArea" onclick="document.getElementById('catImgFile').click()">
-        <div id="catUpIconArea">
-          <i class="fas fa-image" style="font-size:1.6rem;color:var(--txt3);margin-bottom:5px;display:block"></i>
-          <div style="font-size:.82rem;color:var(--txt2)" id="catUpText">Klik upload ikon</div>
+      <label class="lbl">Ikon Katalog <span style="font-size:.68rem;color:var(--txt3)">(disarankan gambar kotak, maks 5MB)</span></label>
+      <div style="display:flex;align-items:center;gap:12px">
+        <!-- Preview box -->
+        <div id="catIconPreviewBox" onclick="document.getElementById('catImgFile').click()" style="width:72px;height:72px;border-radius:14px;background:var(--bg4);border:2px dashed var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;transition:border-color .2s;position:relative" title="Klik untuk upload ikon">
+          <img id="catImgPrev" style="width:100%;height:100%;object-fit:cover;display:none;border-radius:12px">
+          <div id="catIconPlaceholder" style="display:flex;flex-direction:column;align-items:center;gap:3px;pointer-events:none">
+            <i class="fas fa-image" style="font-size:1.4rem;color:var(--txt3)"></i>
+            <span style="font-size:.6rem;color:var(--txt3)">Upload</span>
+          </div>
         </div>
-        <div class="uparea-success-badge" id="catUpBadge" style="display:none"><i class="fas fa-check"></i> Ikon Siap</div>
-        <img id="catImgPrev" style="max-width:80px;max-height:80px;margin:8px auto 0;display:none;border-radius:6px">
+        <!-- Upload trigger -->
+        <div style="flex:1">
+          <div class="uparea" id="catUpArea" onclick="document.getElementById('catImgFile').click()" style="padding:10px 14px">
+            <div id="catUpIconArea" style="display:flex;align-items:center;gap:8px">
+              <i class="fas fa-cloud-upload-alt" style="font-size:1.1rem;color:var(--txt3)"></i>
+              <div style="font-size:.78rem;color:var(--txt2)" id="catUpText">Klik untuk upload ikon</div>
+            </div>
+            <div class="uparea-success-badge" id="catUpBadge" style="display:none"><i class="fas fa-check"></i> Ikon Siap</div>
+          </div>
+        </div>
       </div>
       <input type="file" id="catImgFile" accept="image/*" style="display:none" onchange="prevCatImg(this)">
     </div>
@@ -4505,26 +4487,45 @@ async function loadCatalogs() {
 }
 
 function renderCatalogStrip() {
-  const strip = document.getElementById('homeCatalogStrip');
-  if (!strip) return;
-  // "Semua" chip
-  let html = `<div class="cat-chip ${!activeCat?'act':''}" data-cat="" onclick="setCat('',this)">
-    <div class="cat-chip-icon-box"><div class="cat-chip-icon">🔥</div></div>
-    <div class="cat-chip-label">Semua</div>
-  </div>`;
-  catalogs.forEach(c => {
-    const catKey = c.cat || c.name;
-    const iconInner = c.imgB64
-      ? `<img src="${c.imgB64}" alt="${esc(c.name)}">`
-      : `<div class="cat-chip-icon">${c.emoji||'🎮'}</div>`;
-    html += `<div class="cat-chip ${activeCat===catKey?'act':''}" data-cat="${esc(catKey)}" onclick="setCat('${esc(catKey)}',this)">
-      <div class="cat-chip-icon-box">${iconInner}</div>
-      <div class="cat-chip-label">${esc(c.name)}</div>
-    </div>`;
-  });
-  strip.innerHTML = html;
+  // Also rebuild the home category grid whenever catalogs change
+  renderHomeCatGrid();
   renderTypeSubStrip();
   buildSlideshow();
+}
+
+/* ── Home Category Icon Grid ── */
+function renderHomeCatGrid() {
+  const grid = document.getElementById('homeCatGrid');
+  if (!grid) return;
+
+  // Build all-categories card + one card per catalog
+  let html = `<div class="home-cat-card all-card" onclick="setCat('',null)">
+    <div class="home-cat-img"><span style="font-size:2rem">🔥</span></div>
+    <div class="home-cat-name">Semua</div>
+  </div>`;
+
+  catalogs.forEach(c => {
+    const catKey = c.cat || c.name;
+    const prodCnt = prods.filter(p => (p.cat||'') === catKey).length;
+    const imgHtml = c.imgB64
+      ? `<img src="${c.imgB64}" alt="${esc(c.name)}">`
+      : `<span style="font-size:2rem">${c.emoji||'🎮'}</span>`;
+    const badge = prodCnt > 0 ? `<span class="home-cat-badge">${prodCnt}</span>` : '';
+    html += `<div class="home-cat-card" onclick="setCat('${esc(catKey)}',null)" data-cat="${esc(catKey)}">
+      ${badge}
+      <div class="home-cat-img">${imgHtml}</div>
+      <div class="home-cat-name">${esc(c.name)}</div>
+    </div>`;
+  });
+
+  // If no catalogs yet, show a placeholder hint for owner
+  if (!catalogs.length) {
+    html = `<div style="grid-column:1/-1;text-align:center;padding:32px 16px;color:var(--txt3)">
+      <i class="fas fa-layer-group" style="font-size:2rem;margin-bottom:8px;display:block"></i>
+      <div style="font-size:.82rem">Belum ada katalog. Tambahkan lewat panel Owner.</div>
+    </div>`;
+  }
+  grid.innerHTML = html;
 }
 
 function renderTypeSubStrip() {
@@ -4547,21 +4548,8 @@ function renderTypeSubStrip() {
 function setCat(cat, el) {
   activeCat  = cat;
   activeType = '';
-  document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('act'));
-  if (el) el.classList.add('act');
   renderTypeSubStrip();
   renderHomePage();
-  // Scroll ke bagian produk kalau kategori dipilih
-  if (cat) {
-    setTimeout(() => {
-      const sectEl = document.getElementById('homeCatalogSections');
-      const allEl  = document.getElementById('homeAllProds');
-      const target = (sectEl && sectEl.innerHTML) ? sectEl : allEl;
-      if (target && target.style.display !== 'none') {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 80);
-  }
 }
 
 function setActiveType(typeName) {
@@ -4582,105 +4570,70 @@ function renderHomePage() {
   else if (sort==='rat') list.sort((a,b)=>(b.avgRating||0)-(a.avgRating||0));
   else list.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
 
-  const sectEl = document.getElementById('homeCatalogSections');
-  const allEl  = document.getElementById('homeAllProds');
+  const sectEl   = document.getElementById('homeCatalogSections');
+  const allEl    = document.getElementById('homeAllProds');
+  const gridEl   = document.getElementById('homeCatGrid');
+  const backBar  = document.getElementById('homeCatBackBar');
+  const stripWrap= document.getElementById('homeCatalogStripWrap');
+  const typeStrip= document.getElementById('homeTypeStrip');
   if (!sectEl || !allEl) return;
 
-  // ── TIDAK ADA kategori dipilih & tidak ada search: sembunyikan semua produk ──
-  // Hanya tampilkan catalog chips (sudah ada di atas), sembunyikan produk grid
+  /* ── DEFAULT STATE: no cat, no search → show category icon grid ── */
   if (!activeCat && !activeType && !search) {
+    if (gridEl)  gridEl.style.display  = '';
+    if (backBar) backBar.classList.remove('show');
+    if (stripWrap) stripWrap.style.display = 'none';
+    if (typeStrip) typeStrip.style.display = 'none';
     sectEl.innerHTML = '';
     allEl.style.display = 'none';
+    // Rebuild grid in case prods/catalogs changed
+    renderHomeCatGrid();
+
+    // Show reviews below grid
     return;
   }
 
-  // When a category or type is selected, show flat product grid
-  if (activeCat || activeType || search) {
-    sectEl.innerHTML = '';
-    allEl.style.display = '';
-    const grid = document.getElementById('homeProdsGrid');
-    // Cek apakah kategori ini punya catalog section (nominal-style)
-    const cat = catalogs.find(c => (c.cat||c.name) === activeCat);
-    if (activeCat && cat && !activeType && !search) {
-      // Tampilkan dalam format nominal picker (itemku-style)
-      allEl.style.display = 'none';
-      const catProds = list.slice(0,40);
-      if (!catProds.length) {
-        sectEl.innerHTML = '<div class="empty"><i class="fas fa-box-open"></i><p>Belum ada produk di kategori ini</p></div>';
-        return;
-      }
-      const sortedByPrice = [...catProds].sort((a,b)=>(a.price||0)-(b.price||0));
-      const cheapestId    = sortedByPrice[0]?.id;
-      const popularId     = [...catProds].sort((a,b)=>(b.reviewCount||0)-(a.reviewCount||0))[0]?.id;
-
-      const iconHtml = cat.imgB64
-        ? `<img src="${cat.imgB64}" alt="${esc(cat.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px">`
-        : `<span style="font-size:1.3rem">${cat.emoji||'🎮'}</span>`;
-
-      const nominalCards = catProds.map(p => {
-        const dp = discPrice(p);
-        let cls = '';
-        if (p.id===popularId && p.id!==cheapestId) cls='popular';
-        else if (p.id===cheapestId) cls='cheapest';
-        else if (p.discountPct) cls='bonus';
-        const origPrice  = p.discountPct ? `<span class="nominal-card-orig">Rp ${(p.price||0).toLocaleString()}</span><span class="nominal-card-disc">-${p.discountPct}%</span>` : '';
-        const coinBadge  = p.coinPrice ? `<span>🪙 ${p.coinPrice}</span>` : '';
-        const stockBadge = p.stock<=0 ? `<span style="color:#ef4444">❌ Habis</span>` : p.stock<=3 ? `<span style="color:#f59e0b">⚠ Sisa ${p.stock}</span>` : '';
-        const prodBadge  = p.badge ? `<div style="margin-top:5px"><span style="background:rgba(229,57,53,.15);color:var(--pri);font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:4px;border:1px solid rgba(229,57,53,.3)">${esc(p.badge)}</span></div>` : '';
-        const typeBadge  = p.catType ? `<div style="margin-top:3px"><span style="background:rgba(6,182,212,.12);color:var(--cyan);font-size:.58rem;font-weight:700;padding:1px 6px;border-radius:4px;border:1px solid rgba(6,182,212,.25)">${esc(p.catType)}</span></div>` : '';
-        return `<div class="nominal-card ${cls}" onclick="openProd('${p.id}')">
-          <div class="nominal-card-amount">${esc(p.name)}</div>
-          <div style="display:flex;align-items:baseline;gap:3px;flex-wrap:wrap">
-            <span class="nominal-card-price">Rp ${dp.toLocaleString()}</span>${origPrice}
-          </div>
-          <div class="nominal-card-badge">${coinBadge}${stockBadge}</div>
-          ${prodBadge}${typeBadge}
-        </div>`;
-      }).join('');
-
-      const repProd = catProds.find(p=>p.imgB64||p.imgUrl) || catProds[0];
-      const repImg  = repProd?.imgB64
-        ? `<img src="${repProd.imgB64}" alt="${esc(repProd.name)}" style="width:54px;height:54px;border-radius:8px;object-fit:cover">`
-        : repProd?.imgUrl
-          ? `<img src="${repProd.imgUrl}" alt="${esc(repProd.name)}" onerror="this.style.display='none'" style="width:54px;height:54px;border-radius:8px;object-fit:cover">`
-          : `<div class="prod-picker-img"><i class="fas fa-box" style="font-size:1.4rem"></i></div>`;
-
-      sectEl.innerHTML = `<div class="cat-section mb4" style="animation:fadeup .25s ease">
-        <div class="cat-section-hdr">
-          <div class="cat-section-icon">${iconHtml}</div>
-          <div><div class="cat-section-name">${esc(cat.name)}</div></div>
-        </div>
-        <div class="prod-picker-wrap">
-          <div class="prod-picker-top">
-            ${repImg}
-            <div class="prod-picker-info">
-              <div class="prod-picker-title">${esc(cat.name)}</div>
-              <div class="prod-picker-meta">
-                <span><i class="fas fa-bolt" style="color:var(--pri)"></i> Pengiriman Instan</span>
-                <span><i class="fas fa-shield-alt" style="color:var(--green)"></i> Aman &amp; Terpercaya</span>
-                <span><i class="fas fa-tag" style="color:var(--gold)"></i> ${catProds.length} Pilihan</span>
-              </div>
-              <div class="prod-picker-tags">
-                <div class="prod-picker-tag"><i class="fas fa-trophy" style="color:var(--gold)"></i> Penjual Terbaik</div>
-                <div class="prod-picker-tag"><i class="fas fa-clock" style="color:var(--cyan)"></i> Tepat Waktu</div>
-                <div class="prod-picker-tag"><i class="fas fa-coins" style="color:var(--gold)"></i> Harga Pas</div>
-              </div>
-            </div>
-          </div>
-          <div class="nominal-section">
-            <div class="nominal-section-title"><i class="fas fa-layer-group" style="color:var(--pri)"></i> Pilih Nominal</div>
-            <div class="nominal-grid">${nominalCards}</div>
-          </div>
-        </div>
-      </div>`;
-    } else {
-      // Tampilkan flat grid (search / catType filter / kategori tanpa catalog)
-      allEl.style.display = '';
-      sectEl.innerHTML = '';
-      grid.innerHTML = list.length ? list.map(p=>pCard(p)).join('') : '<div class="empty"><i class="fas fa-box-open"></i><p>Tidak ada produk ditemukan</p></div>';
+  /* ── CATEGORY / SEARCH SELECTED: hide grid, show products ── */
+  if (gridEl)  gridEl.style.display  = 'none';
+  if (backBar) {
+    backBar.classList.add('show');
+    const selName = document.getElementById('homeCatSelectedName');
+    if (selName) {
+      const cat = catalogs.find(c => (c.cat||c.name) === activeCat);
+      selName.textContent = search ? `"${search}"` : (cat?.name || activeCat || '');
     }
-    return;
   }
+  // Show type sub-strip if applicable
+  if (stripWrap) stripWrap.style.display = activeCat ? '' : 'none';
+  renderTypeSubStrip();
+
+  sectEl.innerHTML = '';
+  allEl.style.display = '';
+
+  // Populate product section header
+  const hdr  = document.getElementById('homeProdSecHdr');
+  const icon = document.getElementById('homeProdSecIcon');
+  const title= document.getElementById('homeProdSecTitle');
+  const sub  = document.getElementById('homeProdSecSub');
+  if (hdr && activeCat) {
+    const cat = catalogs.find(c => (c.cat||c.name) === activeCat);
+    hdr.style.display = '';
+    if (icon) icon.innerHTML = cat?.imgB64
+      ? `<img src="${cat.imgB64}" alt="${esc(cat.name)}">`
+      : `<span style="font-size:1.2rem">${cat?.emoji||'🎮'}</span>`;
+    if (title) title.textContent = (cat?.name || activeCat) + (activeType ? ` — ${activeType}` : '');
+    if (sub)   sub.textContent = `${list.length} produk tersedia`;
+  } else if (hdr) {
+    hdr.style.display = search ? '' : 'none';
+    if (title && search) title.textContent = `Hasil pencarian: "${search}"`;
+    if (sub && search)   sub.textContent   = `${list.length} produk ditemukan`;
+    if (icon && search)  icon.innerHTML = `<i class="fas fa-search" style="color:var(--txt3)"></i>`;
+  }
+
+  const prodGrid = document.getElementById('homeProdsGrid');
+  prodGrid.innerHTML = list.length
+    ? list.map(p => pCard(p)).join('')
+    : `<div class="empty"><i class="fas fa-box-open"></i><p>${search ? 'Produk tidak ditemukan' : 'Belum ada produk di kategori ini'}</p></div>`;
 }
 
 function filterHomeProds(val) {
@@ -4790,13 +4743,8 @@ function openAddCatalog() {
   document.getElementById('cEmoji').value = '';
   document.getElementById('cVisible').value = '1';
   document.getElementById('cOrder').value = '0';
-  const prev = document.getElementById('catImgPrev');
-  if (prev) prev.style.display = 'none';
   catImgB64 = '';
-  const area=document.getElementById('catUpArea');
-  if(area) area.classList.remove('success');
-  const badge=document.getElementById('catUpBadge');
-  if(badge) badge.style.display='none';
+  _resetCatImgUI();
   _editingCatTypes = [];
   renderCTypeList();
   openM('mCatalog');
@@ -4813,8 +4761,11 @@ async function oEditCatalog(id) {
   document.getElementById('cVisible').value = c.visible===false ? '0' : '1';
   document.getElementById('cOrder').value = c.order||0;
   catImgB64 = c.imgB64||'';
-  const prev = document.getElementById('catImgPrev');
-  if (prev) { if (catImgB64) { prev.src = catImgB64; prev.style.display = 'block'; } else { prev.style.display = 'none'; } }
+  if (catImgB64) {
+    _showCatImgPreview(catImgB64);
+  } else {
+    _resetCatImgUI();
+  }
   // Load types
   _editingCatTypes = Array.isArray(c.types) ? JSON.parse(JSON.stringify(c.types)) : [];
   renderCTypeList();
@@ -4886,21 +4837,58 @@ async function oDelCatalog(id) {
   toast('Katalog dihapus','inf');
 }
 
+function _resetCatImgUI() {
+  const prev = document.getElementById('catImgPrev');
+  const ph   = document.getElementById('catIconPlaceholder');
+  const area = document.getElementById('catUpArea');
+  const badge= document.getElementById('catUpBadge');
+  const txt  = document.getElementById('catUpText');
+  const box  = document.getElementById('catIconPreviewBox');
+  if (prev)  { prev.src=''; prev.style.display='none'; }
+  if (ph)    ph.style.display='flex';
+  if (area)  area.classList.remove('success');
+  if (badge) badge.style.display='none';
+  if (txt)   txt.textContent='Klik untuk upload ikon';
+  if (box)   box.style.borderColor='';
+}
+
+function _showCatImgPreview(src) {
+  const prev = document.getElementById('catImgPrev');
+  const ph   = document.getElementById('catIconPlaceholder');
+  const area = document.getElementById('catUpArea');
+  const badge= document.getElementById('catUpBadge');
+  const box  = document.getElementById('catIconPreviewBox');
+  if (prev)  { prev.src=src; prev.style.display='block'; }
+  if (ph)    ph.style.display='none';
+  if (area)  area.classList.add('success');
+  if (badge) badge.style.display='flex';
+  if (box)   box.style.borderColor='var(--green)';
+}
+
 function prevCatImg(inp) {
   const f = inp.files[0]; if (!f) return;
-  if (f.size > 2*1024*1024) { toast('Max 2MB','err'); return; }
-  const r = new FileReader();
-  r.onload = e => {
-    catImgB64=e.target.result;
-    const p=document.getElementById('catImgPrev');
-    if(p){p.src=e.target.result;p.style.display='block';}
-    const area=document.getElementById('catUpArea');
-    if(area) area.classList.add('success');
-    const badge=document.getElementById('catUpBadge');
-    if(badge) badge.style.display='flex';
-    toast('✅ Ikon katalog berhasil diupload!','ok');
+  if (f.size > 5*1024*1024) { toast('Ukuran file maks 5MB','err'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      // Compress to max 200×200 for lightweight icon storage
+      const MAX = 200;
+      const scale = Math.min(MAX/img.width, MAX/img.height, 1);
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      catImgB64 = canvas.toDataURL('image/webp', 0.8) || canvas.toDataURL('image/jpeg', 0.8);
+      _showCatImgPreview(catImgB64);
+      const txt = document.getElementById('catUpText');
+      if (txt) txt.textContent = `Ikon siap — ${w}×${h}px`;
+      toast('✅ Ikon katalog berhasil diupload!', 'ok');
+    };
+    img.src = e.target.result;
   };
-  r.readAsDataURL(f);
+  reader.readAsDataURL(f);
 }
 
 // ================================================================
@@ -5486,4 +5474,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 </body>
- </html>
+  </html>
