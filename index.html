@@ -904,32 +904,40 @@ textarea.inp{resize:vertical;min-height:78px;line-height:1.5}
     </div>
   </div>
 
-  <!-- Catalog Chips -->
-  <div class="catalog-strip">
-    <div class="catalog-inner" id="homeCatalogStrip">
-      <div class="cat-chip act" data-cat="" onclick="setCat('',this)">
-        <div class="cat-chip-icon">🔥</div>
-        <span>Semua</span>
-      </div>
-    </div>
+  <!-- Catalog Chips (shown only when category selected for type sub-strip) -->
+  <div class="catalog-strip" id="homeCatalogStripWrap" style="display:none">
+    <div class="catalog-inner" id="homeCatalogStrip"></div>
   </div>
-  <!-- Type sub-strip (appears when a catalog with types is selected) -->
+  <!-- Type sub-strip -->
   <div class="type-sub-strip" id="homeTypeStrip" style="display:none">
     <div class="type-sub-inner" id="homeTypeStripInner"></div>
   </div>
 
-  <div class="ctn" style="padding-top:20px">
+  <div class="ctn" style="padding-top:16px">
+
+    <!-- Back bar (shown when category is selected) -->
+    <div id="homeCatBackBar" onclick="setCat('',null)">
+      <i class="fas fa-arrow-left"></i>
+      <span>Kembali ke Kategori</span>
+      <span class="home-cat-selected-name" id="homeCatSelectedName"></span>
+    </div>
+
+    <!-- Category Icon Grid (default homepage) -->
+    <div id="homeCatGrid"></div>
 
     <!-- Catalog Sections (dynamic) -->
     <div id="homeCatalogSections"></div>
 
-    <!-- All Products Fallback -->
-    <div id="homeAllProds">
-      <div class="sh mb2 mt2">
-        <span class="sh-title">Semua Produk</span>
-        <span class="sh-more" onclick="goSec('products')">Lihat Semua <i class="fas fa-chevron-right"></i></span>
+    <!-- Products grid (shown after category selected / search) -->
+    <div id="homeAllProds" style="display:none">
+      <div class="home-prod-sec-hdr" id="homeProdSecHdr" style="display:none">
+        <div class="home-prod-sec-icon" id="homeProdSecIcon"></div>
+        <div>
+          <div style="font-size:.95rem;font-weight:700" id="homeProdSecTitle"></div>
+          <div style="font-size:.7rem;color:var(--txt3)" id="homeProdSecSub"></div>
+        </div>
       </div>
-      <div class="pgrid" id="homeProdsGrid"><div class="empty"><i class="fas fa-spinner fa-spin"></i></div></div>
+      <div class="pgrid" id="homeProdsGrid"></div>
     </div>
 
     <!-- Reviews -->
@@ -2967,13 +2975,14 @@ function oCard(o) {
   const amt  = o.currency==='coin'?`🪙 ${o.amount}`:o.currency==='balance'?`💰 Rp ${(o.amount||0).toLocaleString()} (Balance)`:`Rp ${(o.amount||0).toLocaleString()}`;
   const noteHtml = o.note ? `<div style="font-size:.72rem;color:var(--gold);margin-top:3px">📝 ${esc(o.note)}</div>` : '';
   const canRev = o.status==='delivered';
+  const canDel = o.status==='delivered' || o.status==='cancelled';
   const pimg = (() => {
     const prod = prods.find(x=>x.id===o.productId);
     if(prod?.imgB64) return `<img class="o-thumb" src="${prod.imgB64}">`;
     if(prod?.imgUrl) return `<img class="o-thumb" src="${prod.imgUrl}" onerror="this.style.display='none'">`;
     return `<div class="o-thumb" style="display:flex;align-items:center;justify-content:center;font-size:1.2rem">📦</div>`;
   })();
-  return `<div class="ocard">
+  return `<div class="ocard" id="ocard-${o.id}">
     ${pimg}
     <div class="o-info" style="flex:1">
       <div class="o-id">${esc(o.id)} &bull; ${fmtDate(o.createdAt)}</div>
@@ -2987,8 +2996,25 @@ function oCard(o) {
       <span class="sta ${scls}"><span class="sta-dot"></span>${slbl}</span>
       ${canRev?`<button class="btn btn-sm" onclick="openRevModal('${o.id}','${o.productId}','${esc(o.productName||'')}')">⭐ Ulasan</button>`:''}
       ${o.proof?`<button class="btn btn-xs" onclick="viewProof('${o.id}')">📄 Bukti</button>`:''}
+      ${canDel?`<button class="btn btn-xs" style="background:none;border:1px solid var(--border2);color:var(--txt3)" onclick="deleteMyOrder('${o.id}')" title="Hapus dari daftar"><i class="fas fa-trash"></i></button>`:''}
     </div>
   </div>`;
+}
+
+async function deleteMyOrder(ordId) {
+  if (!confirm('Hapus orderan ini dari daftar kamu?')) return;
+  try {
+    await dbDel('orders', ordId);
+    // Remove card from DOM instantly (no need to reload)
+    const card = document.getElementById('ocard-' + ordId);
+    if (card) {
+      card.style.transition = 'opacity .25s, transform .25s';
+      card.style.opacity = '0';
+      card.style.transform = 'scale(.95)';
+      setTimeout(() => card.remove(), 260);
+    }
+    toast('Orderan dihapus', 'ok');
+  } catch(e) { toast('Gagal hapus: ' + e.message, 'err'); }
 }
 
 async function viewProof(ordId) {
@@ -4487,7 +4513,6 @@ async function loadCatalogs() {
 }
 
 function renderCatalogStrip() {
-  // Also rebuild the home category grid whenever catalogs change
   renderHomeCatGrid();
   renderTypeSubStrip();
   buildSlideshow();
@@ -4584,12 +4609,19 @@ function renderHomePage() {
     if (backBar) backBar.classList.remove('show');
     if (stripWrap) stripWrap.style.display = 'none';
     if (typeStrip) typeStrip.style.display = 'none';
-    sectEl.innerHTML = '';
     allEl.style.display = 'none';
-    // Rebuild grid in case prods/catalogs changed
     renderHomeCatGrid();
 
-    // Show reviews below grid
+    // Show Featured section below grid
+    const featured = list.filter(p => p.featured || p.feat);
+    if (featured.length > 0) {
+      sectEl.innerHTML = `<div class="mb4">
+        <div class="sh mb2"><span class="sh-title">⭐ Featured</span><span class="sh-more" onclick="goSec('products')">Lihat Semua <i class="fas fa-chevron-right"></i></span></div>
+        <div class="scroll-container"><div class="h-scroll-row">${featured.map(p=>pCard(p,'pcard-h')).join('')}</div></div>
+      </div>`;
+    } else {
+      sectEl.innerHTML = '';
+    }
     return;
   }
 
@@ -5474,4 +5506,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 </body>
-  </html>
+ </html>
