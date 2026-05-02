@@ -55,19 +55,23 @@ function startAutoRefresh() {
   try {
     _autoRefreshUnsub = window._db.collection('products').onSnapshot(snap => {
       const newProds = snap.docs.map(d => ({id:d.id,...d.data()}));
-      // Only update if data actually changed (avoid render loops)
-      const newHash = newProds.map(p=>p.id+(p.stock||0)+(p.price||0)+(p.name||'')+(p.badge||'')).join('|');
+      // Hash includes avgRating and reviewCount so product cards re-render on review changes
+      const newHash = newProds.map(p=>p.id+(p.stock||0)+(p.price||0)+(p.name||'')+(p.badge||'')+(p.avgRating||0)+(p.reviewCount||0)).join('|');
       if (newHash !== _lastProdHash) {
         _lastProdHash = newHash;
         const wasEmpty = !prods.length;
+        // Preserve RTDB stock values before replacing prods
+        const stockMap = {};
+        prods.forEach(p => { if (p.stock !== undefined) stockMap[p.id] = p.stock; });
         prods = newProds;
-        // Refresh UI for non-owner users (owner manages products, no need to auto-refresh their panel)
+        // Re-apply RTDB stocks so they don't get wiped by Firestore snapshot
+        prods.forEach(p => { if (stockMap[p.id] !== undefined) p.stock = stockMap[p.id]; });
+        // Refresh UI for non-owner users
         if (!CU?.isOwner) {
           renderHomePage();
           renderProds();
           renderFavs();
         }
-        // Show toast only after initial load (not on first fetch)
         if (!wasEmpty) {
           const sec = document.querySelector('.sec.act');
           const secId = sec?.id || '';
@@ -2030,13 +2034,16 @@ async function initApp() {
   try { const s = localStorage.getItem('doomCU'); if (s) CU = JSON.parse(s); } catch(e) {}
   // Firebase is ready (guaranteed by init trigger)
   await loadSettings();
-  // ── Restore Firebase Auth session for owner on page reload ──
+  // ── Restore Firebase Auth session ──
   if (CU?.isOwner) {
     const fbEmail = ownerCred.ownerFBEmail;
     const fbPwd   = ownerCred.ownerFBPwd;
     if (fbEmail && fbPwd && !_auth.currentUser) {
       try { await _auth.signInWithEmailAndPassword(fbEmail, fbPwd); } catch(e) { console.warn('FB Auth restore failed:',e.message); }
     }
+  } else if (CU && !_auth.currentUser) {
+    // Regular user: sign in anonymously so Firestore + RTDB rules allow writes
+    try { await _auth.signInAnonymously(); } catch(e) { console.warn('Anon auth failed:',e.message); }
   }
   await loadAllProds();
   await loadCatalogs();
@@ -2876,9 +2883,10 @@ async function buyCoin() {
     CU.coins = (CU.coins||0)-cp; saveCU(); updateNav();
     // Reduce stock
     const ns = Math.max(0,(buyProd.stock||0)-qty);
-    await rtSet('stocks/'+buyProd.id, ns); buyProd.stock=ns;
-    // Create order
-    const buyNoteC = (document.getElementById('buyNote')||{}).value?.trim()||'';
+    await rtSet('stocks/'+buyProd.id, ns);
+    buyProd.stock = ns;
+    const pi = prods.findIndex(p => p.id === buyProd.id);
+    if (pi >= 0) prods[pi].stock = ns;
     await dbSet('orders', ordId, { id:ordId, userId:CU.id, username:CU.username||CU.id, productId:buyProd.id, productName:buyProd.name, qty, amount:cp, currency:'coin', method:'coins', delivery:buyProd.delivery||'', status:'delivered', note:buyNoteC, createdAt:Date.now() });
     // 🔔 WEBHOOK: order coin (langsung delivered)
     sendWebhook('order', {
@@ -2908,9 +2916,10 @@ async function buyBalance() {
     CU.balance = newBal; saveCU(); updateNav();
     // Reduce stock
     const ns = Math.max(0,(buyProd.stock||0)-qty);
-    await rtSet('stocks/'+buyProd.id, ns); buyProd.stock=ns;
-    // Create order
-    const buyNoteB = (document.getElementById('buyNote')||{}).value?.trim()||'';
+    await rtSet('stocks/'+buyProd.id, ns);
+    buyProd.stock = ns;
+    const pi = prods.findIndex(p => p.id === buyProd.id);
+    if (pi >= 0) prods[pi].stock = ns;
     await dbSet('orders', ordId, { id:ordId, userId:CU.id, username:CU.username||CU.id, productId:buyProd.id, productName:buyProd.name, qty, amount:bp, currency:'balance', method:'Balance IDR', delivery:buyProd.delivery||'', status:'delivered', note:buyNoteB, createdAt:Date.now() });
     // 🔔 WEBHOOK
     sendWebhook('order', {
@@ -2955,7 +2964,11 @@ async function submitProof() {
       const ordId = 'ORD-'+Date.now();
       const qty = payContext.qty || 1;
       const ns = Math.max(0,(payContext.prod.stock||0)-qty);
-      await rtSet('stocks/'+payContext.prod.id, ns); payContext.prod.stock=ns;
+      await rtSet('stocks/'+payContext.prod.id, ns);
+      // Update all local references to this product's stock
+      payContext.prod.stock = ns;
+      const pi = prods.findIndex(p => p.id === payContext.prod.id);
+      if (pi >= 0) prods[pi].stock = ns;
       await dbSet('orders', ordId, { id:ordId, userId:CU.id, username:CU.username||CU.id, productId:payContext.prod.id, productName:payContext.prod.name, amount:payContext.finalPrice, currency:'idr', method:payContext.method, proof:proofB64, delivery:payContext.prod.delivery||'', status:'pending', discountCode:payContext.disc?.id||'', note:payContext.note||'', createdAt:Date.now() });
       if (payContext.disc) {
         const usesLeft = payContext.disc.usesLeft;
@@ -3016,8 +3029,22 @@ async function loadHomeRevs() {
   try {
     const revs = await dbGetAll('reviews');
     allRevs = revs;
-    const latest = revs.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,3);
-    document.getElementById('homeRevs').innerHTML = latest.length ? latest.map(revCard).join('') : '<div class="empty"><p>No reviews yet</p></div>';
+    // Sort by newest first
+    const sorted = [...revs].sort((a,b) => (b.createdAt||0)-(a.createdAt||0));
+    // Keep only 1 review per user (their most recent) for homepage display
+    const seenUsers = new Set();
+    const deduped = [];
+    for (const r of sorted) {
+      const uid = r.userId || r.username;
+      if (!seenUsers.has(uid)) {
+        seenUsers.add(uid);
+        deduped.push(r);
+        if (deduped.length >= 6) break;
+      }
+    }
+    document.getElementById('homeRevs').innerHTML = deduped.length
+      ? deduped.map(revCard).join('')
+      : '<div class="empty"><p>Belum ada ulasan</p></div>';
   } catch(e) {}
 }
 
@@ -3060,24 +3087,33 @@ function openRevModal(ordId, prodId, prodName) {
 async function submitRev() {
   if (!CU) { toast('Login first','err'); return; }
   const text = document.getElementById('revText').value.trim();
-  if (!text) { toast('Write your review','err'); return; }
-  const ordId = document.getElementById('revOrdId').value;
-  const prodId = document.getElementById('revProdId').value;
-  const prodName = document.getElementById('revProdName').value;
+  if (!text) { toast('Tulis ulasan kamu dulu','err'); return; }
+  const ordId   = document.getElementById('revOrdId').value;
+  const prodId  = document.getElementById('revProdId').value;
+  const prodName= document.getElementById('revProdName').value;
   try {
     const revId = 'REV-'+Date.now();
     await dbSet('reviews', revId, { id:revId, orderId:ordId, productId:prodId, productName:prodName, userId:CU.id, username:CU.username||CU.id, badge:CU.badge||'', avatarUrl:CU.avatarUrl||'', rating:selRating, text, createdAt:Date.now() });
-    // Update product rating
+    // Recalculate rating from all reviews for this product
     const allR = await dbGetAll('reviews');
-    const pr = allR.filter(r=>r.productId===prodId);
-    const avg = pr.length ? pr.reduce((s,r)=>s+(r.rating||0),0)/pr.length : 0;
-    await dbUpd('products', prodId, { avgRating:Math.round(avg*10)/10, reviewCount:pr.length });
-    // Update local
-    const idx = prods.findIndex(p=>p.id===prodId);
-    if (idx>=0) { prods[idx].avgRating=Math.round(avg*10)/10; prods[idx].reviewCount=pr.length; }
-    closeM('mRev'); toast('Review submitted! +20 XP earned ⭐','ok');
+    const pr   = allR.filter(r => r.productId === prodId);
+    const avg  = pr.length ? pr.reduce((s,r) => s+(r.rating||0), 0)/pr.length : 0;
+    const newAvg = Math.round(avg*10)/10;
+    const newCnt = pr.length;
+    // Update Firestore product doc
+    await dbUpd('products', prodId, { avgRating: newAvg, reviewCount: newCnt });
+    // Update local prods array immediately (don't wait for snapshot)
+    const idx = prods.findIndex(p => p.id === prodId);
+    if (idx >= 0) {
+      prods[idx].avgRating   = newAvg;
+      prods[idx].reviewCount = newCnt;
+    }
+    closeM('mRev');
+    toast('Ulasan terkirim! +20 XP ⭐', 'ok');
+    // Force re-render so rating appears on cards immediately
+    renderHomePage();
+    renderProds();
     await loadHomeRevs();
-    // Refresh level card if on profile
     if (document.getElementById('sec-profile').classList.contains('act')) renderLevelCard();
   } catch(e) { toast('Error: '+e.message,'err'); }
 }
@@ -5645,4 +5681,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 </body>
-  </html>
+ </html>
