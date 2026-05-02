@@ -2158,13 +2158,20 @@ function applyDiscordLinks() {
 async function loadAllProds() {
   try {
     prods = await dbGetAll('products');
-    // Populate category filter
+    // Populate category filter (owner panel)
     const cats = [...new Set(prods.map(p => p.cat).filter(Boolean))];
-    const pcatSel = document.getElementById('pcat');
-    cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; pcatSel.appendChild(o); });
+    const pcatSel = document.getElementById('pCat'); // correct camelCase ID
+    if (pcatSel) {
+      // Clear existing options except first default
+      while (pcatSel.options.length > 1) pcatSel.remove(1);
+      cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; pcatSel.appendChild(o); });
+    }
     // Populate review product filter
     const rfSel = document.getElementById('revFilter');
-    prods.forEach(p => { const o = document.createElement('option'); o.value = p.id; o.textContent = p.name||p.id; rfSel.appendChild(o); });
+    if (rfSel) {
+      while (rfSel.options.length > 1) rfSel.remove(1);
+      prods.forEach(p => { const o = document.createElement('option'); o.value = p.id; o.textContent = p.name||p.id; rfSel.appendChild(o); });
+    }
   } catch(e) {
     prods = [];
     console.error('[loadAllProds] Error:', e);
@@ -5881,4 +5888,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 </body>
-  </html>
+ </html>
