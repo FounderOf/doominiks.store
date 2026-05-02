@@ -2389,25 +2389,137 @@ async function doLogin() {
     CU = { id:un.toLowerCase(), ...user };
     saveCU(); closeM('mAuth'); updateNav();
     toast('Welcome back, '+CU.username+'! 🎉','ok');
+    // Sign in anonymously to Firebase Auth so Firestore rules allow writes
+    try {
+      if (!_auth.currentUser) await _auth.signInAnonymously();
+    } catch(e) { /* non-fatal, Firestore may still work in test mode */ }
   } catch(e) { toast('Login error: '+e.message,'err'); }
 }
 
+// List domain email disposable/fake yang diblokir
+const BLOCKED_EMAIL_DOMAINS = new Set([
+  'mailinator.com','guerrillamail.com','tempmail.com','throwam.com','yopmail.com',
+  'sharklasers.com','guerrillamailblock.com','grr.la','guerrillamail.info',
+  'spam4.me','trashmail.com','trashmail.me','trashmail.net','dispostable.com',
+  'maildrop.cc','spamgourmet.com','spamgourmet.net','10minutemail.com',
+  'getairmail.com','fakeinbox.com','mailnull.com','spambox.us','spamcero.com',
+  'tempinbox.com','mailexpire.com','filzmail.com','throwam.com','discard.email',
+  'mailnesia.com','mailnull.com','spamherelots.com','spamhereplease.com',
+  'tempr.email','tmail.com','spamfree24.org','mailbucket.org','spamgob.com',
+  'mt2015.com','mt2014.com','mt2016.com','spamspot.com','abcd.com',
+  'spamstack.net','spamgob.com','spam.la','spamavert.com','spambog.com',
+  'spamfree.eu','spamfree24.de','spamfree24.eu','spamfree24.info',
+  'trashmail.at','trashmail.io','trashmail.xyz','tempmail.ninja',
+  'getnada.com','tempail.com','tempemail.net','throwam.com',
+  'mohmal.com','owlpic.com','spamgob.com','wegwerfmail.de',
+  'spamgob.com','pookmail.com','spaml.de','spam.su',
+  'binkmail.com','bobmail.info','chammy.info','devnullmail.com',
+  'letthemeatspam.com','spamgob.com','spamgob.com','qqmail.net'
+]);
+
+function isValidEmailFormat(email) {
+  // RFC-ish regex: must have local@domain.tld where tld >= 2 chars
+  return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
+}
+
+function isDisposableEmail(email) {
+  const domain = email.split('@')[1]?.toLowerCase();
+  return domain ? BLOCKED_EMAIL_DOMAINS.has(domain) : false;
+}
+
+let _regUnTimer = null, _regEmTimer = null;
+
+async function checkRegUsername() {
+  const el = document.getElementById('rUN');
+  const status = document.getElementById('rUNStatus');
+  const msg = document.getElementById('rUNMsg');
+  const val = el.value.trim().toLowerCase();
+  if (!val) { status.textContent=''; msg.style.display='none'; return; }
+  if (val.length < 3) { status.textContent='❌'; msg.style.display=''; msg.style.color='#ef4444'; msg.textContent='Username minimal 3 karakter'; return; }
+  if (!/^[a-z0-9_-]+$/.test(val)) { status.textContent='❌'; msg.style.display=''; msg.style.color='#ef4444'; msg.textContent='Hanya huruf kecil, angka, _ dan - yang diizinkan'; return; }
+  status.textContent='⏳'; msg.style.display='none';
+  clearTimeout(_regUnTimer);
+  _regUnTimer = setTimeout(async () => {
+    try {
+      const exists = await dbGet('users', val);
+      if (exists) { status.textContent='❌'; msg.style.display=''; msg.style.color='#ef4444'; msg.textContent='Username sudah dipakai, coba yang lain'; }
+      else { status.textContent='✅'; msg.style.display=''; msg.style.color='#22c55e'; msg.textContent='Username tersedia!'; }
+    } catch(e) { status.textContent=''; msg.style.display='none'; }
+  }, 500);
+}
+
+async function checkRegEmail() {
+  const el = document.getElementById('rEM');
+  const status = document.getElementById('rEMStatus');
+  const msg = document.getElementById('rEMMsg');
+  const val = el.value.trim().toLowerCase();
+  if (!val) { status.textContent=''; msg.style.display='none'; return; }
+  if (!isValidEmailFormat(val)) { status.textContent='❌'; msg.style.display=''; msg.style.color='#ef4444'; msg.textContent='Format email tidak valid (contoh: nama@gmail.com)'; return; }
+  if (isDisposableEmail(val)) { status.textContent='❌'; msg.style.display=''; msg.style.color='#ef4444'; msg.textContent='Email disposable/temporer tidak diizinkan, gunakan email asli'; return; }
+  status.textContent='⏳'; msg.style.display='none';
+  clearTimeout(_regEmTimer);
+  _regEmTimer = setTimeout(async () => {
+    try {
+      // Check if email already used by any user
+      const allUsers = await dbGetAll('users');
+      const emailUsed = allUsers.some(u => (u.email||'').toLowerCase() === val);
+      if (emailUsed) { status.textContent='❌'; msg.style.display=''; msg.style.color='#ef4444'; msg.textContent='Email ini sudah terdaftar, gunakan email lain'; }
+      else { status.textContent='✅'; msg.style.display=''; msg.style.color='#22c55e'; msg.textContent='Email valid dan belum terdaftar!'; }
+    } catch(e) { status.textContent='✅'; msg.style.display='none'; }
+  }, 600);
+}
+
 async function doReg() {
-  const un = document.getElementById('rUN').value.trim().toLowerCase();
-  const em = document.getElementById('rEM').value.trim();
-  const pw = document.getElementById('rPW').value;
-  if (!un||!em||!pw) { toast('Fill all fields','err'); return; }
-  if (pw.length < 6) { toast('Password min 6 chars','err'); return; }
-  if (!/^[a-z0-9_-]+$/.test(un)) { toast('Username: a-z, 0-9, _, - only','err'); return; }
+  const un  = document.getElementById('rUN').value.trim().toLowerCase();
+  const em  = document.getElementById('rEM').value.trim().toLowerCase();
+  const pw  = document.getElementById('rPW').value;
+  const btn = document.getElementById('regBtn');
+
+  // ── Field kosong ──
+  if (!un || !em || !pw) { toast('Isi semua field terlebih dahulu','err'); return; }
+
+  // ── Validasi username ──
+  if (un.length < 3) { toast('Username minimal 3 karakter','err'); return; }
+  if (!/^[a-z0-9_-]+$/.test(un)) { toast('Username hanya boleh huruf kecil, angka, _ dan -','err'); return; }
+
+  // ── Validasi password ──
+  if (pw.length < 6) { toast('Password minimal 6 karakter','err'); return; }
+
+  // ── Validasi format email ──
+  if (!isValidEmailFormat(em)) { toast('Format email tidak valid. Contoh: nama@gmail.com','err'); return; }
+
+  // ── Blokir email disposable ──
+  if (isDisposableEmail(em)) { toast('Email disposable/temporer tidak diizinkan. Gunakan email asli.','err'); return; }
+
+  btn.disabled = true; btn.textContent = 'Memeriksa...';
   try {
-    const existing = await dbGet('users', un);
-    if (existing) { toast('Username already taken','err'); return; }
+    // ── Cek duplikat username ──
+    const existingUN = await dbGet('users', un);
+    if (existingUN) { toast('Username "'+un+'" sudah dipakai, coba yang lain','err'); btn.disabled=false; btn.textContent='Buat Akun'; return; }
+
+    // ── Cek duplikat email ──
+    const allUsers = await dbGetAll('users');
+    const emailUsed = allUsers.some(u => (u.email||'').toLowerCase() === em);
+    if (emailUsed) { toast('Email ini sudah terdaftar, gunakan email lain','err'); btn.disabled=false; btn.textContent='Buat Akun'; return; }
+
+    // ── Simpan user ──
+    btn.textContent = 'Membuat akun...';
     const data = { username:un, email:em, password:btoa(unescape(encodeURIComponent(pw))), balance:0, coins:0, badge:'', createdAt:Date.now() };
     await dbSet('users', un, data);
     CU = { id:un, ...data };
+
+    // Sign in anonymously to Firebase Auth so Firestore rules allow writes
+    try {
+      if (!_auth.currentUser) await _auth.signInAnonymously();
+    } catch(e) { /* non-fatal */ }
+
     saveCU(); closeM('mAuth'); updateNav();
-    toast('Account created! Welcome, '+un+' 🎉','ok');
-  } catch(e) { toast('Register error: '+e.message,'err'); }
+    toast('Akun berhasil dibuat! Selamat datang, '+un+' 🎉','ok');
+  } catch(e) {
+    toast('Register error: '+e.message,'err');
+  } finally {
+    btn.disabled=false; btn.textContent='Buat Akun';
+  }
 }
 
 function doLogout() {
@@ -5533,4 +5645,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </script>
 </body>
- </html>
+  </html>
